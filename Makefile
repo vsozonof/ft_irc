@@ -6,7 +6,7 @@
 #    By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/05 14:09:59 by vsozonof          #+#    #+#              #
-#    Updated: 2024/07/29 08:03:09 by vsozonof         ###   ########.fr        #
+#    Updated: 2024/07/29 11:15:26 by vsozonof         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,10 +24,14 @@ WH=\033[0m
 SRCS = main.cpp \
 	   srcs/Parsing.cpp \
 	   srcs/Server/Server.cpp \
+	   srcs/Server/client_handler.cpp \
+	   srcs/Server/msg_handler.cpp \
+	   srcs/Client/Client.cpp \
 	   
 	   
 DEPS = includes/inc.hpp \
 	   srcs/Server/Server.hpp \
+	   srcs/Client/Client.hpp \
 	   
 
 OBJS = $(SRCS:.cpp=.o)

@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/07/29 07:28:21 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/07/29 11:13:44 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,14 @@ void Server::initServer()
 	
 	if (bind(_socket, (sockaddr *)&servAddr, sizeof(servAddr)) == -1)
 		throw std::runtime_error(BOLD_RED "Ft_IRC: Socket bind failed" def);
-	else if (listen(_socket, 5) == -1)
+	
+	if (listen(_socket, 10) == -1)
 		throw std::runtime_error(BOLD_RED "Ft_IRC: Socket listen failed" def);
 
-	struct pollfd serverPollFd;
-	serverPollFd.fd = _socket;
-	serverPollFd.events = POLLIN;
-	_clients.push_back(serverPollFd);
 }
 
 void Server::run()
 {
-	std::cout << BOLD_GREEN << "Ft_IRC: Server running" << def << std::endl;
-	
-	while (1)
-	{
-		if (poll(_clients.data(), _clients.size(), -1) == -1)
-			throw std::runtime_error(BOLD_RED "Ft_IRC: Poll failed" def);
-	}
+	while (42)
+		acceptClient();
 }
-
