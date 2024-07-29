@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:39:40 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/07/23 15:36:00 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/07/29 07:22:27 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int main (int argc, char **argv)
 	}
 
 	Server server(atoi(argv[1]), argv[2]);
+	server.run();
 	
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/05 14:09:59 by vsozonof          #+#    #+#              #
-#    Updated: 2024/07/23 15:22:30 by vsozonof         ###   ########.fr        #
+#    Updated: 2024/07/29 08:03:09 by vsozonof         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,12 @@ NAME = ircserv
 
 CC = c++
 CPPFLAGS = -Wall -Werror -Wextra -std=c++98
+
+BL=\033[1;34m
+GR=\033[1;32m
+OR=\033[1;33m
+RD=\033[1;31m
+WH=\033[0m
 
 SRCS = main.cpp \
 	   srcs/Parsing.cpp \
@@ -28,19 +34,44 @@ OBJS = $(SRCS:.cpp=.o)
 
 RM = rm -f
 
-all: $(NAME)
+all: $(NAME) ready
 
 $(NAME): $(OBJS)
-	$(CC) $(CPPFLAGS) $(OBJS) -o $(NAME)
+	@echo "\n$(RD)FT_IRC -\t$(WH)$(BL)Linking $(OR)($<)$(WH)\r"
+	@$(CC) $(CPPFLAGS) $(OBJS) -o $(NAME)
+	@echo "                                   \r\c"
 
 %.o: %.cpp $(DEPS)
-	$(CC) $(CPPFLAGS) -c $< -o $@
+	@echo "$(RD)FT_IRC -\t$(WH)$(BL)Compiling $(OR)($<)$(WH)\c\r"
+	@$(CC) $(CPPFLAGS) -c $< -o $@
+	@echo "                                   \r\c"
 
 clean:
-		$(RM) $(OBJS)
+	@echo "$(RD)FT_IRC -\t$(WH)$(BL)CLEANING $(OR)$(WH)"
+	@$(RM) $(OBJS)
+	@echo "$(RD)FT_IRC -\t$(WH)$(BL)CLEANED $(OR)$(WH)"
 
 fclean: 
-		$(RM) $(NAME) $(OBJS)
+	@echo "$(RD)FT_IRC -\t$(WH)$(BL)FCLEANING $(OR)$(WH)"
+	@$(RM) $(NAME) $(OBJS)
+	@echo "$(RD)FT_IRC -\t$(WH)$(BL)FCLEANED $(OR)$(WH)"
+
+
+ready:
+	@echo "$(OR)Welcome to ...\n"
+	@echo "  ▄████████     ███                ▄█     ▄████████  ▄████████"
+	@echo "  ███    ███ ▀█████████▄           ███    ███    ███ ███    ███"
+	@echo "  ███    █▀     ▀███▀▀██           ███▌   ███    ███ ███    █▀ "
+	@echo " ▄███▄▄▄         ███   ▀           ███▌  ▄███▄▄▄▄██▀ ███       "
+	@echo "▀▀███▀▀▀         ███               ███▌ ▀▀███▀▀▀▀▀   ███       "
+	@echo "  ███            ███               ███  ▀███████████ ███    █▄ "
+	@echo "  ███            ███               ███    ███    ███ ███    ███"
+	@echo "  ███           ▄████▀             █▀     ███    ███ ████████▀ "
+	@echo "                                          ███    ███           $(WH)"
+	@echo "\n  $(OR)Usage:$(WH) ./ircserv [port] [password]"
+	@echo "  $(OR)- port$(WH) - port number to listen on"
+	@echo "  $(OR)- password$(WH) - server password"
+	@echo "  $(OR)- Example:$(WH) ./ircserv 6667 norminet-the-god\n"
 
 re: fclean all
 

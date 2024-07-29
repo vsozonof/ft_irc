@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:43:24 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/07/23 17:19:39 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/07/23 18:31:42 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <netinet/in.h>
 #include <vector>
 #include <map>
+#include <poll.h>
 
 #include "../srcs/Server/Server.hpp"
 

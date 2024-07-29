@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:03:09 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/07/23 17:17:32 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/07/29 07:38:22 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,17 @@
 class Server
 {
 	private:
-		unsigned int	_port;
-		std::string		_password;
-		int				_socket;
+		unsigned int				_port;
+		std::string					_password;
+		int							_socket;
+		std::vector<struct pollfd>	_clients;
 
 	public:
 		Server(unsigned int port, std::string password);
 		~Server();
 		
 		void initServer();
+		void run();
 		
 };
 

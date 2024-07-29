@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:46:17 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/07/23 14:57:46 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/07/23 18:41:41 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	parse(std::string const &port, std::string const &password, int n_args)
 		throw std::invalid_argument(BOLD_RED "invalid arguments" def);
 	else if (port.find_first_not_of("0123456789") != std::string::npos)
 		throw std::invalid_argument(BOLD_RED "invalid port" def);
-
+	else if (atoi(port.c_str()) < 1024 || atoi(port.c_str()) > 49151)
+		throw std::invalid_argument(BOLD_RED "invalid port range" def);
 	std::cout << BOLD_GREEN << "Basic Parsing successful" << def << std::endl;
 	std::cout << "Port: " << port << std::endl;
 	std::cout << "Password: " << password << std::endl;
