@@ -6,22 +6,34 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:46:17 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/07/29 08:11:54 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/08/07 08:53:36 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/inc.hpp"
 
-int	parse(std::string const &port, std::string const &password, int n_args)
+int parse(std::string const &port, std::string const &password, int n_args)
 {
 	if (n_args != 3)
-		throw std::invalid_argument(BOLD_RED "Ft_IRC: invalid number of arguments" def);
+	{
+		std::cout << BOLD_RED "⚠️  Ft_IRC: Parsing: invalid number of arguments" def << std::endl;
+		return 1;
+	}
 	else if (port.empty() || password.empty())
-		throw std::invalid_argument(BOLD_RED "Ft_IRC: invalid arguments" def);
+	{
+		std::cout << BOLD_RED "⚠️  Ft_IRC: Parsing: invalid arguments" def << std::endl;
+		return 1;
+	}
 	else if (port.find_first_not_of("0123456789") != std::string::npos)
-		throw std::invalid_argument(BOLD_RED "Ft_IRC: invalid port" def);
+	{
+		std::cout << BOLD_RED "⚠️  Ft_IRC: Parsing: invalid port" def << std::endl;
+		return 1;
+	}
 	else if (atoi(port.c_str()) < 1024 || atoi(port.c_str()) > 49151)
-		throw std::invalid_argument(BOLD_RED "Ft_IRC: invalid port range" def);
-	std::cout << BOLD_GREEN << "Ft_IRC: Basic Parsing successful" << def << std::endl;
+	{
+		std::cout << BOLD_RED "⚠️  Ft_IRC: Parsing: invalid port range" def << std::endl;
+		return 1;
+	}
+	std::cout << BOLD_GREEN "⚙️  Ft_IRC: Arguments parsed successfully" def << std::endl;
 	return 0;
 }

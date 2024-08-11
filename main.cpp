@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:39:40 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/07/29 09:41:24 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/08/08 08:27:44 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 int main (int argc, char **argv)
 {
+	if (parse(argv[1], argv[2], argc))
+		return (1);
 	try
 	{
-		parse(argv[1], argv[2], argc);
+		Server server(atoi(argv[1]), argv[2]);
+		server.run();
 	}
 	catch (std::exception &e)
 	{
-		std::cout << BOLD_RED << "Error: " << e.what() << def << std::endl;
-		exit (1);
+		std::cout << BOLD_RED << "⚠️  FATAL Error: " << e.what() << def << std::endl;
 	}
 
-	Server server(atoi(argv[1]), argv[2]);
-	server.run();
 	
 	return (0);
 }
