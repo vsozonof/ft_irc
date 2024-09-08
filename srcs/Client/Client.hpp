@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 10:15:47 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/07/31 12:42:36 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/09/08 16:33:19 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ class Client
 		int				getSocket() const;
 		int 			isAuth() const;
 		void			setAuth(bool auth);
+		void			setNickname(std::string const &nickname);
+		std::string		getNickname() const;
+		void			setUsername(std::string const &username);
+		std::string		getUsername() const;
 		std::string		receiveMsg();
 		void 			sendMsg(std::string const &msg);
 		void 			closeClient();

@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 10:45:06 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/07/31 09:27:29 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/09/08 16:31:24 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,16 @@ Client::Client() : _socket(-1), _authenticated(false) {}
 
 Client::Client(int socket) : _socket(socket), _authenticated(false) {}
 
-Client::~Client()
-{
-	std::cout << "Client " << _socket << " disconnected [no]" << std::endl;
-}
+Client::~Client() {}
 
 Client::Client(const Client &src)
 {
-	std::cout << "Copy constructor called" << std::endl;
 	_socket = src.getSocket();
 	_authenticated = src.isAuth();
 }
 
 Client& Client::operator=(Client const &rhs)
 {
-	std::cout << "Assignation operator called" << std::endl;
 	if (this != &rhs)
 	{
 		_socket = rhs.getSocket();
@@ -50,9 +45,29 @@ void Client::closeClient()
 	close(_socket);
 }
 
+void Client::setNickname(std::string const &nickname)
+{
+	_nickname = nickname;
+}
+
+std::string Client::getNickname() const
+{
+	return (_nickname);
+}
+
+void Client::setUsername(std::string const &username)
+{
+	_username = username;
+}
+
+std::string Client::getUsername() const
+{
+	return (_username);
+}
+
 void Client::sendMsg(std::string const &msg)
 {
-	std::cout << _socket << "Sending: " << msg << std::endl;
+	std::cout << _socket << " Sending: " << msg << std::endl;
 	int bytes = send(_socket, msg.c_str(), msg.size() + 1, 0);
 	if (bytes == -1)
 		throw std::runtime_error("Error sending message");
