@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/09/14 04:30:57 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/11/06 09:58:28 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,33 @@ void Server::setupNewClient(int clientSocket)
 	newClient_fd.events = POLLIN;
 	_fds.push_back(newClient_fd);
 
-	// ! Server Password Handling
-	std::string msg = _clients[clientSocket].receiveMsg();
-	std::cout << clientSocket << " NewReceived: " << msg << std::endl;
+	// ! CAP Negociation && Password Check
+	std::string msg;
+	
+	int check = 0;
+
+	while (!check)
+	{
+		msg += _clients[clientSocket].receiveMsg();
+		std::cout << clientSocket << " Received: " << msg << std::endl;
+		if (msg.find("USER") != std::string::npos
+			&& msg.find("NICK") != std::string::npos
+			&& msg.find("PASS") != std::string::npos)
+		{
+			std::cout << "All infos received" << std::endl;
+			check = 1;
+		}
+		else
+			std::cout << "Not all infos received" << std::endl;
+	}
+
+	_clients[clientSocket].setNickname(msg.substr((msg.find("NICK") + 5), msg.find("USER") - msg.find("NICK") - 6));
+	_clients[clientSocket].setUsername(msg.substr((msg.find("USER") + 5), msg.find("PASS") - msg.find("USER") - 6));
+	
 	if (msg.find("PASS") != std::string::npos)
 	{
-		std::string password = msg.substr(5, (msg.length() - 6));
+		std::string password = msg.substr((msg.find("PASS") + 5), _password.length());
+		std::cout << "Password received: " << password << std::endl;
 		if (password == _password)
 			std::cout << "Password received and correct" << std::endl;
 		else
@@ -66,30 +87,19 @@ void Server::setupNewClient(int clientSocket)
 	else
 		std::cout << "Password not received - TBD" << std::endl;
 
-	// ! CAP Negociation
-	std::cout << "Beginning CAP Negociation for client : " << clientSocket << std::endl;
+	_clients[clientSocket].setAuth(true);
+	_clients[clientSocket].sendMsg("CAP * LS:\r\n");
+	
 	msg = _clients[clientSocket].receiveMsg();
 	std::cout << clientSocket << " NewReceived: " << msg << std::endl;
 
-	msg = _clients[clientSocket].receiveMsg();
-	_clients[clientSocket].setNickname(msg.substr(5, msg.length()));
-	std::cout << "Nickname set to : " << _clients[clientSocket].getNickname() << std::endl;
-
-	msg = _clients[clientSocket].receiveMsg();
-	std::cout << "Username set to : " << msg.substr(5, msg.length()) << std::endl;
-	
-	_clients[clientSocket].sendMsg("CAP victor LS :\r\n");
-
-	msg = _clients[clientSocket].receiveMsg();
-
-	msg = _clients[clientSocket].receiveMsg();
 	if (msg.find("CAP END") != std::string::npos)
 		std::cout << "CAP Negociation ended" << std::endl;
 	else
 		throw std::runtime_error("CAP Negociation failed");
-	_clients[clientSocket].sendMsg(":localhost 001 victor :Welcome to the Ft_IRC Server !\r\n");
-	
-	
+	_clients[clientSocket].sendMsg("CAP * END\r\n");
+	sleep(1);
+	_clients[clientSocket].sendMsg(":localhost 001 vsozonof :Welcome to the Internet Relay Network localhost\r\n");
 }
 
 void Server::doClientAction(int clientSocket)
