@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/09/08 17:52:49 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/09/14 04:30:57 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void Server::handleClient()
 
 void Server::setupNewClient(int clientSocket)
 {
-	std::cout << "Setting up new client" << std::endl;
+	std::cout << "\033[1m" << "Setting up new client" << std::endl;
 	Client newClient(clientSocket);
 	_clients.insert(std::pair<int, Client>(clientSocket, newClient));
 
@@ -110,5 +110,24 @@ void Server::doClientAction(int clientSocket)
     std::string msg(buffer);
 
 	std::cout << clientSocket << " Received: " << msg << std::endl;
+	
+	if (msg.find("JOIN") != std::string::npos)
+	{
+		std::cout << "JOIN command" << std::endl;
+	}
+	else if (msg.find("PING") != std::string::npos)
+	{
+		std::string pong = "PONG localhost\r\n";
+		_clients[clientSocket].sendMsg(pong);
+	}
+	else if (msg.find("QUIT") != std::string::npos)
+	{
+		std::cout << "QUIT command" << std::endl;	
+	}
+	else
+		{
+			std::cout << "Unknown command" << std::endl;
+			_clients[clientSocket].sendMsg("Unknown command\r\n");
+		}
 
 }
