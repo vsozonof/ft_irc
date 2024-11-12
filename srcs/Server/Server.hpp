@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:03:09 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/08/08 08:01:47 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/11/12 15:22:29 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,14 @@ class Server
 		void initServer();
 		void run();
 		void handleClient();
+
+		// ? Client Regisration
 		void setupNewClient(int clientSocket);
+		int checkUserInfos(std::string clientPassword, std::string clientNick);
+		int checkPassword(std::string clientPassword);
+		int checkNick(std::string clientNick);
+
+		
 		void doClientAction(int clientSocket);
 
 		void sendWelcome(int clientSocket);

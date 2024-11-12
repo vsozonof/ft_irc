@@ -1,0 +1,19 @@
+- la "norme" IRC : https://www.rfc-editor.org/rfc/rfc2812
+avec les codes d'erreurs etc etc
+
+- Client utillise : IRSSI (installe par defaut a 42) v1.2.3-1
+
+- Bien remplacer la config de irssi par la config presente dans ce dossier (~/.irssi)
+Faudra juste utiliser le port 6666 pour se co au serveur
+
+Comment se connecter au serveur ?
+./ircserv PORT password
+donc
+./ircserv 6666 prout
+(utilisez prout j'ai set up la config irssi comme ca mdr)
+
+En suite, lancez irssi :
+irssi
+
+Puis faites :
+/connect ft_irc 

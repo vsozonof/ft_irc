@@ -6,7 +6,7 @@
 #    By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/05 14:09:59 by vsozonof          #+#    #+#              #
-#    Updated: 2024/07/29 11:15:26 by vsozonof         ###   ########.fr        #
+#    Updated: 2024/11/12 17:19:24 by vsozonof         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ SRCS = main.cpp \
 	   srcs/Server/Server.cpp \
 	   srcs/Server/client_handler.cpp \
 	   srcs/Server/msg_handler.cpp \
+	   srcs/Server/registrationUtils.cpp \
 	   srcs/Client/Client.cpp \
 	   
 	   

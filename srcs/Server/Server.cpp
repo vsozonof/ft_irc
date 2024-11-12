@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/08/08 08:03:57 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/11/08 09:50:08 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,7 @@
 Server::Server(unsigned int port, std::string password) : _port(port), _password(password)
 {
 	std::cout << BOLD_GREEN << "⚙️  Ft_IRC: Creating IRC Server ..." << def << std::endl;
-	try
-	{
-		initServer();
-	}
-	catch (std::exception &e)
-	{
-		throw;
-	}
+	initServer();
 }
 
 Server::~Server()
