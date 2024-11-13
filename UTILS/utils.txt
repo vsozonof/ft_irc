@@ -17,3 +17,5 @@ irssi
 
 Puis faites :
 /connect ft_irc 
+
+branche theo
