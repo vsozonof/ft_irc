@@ -115,9 +115,10 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "QUIT command" << std::endl;	
 	}
 	else
-		{
-			std::cout << "Unknown command" << std::endl;
-			_clients[clientSocket].sendMsg("Unknown command\r\n");
-		}
+	{
+		// faire dire au chat le message, ca doit etre visible pour les autres
+		std::cout << "Unknown command" << std::endl;
+		_clients[clientSocket].sendMsg("Unknown command\r\n");
+	}
 
 }
