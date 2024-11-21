@@ -106,7 +106,6 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "JOIN command" << std::endl;
 		// ajouter la creation du salon a ce moment la
 		Salon("salut");
-		Salon();
 	}
 	else if (msg.find("PING") != std::string::npos)
 	{
@@ -122,6 +121,31 @@ void Server::doClientAction(int clientSocket)
 		// faire dire au chat le message, ca doit etre visible pour les autres
 		std::cout << "Unknown command" << std::endl;
 		_clients[clientSocket].sendMsg("Unknown command\r\n");
+		std::cout << "voici un client socket " << clientSocket << std::endl;
+		size_t i = 0;
+		while (i < _fds.size())
+		{
+			std::cout << "_fds[i].fd " << _fds[i].fd << std::endl;
+			int bytes = send(_client , "salut", 5 + 1, 0);
+			if (bytes == -1)
+				throw std::runtime_error("Error sending message");
+			i++;
+		}
+		std::cout << "fin affichage" << std::endl;
+		// i = 0;
+		// for (; _fds.size(); i++)
+		// {
+		// 	int bytes2 = send(_fds[i].fd , "salut", 5 + 1, 0);
+		// 	if (bytes2 == -1)
+		// 		throw std::runtime_error("Error sending message");
+		// }
+		// std::map<int, Client>::iterator client = _clients.begin();
+		// for (int w = 0; _clients[clientSocket].sendMsg("sa") ; w++)
+		// {
+		// 	int bytes2 = send(_socket, "salut", 5 + 1, 0);
+		// 	if (bytes2 == -1)
+		// 		throw std::runtime_error("Error sending message");
+		// }
 	}
 
 }

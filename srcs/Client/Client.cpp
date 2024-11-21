@@ -69,6 +69,7 @@ void Client::sendMsg(std::string const &msg)
 {
 	std::cout << _socket << " Sending: " << msg << std::endl;
 	// surement ici pour transmettre le message pour plusieurs client
+	// transmettre tous les send avec des socket differents
 	int bytes = send(_socket, msg.c_str(), msg.size() + 1, 0);
 	if (bytes == -1)
 		throw std::runtime_error("Error sending message");

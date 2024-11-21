@@ -28,7 +28,7 @@ SRCS = main.cpp \
 	   srcs/Server/msg_handler.cpp \
 	   srcs/Server/registrationUtils.cpp \
 	   srcs/Client/Client.cpp \
-	   srcs/Salon/Salon/cpp \
+	   srcs/Salon/Salon.cpp \
 	   
 	   
 DEPS = includes/inc.hpp \
