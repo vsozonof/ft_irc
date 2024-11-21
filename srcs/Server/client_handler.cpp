@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "../Salon/Salon.hpp"
 
 void Server::handleClient()
 {
@@ -100,10 +101,12 @@ void Server::doClientAction(int clientSocket)
     std::string msg(buffer);
 
 	std::cout << clientSocket << " Received: " << msg << std::endl;
-	
 	if (msg.find("JOIN") != std::string::npos)
 	{
 		std::cout << "JOIN command" << std::endl;
+		// ajouter la creation du salon a ce moment la
+		Salon("salut");
+		Salon();
 	}
 	else if (msg.find("PING") != std::string::npos)
 	{

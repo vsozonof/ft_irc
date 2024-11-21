@@ -12,22 +12,21 @@
 
 class Salon
 {
-
 	public:
 		Salon(const Salon &src);
 		Salon& operator=(Salon const &rhs);
 		~Salon();
 
-        Salon(std::string name)
-        getName();
-        setName();
-        showMessage();
+        Salon(std::string name);
+        std::string getName();
+        void setName(std::string name);
+		int getNumberOfClient();
+        void showMessage();
+
 	private:
 		std::string		_Name;			// name du Salon
-	    int  numberOfClient;		// nombre de client
+	    int  			_numberOfClient;		// nombre de client
 		Salon();
-
-
 };
 
 #endif
