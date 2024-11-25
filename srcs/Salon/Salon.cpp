@@ -32,7 +32,7 @@ void Salon::setName(std::string name)
     this->_Name = name;
 }
 
-int Salon::getNumberOfClient()
+int *Salon::getNumberOfClient()
 {
     return this->_numberOfClient;
 }
