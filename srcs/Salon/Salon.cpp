@@ -5,16 +5,12 @@ Salon::Salon() {}
 Salon::Salon(const Salon &src)
 {
     _Name = src._Name;
-    _numberOfClient = src._numberOfClient;
 }
 
 Salon& Salon::operator=(Salon const &rhs)
 {
     if (this != &rhs)
-    {
         _Name = rhs._Name;
-        _numberOfClient = rhs._numberOfClient;
-    }
     return *this;
 }
 
@@ -32,9 +28,22 @@ void Salon::setName(std::string name)
     this->_Name = name;
 }
 
-int *Salon::getNumberOfClient()
+void Salon::increaseSocketClient(int socket)
 {
-    return this->_numberOfClient;
+    std::cout << "je rentre dans increase" << std::endl;
+    int i = 0;
+    while (_SocketClient[i])
+    {
+        std::cout << "voici les socket << " << _SocketClient  <<std::endl;
+        i++;
+    }
+    _SocketClient[i] = socket;
+    std::cout << "voici les socket << " << _SocketClient  <<std::endl;
+}
+
+int *Salon::getSocketClient()
+{
+    return _SocketClient;
 }
 
 void showMessage()

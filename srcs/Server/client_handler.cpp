@@ -80,7 +80,6 @@ void Server::setupNewClient(int clientSocket)
 	_clients[clientSocket].sendMsg(":127.0.0.1 001 test :Welcome to the IRC Network\r\n");
 }
 
-
 // ! Do-Client Action = fonction qui va gerer les cmd client, les messages...
 void Server::doClientAction(int clientSocket)
 {
@@ -107,6 +106,7 @@ void Server::doClientAction(int clientSocket)
 		msg = msg.erase(0, 6);
 		std::cout << "voici mon nouveau msg " << msg << std::endl; 
 		_salon = Salon(msg);
+		// _salon.increaseSocketClient(clientSocket);
 		//donc la en theorie: mon salon avec son nom est cree, je dois maintenant stocker
 		// les gens qui entrent dedans pour pouvoir leurs faire parvenir le message
 	}
@@ -124,22 +124,27 @@ void Server::doClientAction(int clientSocket)
 		// faire dire au chat le message, ca doit etre visible pour les autres
 		std::cout << "Unknown command" << std::endl;
 		_clients[clientSocket].sendMsg("Unknown command\r\n");
-		size_t it = 0;
-		int *tab = _salon.getNumberOfClient();
-		while (tab[it])
-		{
+		// if ()
+		// size_t it = 0;
+		// int *tab = _salon.getSocketClient();
+		// while (tab[it])
+		// {
+		// 	int bytes = send(tab[it], msg.c_str(), msg.size() + 1, 0);
+		// 	if (bytes == -1)
+		// 		throw std::runtime_error("Error sending message");
+		// }
+		// std::cout << "voici un client socket " << clientSocket << std::endl;
+		// size_t i = 0;
+		// while (i < _fds.size())
+		// {
+		// 	std::cout << "_fds[i].fd " << _fds[i].fd << std::endl;
+		// 	// int bytes = send(_client , "salut", 5 + 1, 0);
+		// 	// if (bytes == -1)
+		// 	// 	throw std::runtime_error("Error sending message");
+		// 	i++;
+		// }
 
-		}
-		std::cout << "voici un client socket " << clientSocket << std::endl;
-		size_t i = 0;
-		while (i < _fds.size())
-		{
-			std::cout << "_fds[i].fd " << _fds[i].fd << std::endl;
-			// int bytes = send(_client , "salut", 5 + 1, 0);
-			// if (bytes == -1)
-			// 	throw std::runtime_error("Error sending message");
-			i++;
-		}
+
 		std::cout << "fin affichage" << std::endl;
 		// i = 0;
 		// for (; _fds.size(); i++)

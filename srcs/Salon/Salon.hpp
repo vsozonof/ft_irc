@@ -19,7 +19,6 @@
 // le salon doit avoir un nom
 // -> mettre a jours les clients quand ils se connectent
 
-
 class Salon
 {
 	public:
@@ -31,12 +30,13 @@ class Salon
 
         std::string getName();
         void setName(std::string name);
-		int *getNumberOfClient();
+		void increaseSocketClient(int socket);
+		int *getSocketClient();
         void showMessage();
 
 	private:
 		std::string		_Name;			// name du Salon
-	    int  			*_numberOfClient;		// nombre de client
+	    int  			*_SocketClient;		// nombre de client
 };
 
 #endif
