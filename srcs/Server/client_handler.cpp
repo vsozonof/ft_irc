@@ -104,10 +104,16 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "JOIN command" << std::endl;
 		// ajouter la creation du salon a ce moment la
 		msg = msg.erase(0, 6);
-		std::cout << "voici mon nouveau msg " << msg << std::endl; 
-		_salon = Salon(msg);
-		// _salon.increaseSocketClient(clientSocket);
-		//donc la en theorie: mon salon avec son nom est cree, je dois maintenant stocker
+		size_t i = 0;
+		std::cout << "voici mon nouveau msg " << msg << std::endl;
+		Salon salon (msg);
+		_salon.insert(std::pair<int, Salon>(i, salon));
+		std::cout << "voici ma size " << _salon.size() << std::endl;
+		std::cout << "voici mon emplacement 0 " << _salon[i].getName() << std::endl;
+		std::cout << " tst sddaasddsaasdadsasasddasasass" << std::endl;
+		// std::map<int, Salon>::iterator it = _salon.begin();
+		_salon[i].increaseSocketClient(clientSocket);
+		// donc la en theorie: mon salon avec son nom est cree, je dois maintenant stocker
 		// les gens qui entrent dedans pour pouvoir leurs faire parvenir le message
 	}
 	else if (msg.find("PING") != std::string::npos)
@@ -117,49 +123,26 @@ void Server::doClientAction(int clientSocket)
 	}
 	else if (msg.find("QUIT") != std::string::npos)
 	{
-		std::cout << "QUIT command" << std::endl;	
+		std::cout << "QUIT command" << std::endl;
 	}
 	else
 	{
 		// faire dire au chat le message, ca doit etre visible pour les autres
 		std::cout << "Unknown command" << std::endl;
 		_clients[clientSocket].sendMsg("Unknown command\r\n");
-		// if ()
-		// size_t it = 0;
-		// int *tab = _salon.getSocketClient();
-		// while (tab[it])
-		// {
-		// 	int bytes = send(tab[it], msg.c_str(), msg.size() + 1, 0);
-		// 	if (bytes == -1)
-		// 		throw std::runtime_error("Error sending message");
-		// }
-		// std::cout << "voici un client socket " << clientSocket << std::endl;
-		// size_t i = 0;
-		// while (i < _fds.size())
-		// {
-		// 	std::cout << "_fds[i].fd " << _fds[i].fd << std::endl;
-		// 	// int bytes = send(_client , "salut", 5 + 1, 0);
-		// 	// if (bytes == -1)
-		// 	// 	throw std::runtime_error("Error sending message");
-		// 	i++;
-		// }
-
-
+		std::map<int, Salon> tab = getSalon();
+		std::map<int, Salon>::iterator it = tab.begin();
+		std::cout << "checkpoint " << std::endl;
+		if (it != tab.begin())
+		{
+			std::cout << "je rentre dans it != tab.begin()" << std::endl;
+			while (it != tab.begin())
+			{
+				int bytes = send(it != tab.begin(), msg.c_str(), msg.size() + 1, 0);
+				if (bytes == -1)
+					throw std::runtime_error("Error sending message");
+			}
+		}
 		std::cout << "fin affichage" << std::endl;
-		// i = 0;
-		// for (; _fds.size(); i++)
-		// {
-		// 	int bytes2 = send(_fds[i].fd , "salut", 5 + 1, 0);
-		// 	if (bytes2 == -1)
-		// 		throw std::runtime_error("Error sending message");
-		// }
-		// std::map<int, Client>::iterator client = _clients.begin();
-		// for (int w = 0; _clients[clientSocket].sendMsg("sa") ; w++)
-		// {
-		// 	int bytes2 = send(_socket, "salut", 5 + 1, 0);
-		// 	if (bytes2 == -1)
-		// 		throw std::runtime_error("Error sending message");
-		// }
 	}
-
 }

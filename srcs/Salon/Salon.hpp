@@ -35,7 +35,7 @@ class Salon
         void showMessage();
 
 	private:
-		std::string		_Name;			// name du Salon
+		std::string		_Name;				// name du Salon
 	    int  			*_SocketClient;		// nombre de client
 };
 

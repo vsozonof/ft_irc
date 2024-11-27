@@ -47,12 +47,12 @@ void Server::initServer()
 	std::cout << BOLD_GREEN << "⚙️  Ft_IRC: Server successfully initialized" << def << std::endl;
 }
 
-void Server::setSalon(Salon salon)
+void Server::setSalon(Salon salon, int i)
 {
-	this->_salon = salon;
+	this->_salon[i] = salon;
 }
 
-Salon Server::getSalon(void)
+std::map<int, Salon> Server::getSalon(void)
 {
 	return _salon;
 }
