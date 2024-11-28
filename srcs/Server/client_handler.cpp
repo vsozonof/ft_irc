@@ -106,13 +106,17 @@ void Server::doClientAction(int clientSocket)
 		msg = msg.erase(0, 6);
 		size_t i = 0;
 		std::cout << "voici mon nouveau msg " << msg << std::endl;
-		Salon salon (msg);
-		_salon.insert(std::pair<int, Salon>(i, salon));
-		std::cout << "voici ma size " << _salon.size() << std::endl;
+		Salon salon(msg);
+		setSalon(salon, 0);
+		std::cout << "voici ma size " << _salon.size() << "dsadafaddssd" << std::endl;
 		std::cout << "voici mon emplacement 0 " << _salon[i].getName() << std::endl;
 		std::cout << " tst sddaasddsaasdadsasasddasasass" << std::endl;
 		// std::map<int, Salon>::iterator it = _salon.begin();
+		std::cout << "voici mon clientsocket " << clientSocket << std::endl;
+		// std::vector<Salon>::iterator it = _salon.begin();
+		std::cout << "tmp" << std::endl;
 		_salon[i].increaseSocketClient(clientSocket);
+
 		// donc la en theorie: mon salon avec son nom est cree, je dois maintenant stocker
 		// les gens qui entrent dedans pour pouvoir leurs faire parvenir le message
 	}
@@ -130,13 +134,12 @@ void Server::doClientAction(int clientSocket)
 		// faire dire au chat le message, ca doit etre visible pour les autres
 		std::cout << "Unknown command" << std::endl;
 		_clients[clientSocket].sendMsg("Unknown command\r\n");
-		std::map<int, Salon> tab = getSalon();
-		std::map<int, Salon>::iterator it = tab.begin();
+		std::vector<Salon> tab = getSalon();
 		std::cout << "checkpoint " << std::endl;
-		if (it != tab.begin())
+		if (tab)
 		{
 			std::cout << "je rentre dans it != tab.begin()" << std::endl;
-			while (it != tab.begin())
+			while (it)
 			{
 				int bytes = send(it != tab.begin(), msg.c_str(), msg.size() + 1, 0);
 				if (bytes == -1)

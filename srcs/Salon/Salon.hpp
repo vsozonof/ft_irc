@@ -31,12 +31,12 @@ class Salon
         std::string getName();
         void setName(std::string name);
 		void increaseSocketClient(int socket);
-		int *getSocketClient();
+		std::vector<int> getSocketClient();
         void showMessage();
 
 	private:
-		std::string		_Name;				// name du Salon
-	    int  			*_SocketClient;		// nombre de client
+		std::string						_Name;				// name du Salon
+		std::vector<int>  			_SocketClient;		// nombre de client
 };
 
 #endif

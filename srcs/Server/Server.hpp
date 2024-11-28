@@ -28,7 +28,7 @@ class Server
 		int								_socket;		// Socket du serveur
 		std::map<int, Client>			_clients;		// Liste des clients connectés
 		std::vector<pollfd>				_fds;			// Liste des fds des clients connectés
-		std::map<int, Salon>			_salon;			// Liste des salons cree
+		std::vector<Salon>				_salon;			// Liste des salons cree
 		// std::vector<Salon>::iterator	_salonList;		// iterateur pour les salons crees
 
 	public:
@@ -52,7 +52,7 @@ class Server
 		void broadcastMessage(std::string const &message, int clientSocket);
 
 		void setSalon(Salon salon, int i);
-		std::map<int, Salon> getSalon(void);
+		std::vector<Salon> getSalon(void);
 
 };
 

@@ -5,18 +5,25 @@ Salon::Salon() {}
 Salon::Salon(const Salon &src)
 {
     _Name = src._Name;
+    _SocketClient = src._SocketClient;
 }
 
 Salon& Salon::operator=(Salon const &rhs)
 {
     if (this != &rhs)
+    {
         _Name = rhs._Name;
+        _SocketClient = rhs._SocketClient;
+    }
     return *this;
 }
 
 Salon::~Salon() {}
 
-Salon::Salon(std::string name) : _Name(name) {}
+Salon::Salon(std::string name) : _Name(name), _SocketClient(0)
+{
+    std::cout << "voici donc mon Name " << _Name << std::endl;
+}
 
 std::string Salon::getName()
 {
@@ -30,25 +37,12 @@ void Salon::setName(std::string name)
 
 void Salon::increaseSocketClient(int socket)
 {
-    std::cout << "je rentre dans increase ";
-    int i = 0;
-    if (!_SocketClient)
-    {
-        std::cout << "je passe dans le if" << std::endl;
-        _SocketClient[i] = socket;
-        return;
-    }
+    std::cout << "je rentre dans increase ghghhkghgghbnvnmghfgvbnghvm ";
     std::cout << "premier if passe" << std::endl;
-    while (_SocketClient[i])
-    {
-        std::cout << "voici les socket << " << _SocketClient  <<std::endl;
-        i++;
-    }
-    _SocketClient[i] = socket;
-    std::cout << "voici les socket << " << _SocketClient  <<std::endl;
+    _SocketClient.push_back(socket);
 }
 
-int *Salon::getSocketClient()
+std::vector<int> Salon::getSocketClient()
 {
     return _SocketClient;
 }

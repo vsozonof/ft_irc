@@ -49,10 +49,12 @@ void Server::initServer()
 
 void Server::setSalon(Salon salon, int i)
 {
-	this->_salon[i] = salon;
+	(void)i;
+	_salon.push_back(salon);
+	std::cout << "dsajkldsdjklsdajkldaskjldasjkladsljkadsljksadjlksa" << std::endl;
 }
 
-std::map<int, Salon> Server::getSalon(void)
+std::vector<Salon> Server::getSalon(void)
 {
 	return _salon;
 }
