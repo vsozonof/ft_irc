@@ -136,12 +136,15 @@ void Server::doClientAction(int clientSocket)
 		_clients[clientSocket].sendMsg("Unknown command\r\n");
 		std::vector<Salon> tab = getSalon();
 		std::cout << "checkpoint " << std::endl;
-		if (tab)
+		std::cout << "exemple " << tab.size() << std::endl;
+		if (tab.size() > 0)
 		{
 			std::cout << "je rentre dans it != tab.begin()" << std::endl;
-			while (it)
+			int i = 0;
+			std::vector<int> tmp = tab[i].getSocketClient();
+			while (tmp[i])
 			{
-				int bytes = send(it != tab.begin(), msg.c_str(), msg.size() + 1, 0);
+				int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
 				if (bytes == -1)
 					throw std::runtime_error("Error sending message");
 			}
