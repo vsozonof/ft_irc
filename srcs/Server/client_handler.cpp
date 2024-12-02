@@ -139,16 +139,23 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "exemple " << tab.size() << std::endl;
 		if (tab.size() > 0)
 		{
+			std::cout << "voici le message "
 			std::cout << "je rentre dans it != tab.begin()" << std::endl;
 			int i = 0;
 			std::vector<int> tmp = tab[i].getSocketClient();
 			while (tmp[i])
 			{
+				std::cout << "voici les users " << tmp[i] << std::endl;
 				int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
 				if (bytes == -1)
 					throw std::runtime_error("Error sending message");
+				i++;
 			}
 		}
 		std::cout << "fin affichage" << std::endl;
 	}
 }
+
+// schema de base	 envoyeur PRIVMSG receveur
+// donc pour un serv Envoyeur PRIVMSG serv
+// pour mp 			 Envoyeur PRIVmsg serv

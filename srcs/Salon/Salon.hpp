@@ -37,7 +37,6 @@ class Salon
 	private:
 		std::string						_Name;				// name du Salon
 		std::vector<int>				_SocketClient;		// nombre de client
-		int 							_verif;
 };
 
 #endif
