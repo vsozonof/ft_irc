@@ -139,7 +139,7 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "exemple " << tab.size() << std::endl;
 		if (tab.size() > 0)
 		{
-			std::cout << "voici le message "
+			std::cout << "voici le message " << msg << std::endl;
 			std::cout << "je rentre dans it != tab.begin()" << std::endl;
 			int i = 0;
 			std::vector<int> tmp = tab[i].getSocketClient();
@@ -155,6 +155,13 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "fin affichage" << std::endl;
 	}
 }
+
+// Donc je dois cree mon serv
+// Depuis un client, envoyer un message
+// Le message envoyer doit ensuite etre repris par le serv pour etre envoyer
+// a tous le monde
+
+// la j'ai PRIVMSG channel *le message*
 
 // schema de base	 envoyeur PRIVMSG receveur
 // donc pour un serv Envoyeur PRIVMSG serv
