@@ -35,6 +35,16 @@ void Salon::setName(std::string name)
     this->_Name = name;
 }
 
+void Salon::setMessage(std::string msg)
+{
+    _message = msg;
+}
+
+std::string Salon::getMessage(void)
+{
+    return _message;
+}
+
 void Salon::increaseSocketClient(int socket)
 {
     _SocketClient.push_back(socket);

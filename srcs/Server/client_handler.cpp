@@ -133,33 +133,34 @@ void Server::doClientAction(int clientSocket)
 	{
 		// faire dire au chat le message, ca doit etre visible pour les autres
 		std::cout << "Unknown command" << std::endl;
-		_clients[clientSocket].sendMsg("Unknown command\r\n");
-		std::vector<Salon> tab = getSalon();
-		std::cout << "checkpoint " << std::endl;
-		std::cout << "exemple " << tab.size() << std::endl;
-		if (tab.size() > 0)
-		{
-			std::cout << "voici le message " << msg << std::endl;
-			std::cout << "je rentre dans it != tab.begin()" << std::endl;
-			int i = 0;
-			std::vector<int> tmp = tab[i].getSocketClient();
-			while (tmp[i])
-			{
-				std::cout << "voici les users " << tmp[i] << std::endl;
-				int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
-				if (bytes == -1)
-					throw std::runtime_error("Error sending message");
-				i++;
-			}
-		}
+		// _clients[clientSocket].sendMsg("Unknown command\r\n");
+		// std::vector<Salon> tab = getSalon();
+		// std::cout << "checkpoint " << std::endl;
+		// std::cout << "exemple " << tab.size() << std::endl;
+		// if (tab.size() > 0)
+		// {
+		// 	std::cout << "voici le message " << msg << std::endl;
+		// 	std::cout << "je rentre dans it != tab.begin()" << std::endl;
+		// 	int i = 0;
+		// 	std::vector<int> tmp = tab[i].getSocketClient();
+		// 	while (tmp[i])
+		// 	{
+		// 		std::cout << "voici les users et message diffuser: " << tmp[i] << " " << msg.c_str() << std::endl;
+		// 		int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
+		// 		if (bytes == -1)
+		// 			throw std::runtime_error("Error sending message");
+		// 		i++;
+		// 	}
+		// 	// envoyer le message du serveur vers tous le monde
+		// }
 		std::cout << "fin affichage" << std::endl;
 	}
 }
 
-// Donc je dois cree mon serv
-// Depuis un client, envoyer un message
-// Le message envoyer doit ensuite etre repris par le serv pour etre envoyer
-// a tous le monde
+// Donc je dois cree mon serv 									-> fait
+// Depuis un client, envoyer un message							-> fait
+// Message recu par le serveur									-> fait
+// Le serveur doit ensuite envoyer le message a tous le monde
 
 // la j'ai PRIVMSG channel *le message*
 

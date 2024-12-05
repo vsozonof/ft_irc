@@ -30,6 +30,8 @@ class Salon
 
         std::string getName();
         void setName(std::string name);
+		void setMessage(std::string msg);
+		std::string getMessage(void);
 		void increaseSocketClient(int socket);
 		std::vector<int> getSocketClient();
         void showMessage();
@@ -37,6 +39,7 @@ class Salon
 	private:
 		std::string						_Name;				// name du Salon
 		std::vector<int>				_SocketClient;		// nombre de client
+		std::string						_message;
 };
 
 #endif
