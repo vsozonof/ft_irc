@@ -73,11 +73,13 @@ void Server::setupNewClient(int clientSocket)
 		}
 	}
 
+	std::cout << "premier substr " << std::endl;
 	if (checkUserInfos(msg.substr((msg.find("PASS") + 5), _password.length()),
 		msg.substr((msg.find("NICK"), msg.find("USER") - msg.find("NICK")))))
 	{
 		throw std::runtime_error("User infos not correct");
 	}
+	std::cout << "second substr " << std::endl;
 	_clients[clientSocket].sendMsg(":127.0.0.1 001 test :Welcome to the IRC Network\r\n");
 }
 
@@ -154,22 +156,32 @@ void Server::doClientAction(int clientSocket)
 				std::string serv_name;
 				std::string receveur;
 				std::cout << "voici mes taille pos " << pos << " msg " << msg.size() << std::endl; 
-				std::string message = msg.substr(pos);
-				pos = message.find(':');
-				serv_name = message.substr(0, pos);
-				message = message.erase(0, pos);
-				std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
-				std::cout << "donc voici tmp2 " << serv_name << std::endl;
-				std::istringstream(receveur) >> tmp[i];
-				final = serv_name + "PRIVMSG " + message;
-				std::cout << final << std::endl;
+				std::cout << "substr 1 " << std::endl; // un qui ne fonctionne pas ici
+				try
+				{
+					std::string message = msg.substr(pos);
+					pos = message.find(':');
+					std::cout << "substr 2 " << std::endl;
+					serv_name = message.substr(0, pos);
+					std::cout << "substr 3 " << std::endl;
+					message = message.erase(0, pos);
+					std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
+					std::cout << "donc voici tmp2 " << serv_name << std::endl;
+					std::istringstream(receveur) >> tmp[i];
+					final = serv_name + "PRIVMSG " + message;
+					std::cout << final << std::endl;
+				}
+				catch(std::exception)
+				{
+					throw std::runtime_error("a problem happend when sending message");
+				}
 				// donc la j'ai mon message, le nom du serv, il me manque qu'a assembler tout
 				// pour faire serv PRIVMSG receveur message
 				// message set serv_name set
 				// PRIVMSG doit etre mis a la mano
 				// manque plus que le receveur
 				std::cout << std::endl << std::endl;
-				int bytes = send(tmp[i], final.c_str(), msg.size() + 1, 0);
+				int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
 				if (bytes == -1)
 					throw std::runtime_error("Error sending message");
 				std::cout << std::endl;
