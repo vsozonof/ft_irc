@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <stdlib.h>
 
 void Server::handleClient()
 {
@@ -133,29 +134,55 @@ void Server::doClientAction(int clientSocket)
 	{
 		// faire dire au chat le message, ca doit etre visible pour les autres
 		std::cout << "Unknown command" << std::endl;
-		// _clients[clientSocket].sendMsg("Unknown command\r\n");
-		// std::vector<Salon> tab = getSalon();
-		// std::cout << "checkpoint " << std::endl;
-		// std::cout << "exemple " << tab.size() << std::endl;
-		// if (tab.size() > 0)
-		// {
-		// 	std::cout << "voici le message " << msg << std::endl;
-		// 	std::cout << "je rentre dans it != tab.begin()" << std::endl;
-		// 	int i = 0;
-		// 	std::vector<int> tmp = tab[i].getSocketClient();
-		// 	while (tmp[i])
-		// 	{
-		// 		std::cout << "voici les users et message diffuser: " << tmp[i] << " " << msg.c_str() << std::endl;
-		// 		int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
-		// 		if (bytes == -1)
-		// 			throw std::runtime_error("Error sending message");
-		// 		i++;
-		// 	}
-		// 	// envoyer le message du serveur vers tous le monde
-		// }
+		_clients[clientSocket].sendMsg("Unknown command\r\n");
+		std::vector<Salon> tab = getSalon();
+		std::cout << "checkpoint " << std::endl;
+		std::cout << "exemple " << tab.size() << std::endl;
+		if (tab.size() > 0)
+		{
+			std::cout << "voici le message " << msg << std::endl;
+			std::cout << "je rentre dans it != tab.begin()" << std::endl;
+			int i = 0;
+			std::vector<int> tmp = tab[i].getSocketClient();
+			std::cout << "======";
+			while (tmp[i])
+			{
+				std::cout << "voici les users et message diffuser: " << tmp[i] << " " << msg.c_str() << std::endl;
+				size_t pos = msg.find('#');
+				std::cout << std::endl << std::endl;
+				std::string final;
+				std::string serv_name;
+				std::string receveur;
+				std::cout << "voici mes taille pos " << pos << " msg " << msg.size() << std::endl; 
+				std::string message = msg.substr(pos);
+				pos = message.find(':');
+				serv_name = message.substr(0, pos);
+				message = message.erase(0, pos);
+				std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
+				std::cout << "donc voici tmp2 " << serv_name << std::endl;
+				std::istringstream(receveur) >> tmp[i];
+				final = serv_name + "PRIVMSG " + message;
+				std::cout << final << std::endl;
+				// donc la j'ai mon message, le nom du serv, il me manque qu'a assembler tout
+				// pour faire serv PRIVMSG receveur message
+				// message set serv_name set
+				// PRIVMSG doit etre mis a la mano
+				// manque plus que le receveur
+				std::cout << std::endl << std::endl;
+				int bytes = send(tmp[i], final.c_str(), msg.size() + 1, 0);
+				if (bytes == -1)
+					throw std::runtime_error("Error sending message");
+				std::cout << std::endl;
+				i++;
+			}
+			std::cout << "======" << std::endl;
+			// envoyer le message du serveur vers tous le monde
+		}
 		std::cout << "fin affichage" << std::endl;
 	}
 }
+
+//essayer de faire serv PRIVMSG receveur : message
 
 // Donc je dois cree mon serv 									-> fait
 // Depuis un client, envoyer un message							-> fait
@@ -163,6 +190,9 @@ void Server::doClientAction(int clientSocket)
 // Le serveur doit ensuite envoyer le message a tous le monde
 
 // la j'ai PRIVMSG channel *le message*
+
+// le probleme viens peut etre du formatage de ma commande
+// -> utiliser les schema ci dessous
 
 // schema de base	 envoyeur PRIVMSG receveur
 // donc pour un serv Envoyeur PRIVMSG serv

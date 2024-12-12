@@ -13,6 +13,7 @@
 #include <poll.h>
 #include <cstdio>
 #include <netdb.h>
+#include <bits/stdc++.h>
 
 //classe salon
 //-> doit avoir plusieurs clients qui pourront s'envoyer des messages
