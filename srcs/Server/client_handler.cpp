@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/11/12 17:17:10 by vsozonof         ###   ########.fr       */
+/*   Updated: 2024/12/14 13:15:25 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,19 @@ void Server::setupNewClient(int clientSocket)
 	}
 
 	std::cout << "premier substr " << std::endl;
-	if (checkUserInfos(msg.substr((msg.find("PASS") + 5), _password.length()),
-		msg.substr((msg.find("NICK"), msg.find("USER") - msg.find("NICK")))))
+	// ! Attention : quand find() fail, il retourne 18446744073709551615, ce qui fait peter le substr
+	// ! Il faut donc verifier si find() a trouve qqch avant de faire le substr
+	// ! Sinon, on peut faire find() + 1 pour eviter le probleme
+	// ! J'ai aussi modif les parentheses dans mon if, pour que ca soit plus lisible
+	// ! Voila tout, mon ami
+	size_t pos = msg.find("PASS");
+	size_t pos2 = msg.find("NICK");
+	size_t pos3 = msg.find("USER");
+	std::cout << "pos " << pos << " pos2 " << pos2 << " pos3 " << pos3 << std::endl;
+
+	if (checkUserInfos(
+		msg.substr((msg.find("PASS") + 5), _password.length()),
+		msg.substr(msg.find("NICK"), msg.find("USER") - msg.find("NICK"))))
 	{
 		throw std::runtime_error("User infos not correct");
 	}
@@ -171,7 +182,7 @@ void Server::doClientAction(int clientSocket)
 					final = serv_name + "PRIVMSG " + message;
 					std::cout << final << std::endl;
 				}
-				catch(std::exception)
+				catch(std::exception &e)
 				{
 					throw std::runtime_error("a problem happend when sending message");
 				}
