@@ -151,6 +151,8 @@ void Server::doClientAction(int clientSocket)
 			{
 				std::cout << "voici les users et message diffuser: " << tmp[i] << " " << msg.c_str() << std::endl;
 				size_t pos = msg.find('#');
+				if (pos > 10000000)
+					return ;
 				std::cout << std::endl << std::endl;
 				std::string final;
 				std::string serv_name;
@@ -170,6 +172,9 @@ void Server::doClientAction(int clientSocket)
 					std::istringstream(receveur) >> tmp[i];
 					final = serv_name + "PRIVMSG " + message;
 					std::cout << final << std::endl;
+					int bytes = send(tmp[i], final.c_str(), msg.size() + 1, 0);
+					if (bytes == -1)
+						throw std::runtime_error("Error sending message");
 				}
 				catch(std::exception)
 				{
@@ -181,9 +186,9 @@ void Server::doClientAction(int clientSocket)
 				// PRIVMSG doit etre mis a la mano
 				// manque plus que le receveur
 				std::cout << std::endl << std::endl;
-				int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
-				if (bytes == -1)
-					throw std::runtime_error("Error sending message");
+				// int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
+				// if (bytes == -1)
+				// 	throw std::runtime_error("Error sending message");
 				std::cout << std::endl;
 				i++;
 			}
