@@ -68,6 +68,8 @@ std::string Client::getUsername() const
 void Client::sendMsg(std::string const &msg)
 {
 	std::cout << _socket << " Sending: " << msg << std::endl;
+	// surement ici pour transmettre le message pour plusieurs client
+	// transmettre tous les send avec des socket differents
 	int bytes = send(_socket, msg.c_str(), msg.size() + 1, 0);
 	if (bytes == -1)
 		throw std::runtime_error("Error sending message");
@@ -77,13 +79,13 @@ std::string Client::receiveMsg()
 {
 	char buffer[1024];
 	int bytesRecv = recv(_socket, buffer, sizeof(buffer), 0);
-	
+	// surement ici pour recuperer le message pour plusieurs client
 	if (bytesRecv <= 0)
 	{
 		close(_socket);
 		return ("EMPTY MSG");
 	}
-	
+	// std::cout << "je viens de recevoir un message";
 	buffer[bytesRecv - 1] = '\0';
 	return (std::string(buffer));
 }

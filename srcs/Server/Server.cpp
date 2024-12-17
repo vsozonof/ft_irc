@@ -24,7 +24,7 @@ Server::~Server()
 }
 
 void Server::initServer()
-{	
+{
 	_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socket == -1)
 		throw std::runtime_error(BOLD_RED "Socket creation failure" def);
@@ -44,8 +44,19 @@ void Server::initServer()
 	listening_fd.fd = _socket;
 	listening_fd.events = POLLIN;
 	_fds.push_back(listening_fd);
-
 	std::cout << BOLD_GREEN << "⚙️  Ft_IRC: Server successfully initialized" << def << std::endl;
+}
+
+void Server::setSalon(Salon salon, int i)
+{
+	(void)i;
+	_salon.push_back(salon);
+	std::cout << "dsajkldsdjklsdajkldaskjldasjkladsljkadsljksadjlksa" << std::endl;
+}
+
+std::vector<Salon> Server::getSalon(void)
+{
+	return _salon;
 }
 
 void Server::run()

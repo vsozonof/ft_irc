@@ -26,6 +26,5 @@ int main (int argc, char **argv)
 		std::cout << BOLD_RED << "⚠️  FATAL Error: " << e.what() << def << std::endl;
 	}
 
-	
 	return (0);
 }

@@ -15,8 +15,10 @@
 
 #include "../../includes/inc.hpp"
 #include "../Client/Client.hpp"
+#include "../Salon/Salon.hpp"
 
 class Client;
+class Salon;
 
 class Server
 {
@@ -26,6 +28,8 @@ class Server
 		int								_socket;		// Socket du serveur
 		std::map<int, Client>			_clients;		// Liste des clients connectés
 		std::vector<pollfd>				_fds;			// Liste des fds des clients connectés
+		std::vector<Salon>				_salon;			// Liste des salons cree
+		// std::vector<Salon>::iterator	_salonList;		// iterateur pour les salons crees
 
 	public:
 		Server(unsigned int port, std::string password);
@@ -46,7 +50,10 @@ class Server
 
 		void sendWelcome(int clientSocket);
 		void broadcastMessage(std::string const &message, int clientSocket);
-		
+
+		void setSalon(Salon salon, int i);
+		std::vector<Salon> getSalon(void);
+
 };
 
 #endif
