@@ -97,7 +97,7 @@ void Server::setupNewClient(int clientSocket)
 // ! Do-Client Action = fonction qui va gerer les cmd client, les messages...
 void Server::doClientAction(int clientSocket)
 {
-	std::cout << "Doing client action " << clientSocket << std::endl;
+	std::cout << std::endl << "===== Doing client action " << clientSocket << std::endl;
 	char buffer[1024];
     int bytesRecv = recv(clientSocket, buffer, sizeof(buffer), 0);
 
@@ -149,64 +149,87 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "Unknown command" << std::endl;
 		_clients[clientSocket].sendMsg("Unknown command\r\n");
 		std::vector<Salon> tab = getSalon();
-		std::cout << "checkpoint " << std::endl;
 		std::cout << "exemple " << tab.size() << std::endl;
 		if (tab.size() > 0)
 		{
 			std::cout << "voici le message " << msg << std::endl;
 			std::cout << "je rentre dans it != tab.begin()" << std::endl;
-			int i = 0;
-			std::vector<int> tmp = tab[i].getSocketClient();
-			std::cout << "======";
-			while (tmp[i])
-			{
-				std::cout << "voici les users et message diffuser: " << tmp[i] << " " << msg.c_str() << std::endl;
-				size_t pos = msg.find('#');
-				if (pos > 10000000)
-					return ;
-				std::cout << std::endl << std::endl;
-				std::string final;
-				std::string serv_name;
-				std::string receveur;
-				std::cout << "voici mes taille pos " << pos << " msg " << msg.size() << std::endl; 
-				std::cout << "substr 1 " << std::endl; // un qui ne fonctionne pas ici
-				try
-				{
-					std::string message = msg.substr(pos);
-					pos = message.find(':');
-					std::cout << "substr 2 " << std::endl;
-					serv_name = message.substr(0, pos);
-					std::cout << "substr 3 " << std::endl;
-					message = message.erase(0, pos);
-					std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
-					std::cout << "donc voici tmp2 " << serv_name << std::endl;
-					std::istringstream(receveur) >> tmp[i];
-					final = serv_name + "PRIVMSG " + message;
-					std::cout << final << std::endl;
-					int bytes = send(tmp[i], final.c_str(), msg.size() + 1, 0);
-					if (bytes == -1)
-						throw std::runtime_error("Error sending message");
-				}
-				catch(std::exception &e)
-				{
-					throw std::runtime_error("a problem happend when sending message");
-				}
-				// donc la j'ai mon message, le nom du serv, il me manque qu'a assembler tout
-				// pour faire serv PRIVMSG receveur message
-				// message set serv_name set
-				// PRIVMSG doit etre mis a la mano
-				// manque plus que le receveur
-				std::cout << std::endl << std::endl;
-				// int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
-				// if (bytes == -1)
-				// 	throw std::runtime_error("Error sending message");
-				std::cout << std::endl;
-				i++;
-			}
+			// while (i < tmp.size())
+			// {
+			// 	tmp = tab[i].getSocketClient();
+			// 	std::cout << "voici tous les sockets des clients " << tmp[i] << std::endl;
+			// 	std::string msg_final = msg;
+			// 	msg_final.replace("sa", "4");
+			// 	send(tmp[i], msg.c_str(), msg.size() + 1, 0);
+			// 	i++;
+			// }
+			// std::cout << "======";
+
+			// 1[celui envois] 2[PRIVMSG] 3[celui qui recoit] 4[puis message]
+			// <no>
+			// light75018
+			msg_client(clientSocket, tab, msg);
 			std::cout << "======" << std::endl;
 			// envoyer le message du serveur vers tous le monde
 		}
 		std::cout << "fin affichage" << std::endl;
+	}
+}
+
+void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string msg)
+{
+	std::cout << "debut de la methode de msg_client" << std::endl;
+	std::string envoyeur;
+	std::string receveur;
+	std::string final;
+	int i = 0;
+	std::vector<int> tmp = tab[i].getSocketClient();
+	//faire le brouillon du message ou il ne reste que les receveurs a ajouter
+
+	std::cout << "fin des definitions" << std::endl;
+	std::stringstream nb;
+	nb << clientSocket;
+	envoyeur = nb.str();
+	size_t pos = msg.find('#');
+	std::string message = msg.substr(pos);
+	pos = message.find(':');
+	message = message.erase(0, pos);
+	std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
+	while (tmp[i])
+	{
+		std::cout << "voici les users et message diffuser: " << tmp[i] << " " << msg.c_str() << std::endl;
+		if (pos > 10000000)
+			return ;
+		std::cout << std::endl << std::endl;
+		std::cout << "voici mes taille pos " << pos << " msg " << msg.size() << std::endl; 
+		std::cout << "substr 1 " << std::endl; // un qui ne fonctionne pas ici
+		std::cout << "voici le message " << msg << std::endl;
+		try
+		{
+			std::stringstream nb_recev;
+			nb_recev << tmp[i];
+			receveur = nb_recev.str();
+			final = envoyeur + " PRIVMSG " + receveur + message;
+			std::cout << "voici ma version final " << final << std::endl;
+			int bytes = send(tmp[i], final.c_str(), msg.size() + 1, 0);
+			if (bytes == -1)
+				throw std::runtime_error("Error sending message");
+		}
+		catch(std::exception &e)
+		{
+			throw std::runtime_error("a problem happend when sending message");
+		}
+		// donc la j'ai mon message, le nom du serv, il me manque qu'a assembler tout
+		// pour faire serv PRIVMSG receveur message
+		// message set serv_name set
+		// PRIVMSG doit etre mis a la mano
+		// manque plus que le receveur
+		std::cout << std::endl << std::endl;
+		// int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
+		// if (bytes == -1)
+		// 	throw std::runtime_error("Error sending message");
+		std::cout << std::endl;
+		i++;
 	}
 }
 

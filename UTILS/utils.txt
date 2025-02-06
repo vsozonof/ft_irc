@@ -33,3 +33,7 @@ delimiter for the channel mask.  Channel names are case insensitive.
 
 -> Je dois aussi faire en sorte qu'a chaque fois qu'une personne
 envois un message les autres le recoivent
+
+
+pour la partie de Theo, si vous avez un problem avec l'une de mes ligne,
+mettez en commentaire la le ligne 149 a 220

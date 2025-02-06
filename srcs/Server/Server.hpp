@@ -53,6 +53,8 @@ class Server
 
 		void setSalon(Salon salon, int i);
 		std::vector<Salon> getSalon(void);
+		
+		void msg_client(int clientSocket, std::vector<Salon> tab, std::string msg);
 
 };
 
