@@ -60,3 +60,15 @@ void showMessage()
     // faire circuler le message
     std::cout << "je fais circuler le message" << std::endl;
 }
+
+std::vector<Client> Salon::get_client(int ClientSocket)
+{
+
+    return _client;
+}
+
+void Salon::set_client(Client client)
+{
+    int i = _client.size();
+    this->_client[i] = client;
+}

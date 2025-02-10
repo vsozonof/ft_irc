@@ -14,11 +14,14 @@
 #include <cstdio>
 #include <netdb.h>
 #include <bits/stdc++.h>
+#include "../Client/Client.hpp"
 
 //classe salon
 //-> doit avoir plusieurs clients qui pourront s'envoyer des messages
 // le salon doit avoir un nom
 // -> mettre a jours les clients quand ils se connectent
+
+class Client;
 
 class Salon
 {
@@ -36,11 +39,15 @@ class Salon
 		void increaseSocketClient(int socket);
 		std::vector<int> getSocketClient();
         void showMessage();
+		std::vector<Client> get_client(int ClientSocket);
+		void set_client(Client client);
+
 
 	private:
 		std::string						_Name;				// name du Salon
 		std::vector<int>				_SocketClient;		// nombre de client
 		std::string						_message;
+		std::vector<Client>							_client;
 };
 
 #endif

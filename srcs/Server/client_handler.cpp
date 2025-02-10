@@ -187,11 +187,24 @@ void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string ms
 	//faire le brouillon du message ou il ne reste que les receveurs a ajouter
 
 	std::cout << "fin des definitions" << std::endl;
-	std::stringstream nb;
-	nb << clientSocket;
-	envoyeur = nb.str();
+	// std::stringstream nb;
+	(void)clientSocket;
+	// nb << clientSocket;
+	// envoyeur = nb.str();
+	envoyeur = tab[i].getName();
+	std::vector<Client> tmp2 = tab[i].get_client(clientSocket);
+	tmp2.
+	Client client = tab[i].get_client(clientSocket);
+	envoyeur = client.getNickname();
+	std::cout << "ALOOOOOOOOOOOOOOOOOOOOOO " << tab[i].getName();
+	std::cout << "voici envoyeur " << envoyeur;
 	size_t pos = msg.find('#');
-	std::string message = msg.substr(pos);
+	std::string message;
+	if (pos < 2147483647)
+		message = msg.substr(pos);
+	else
+		return ;
+	std::cout << "premier substr dans msg_client" << std::endl;
 	pos = message.find(':');
 	message = message.erase(0, pos);
 	std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
@@ -202,15 +215,18 @@ void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string ms
 			return ;
 		std::cout << std::endl << std::endl;
 		std::cout << "voici mes taille pos " << pos << " msg " << msg.size() << std::endl; 
-		std::cout << "substr 1 " << std::endl; // un qui ne fonctionne pas ici
 		std::cout << "voici le message " << msg << std::endl;
 		try
 		{
+			std::cout << "je suis dans le try and catch" << std::endl;
 			std::stringstream nb_recev;
 			nb_recev << tmp[i];
 			receveur = nb_recev.str();
-			final = envoyeur + " PRIVMSG " + receveur + message;
-			std::cout << "voici ma version final " << final << std::endl;
+			std::cout << "dasdsasd" << std::endl;
+			final = envoyeur + " PRIVMSG " + receveur + " " + message;
+			std::cout << "dsadasdasasdasdasddsadsasdsdassa" << std::endl;
+			std::cout << final << std::endl;
+			std::cout << "czxxxxxxxxxxxxxxxxxxdasdsasd" << std::endl;
 			int bytes = send(tmp[i], final.c_str(), msg.size() + 1, 0);
 			if (bytes == -1)
 				throw std::runtime_error("Error sending message");
