@@ -37,17 +37,17 @@ class Salon
 		void setMessage(std::string msg);
 		std::string getMessage(void);
 		void increaseSocketClient(int socket);
-		std::vector<int> getSocketClient();
         void showMessage();
-		std::vector<Client> get_client(int ClientSocket);
+		Client get_client(int ClientSocket);
 		void set_client(Client client);
+		void show_list_client();
 
 
 	private:
 		std::string						_Name;				// name du Salon
 		std::vector<int>				_SocketClient;		// nombre de client
 		std::string						_message;
-		std::vector<Client>							_client;
+		std::map<int, Client>			_clients;
 };
 
 #endif

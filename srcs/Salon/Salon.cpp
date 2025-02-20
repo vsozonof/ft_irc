@@ -50,25 +50,37 @@ void Salon::increaseSocketClient(int socket)
     _SocketClient.push_back(socket);
 }
 
-std::vector<int> Salon::getSocketClient()
-{
-    return _SocketClient;
-}
-
 void showMessage()
 {
     // faire circuler le message
     std::cout << "je fais circuler le message" << std::endl;
 }
 
-std::vector<Client> Salon::get_client(int ClientSocket)
+// get_client doit pouvoir parcourir la base de donnees des clients connecter dans le salon
+// et renvoyer le nom qui client qui possede le ClientSocket passer en parametre
+Client Salon::get_client(int ClientSocket)
 {
-
-    return _client;
+    int i = 0;
+    while (ClientSocket != this->_clients[i].getSocket())
+        i++;
+    
+    return _clients[i];
 }
 
 void Salon::set_client(Client client)
 {
-    int i = _client.size();
-    this->_client[i] = client;
+    int i = _clients.size();
+    this->_clients[i] = client;
+}
+
+void Salon::show_list_client()
+{
+    std::cout << "here is clients list " << std::endl;
+    int len = this->_clients.size();
+    while (len > 0)
+    {
+        std::cout << this->_clients[len].getNickname();
+        std::cout << this->_clients[len].getUsername();
+        len--;
+    }
 }

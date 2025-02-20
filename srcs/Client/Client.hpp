@@ -23,8 +23,8 @@ class Client
 		std::string _nickname;		// Pseudo du client
 		std::string _username;		// Username du client
 		std::string _password;		// Mot de passe du client
-		
-		
+
+
 
 	public:
 		int				getSocket() const;

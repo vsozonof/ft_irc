@@ -130,6 +130,7 @@ void Server::doClientAction(int clientSocket)
 		// std::vector<Salon>::iterator it = _salon.begin();
 		std::cout << "tmp" << std::endl;
 		_salon[i].increaseSocketClient(clientSocket);
+		this->clients[]; // trouver le client qui a fait cette commande
 
 		// donc la en theorie: mon salon avec son nom est cree, je dois maintenant stocker
 		// les gens qui entrent dedans pour pouvoir leurs faire parvenir le message
@@ -182,22 +183,25 @@ void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string ms
 	std::string envoyeur;
 	std::string receveur;
 	std::string final;
-	int i = 0;
-	std::vector<int> tmp = tab[i].getSocketClient();
+	unsigned long i = 0;
 	//faire le brouillon du message ou il ne reste que les receveurs a ajouter
+	// on decoupe etape par etape
+
+
 
 	std::cout << "fin des definitions" << std::endl;
-	// std::stringstream nb;
 	(void)clientSocket;
-	// nb << clientSocket;
-	// envoyeur = nb.str();
+	(void)msg;
 	envoyeur = tab[i].getName();
-	std::vector<Client> tmp2 = tab[i].get_client(clientSocket);
-	tmp2.
+	std::cout << "voici mon salon " << tab[i].getName() << std::endl; // le salon a le bon nom
+	// Salon salon = tab[i];
+	tab[i].show_list_client();
+	std::cout << "nouveau test " << std::endl;
+	std::cout << "par exemple " << tab[i].getName() << " mais encore ";
 	Client client = tab[i].get_client(clientSocket);
 	envoyeur = client.getNickname();
-	std::cout << "ALOOOOOOOOOOOOOOOOOOOOOO " << tab[i].getName();
 	std::cout << "voici envoyeur " << envoyeur;
+	// std::cout << "ALOOOOOOOOOOOOOOOOOOOOOO " << tab[i].getName();
 	size_t pos = msg.find('#');
 	std::string message;
 	if (pos < 2147483647)
@@ -205,36 +209,37 @@ void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string ms
 	else
 		return ;
 	std::cout << "premier substr dans msg_client" << std::endl;
-	pos = message.find(':');
-	message = message.erase(0, pos);
-	std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
-	while (tmp[i])
-	{
-		std::cout << "voici les users et message diffuser: " << tmp[i] << " " << msg.c_str() << std::endl;
-		if (pos > 10000000)
-			return ;
-		std::cout << std::endl << std::endl;
-		std::cout << "voici mes taille pos " << pos << " msg " << msg.size() << std::endl; 
-		std::cout << "voici le message " << msg << std::endl;
-		try
-		{
-			std::cout << "je suis dans le try and catch" << std::endl;
-			std::stringstream nb_recev;
-			nb_recev << tmp[i];
-			receveur = nb_recev.str();
-			std::cout << "dasdsasd" << std::endl;
-			final = envoyeur + " PRIVMSG " + receveur + " " + message;
-			std::cout << "dsadasdasasdasdasddsadsasdsdassa" << std::endl;
-			std::cout << final << std::endl;
-			std::cout << "czxxxxxxxxxxxxxxxxxxdasdsasd" << std::endl;
-			int bytes = send(tmp[i], final.c_str(), msg.size() + 1, 0);
-			if (bytes == -1)
-				throw std::runtime_error("Error sending message");
-		}
-		catch(std::exception &e)
-		{
-			throw std::runtime_error("a problem happend when sending message");
-		}
+	// pos = message.find(':');
+	// message = message.erase(0, pos);
+	// std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
+	// while (tab.size() > i)
+	// {
+	// 	std::cout << "voici les users et message diffuser: " << tab[i].getName() << " " << msg.c_str() << std::endl;
+	// 	if (pos > 10000000)
+	// 		return ;
+	// 	std::cout << std::endl << std::endl;
+	// 	std::cout << "voici mes taille pos " << pos << " msg " << msg.size() << std::endl; 
+	// 	std::cout << "voici le message " << msg << std::endl;
+	// 	std::string tmp;
+	// 	try
+	// 	{
+	// 		std::cout << "je suis dans le try and catch" << std::endl;
+	// 		std::stringstream nb_recev;
+	// 		nb_recev << tmp[i];
+	// 		receveur = nb_recev.str();
+	// 		std::cout << "dasdsasd" << std::endl;
+	// 		final = envoyeur + " PRIVMSG " + receveur + " " + message;
+	// 		std::cout << "dsadasdasasdasdasddsadsasdsdassa" << std::endl;
+	// 		std::cout << final << std::endl;
+	// 		std::cout << "czxxxxxxxxxxxxxxxxxxdasdsasd" << std::endl;
+	// 		int bytes = send(tmp[i], final.c_str(), msg.size() + 1, 0);
+	// 		if (bytes == -1)
+	// 			throw std::runtime_error("Error sending message");
+	// 	}
+	// 	catch(std::exception &e)
+	// 	{
+	// 		throw std::runtime_error("a problem happend when sending message");
+	// 	}
 		// donc la j'ai mon message, le nom du serv, il me manque qu'a assembler tout
 		// pour faire serv PRIVMSG receveur message
 		// message set serv_name set
@@ -246,7 +251,7 @@ void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string ms
 		// 	throw std::runtime_error("Error sending message");
 		std::cout << std::endl;
 		i++;
-	}
+	// }
 }
 
 //essayer de faire serv PRIVMSG receveur : message
