@@ -29,10 +29,13 @@ void Server::handleClient()
 					if (clientSocket == -1)
 						throw std::runtime_error("Socket accept() failure");
 					setupNewClient(clientSocket);
+					std::cout << "sandwitch 0 ";
 				}
 				else
 				{
+					std::cout << "sandwitch 1 ";
 					int clientSocket = _fds[i].fd;
+					std::cout << "sandwitch 2" << std::endl;
 					doClientAction(clientSocket);
 				}
 			}
@@ -124,13 +127,20 @@ void Server::doClientAction(int clientSocket)
 		setSalon(salon, 0);
 		std::cout << "voici ma size " << _salon.size() << "dsadafaddssd" << std::endl;
 		std::cout << "voici mon emplacement 0 " << _salon[i].getName() << std::endl;
-		std::cout << " tst sddaasddsaasdadsasasddasasass" << std::endl;
 		// std::map<int, Salon>::iterator it = _salon.begin();
 		std::cout << "voici mon clientsocket " << clientSocket << std::endl;
 		// std::vector<Salon>::iterator it = _salon.begin();
-		std::cout << "tmp" << std::endl;
 		_salon[i].increaseSocketClient(clientSocket);
-		this->clients[]; // trouver le client qui a fait cette commande
+		_salon[i].set_client(this->_clients[clientSocket]);
+		std::cout << "par exemple voici le client ajouter " << this->_clients[clientSocket].getNickname() << std::endl; // trouver le client qui a fait cette commande
+		std::cout << "qui a ete ajouter dans ce salon: " << _salon[i].getName() << std::endl;
+		std::cout << "voici donc tous les clients ajouter: " << std::endl;
+		for(int i = 0; i < _salon[i].get_salon_client_len(); i++)
+		{
+			std::cout << "liste client " << this->_clients[clientSocket].getNickname() << std::endl;
+			clientSocket++;
+		}
+		std::cout << "donc la j'ai set un clien de plus dans le salon (normalement) 😁" << std::endl;
 
 		// donc la en theorie: mon salon avec son nom est cree, je dois maintenant stocker
 		// les gens qui entrent dedans pour pouvoir leurs faire parvenir le message
@@ -169,7 +179,7 @@ void Server::doClientAction(int clientSocket)
 			// 1[celui envois] 2[PRIVMSG] 3[celui qui recoit] 4[puis message]
 			// <no>
 			// light75018
-			msg_client(clientSocket, tab, msg);
+			// msg_client(clientSocket, tab, msg);
 			std::cout << "======" << std::endl;
 			// envoyer le message du serveur vers tous le monde
 		}
@@ -188,7 +198,7 @@ void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string ms
 	// on decoupe etape par etape
 
 
-
+ 
 	std::cout << "fin des definitions" << std::endl;
 	(void)clientSocket;
 	(void)msg;

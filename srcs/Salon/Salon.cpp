@@ -6,6 +6,7 @@ Salon::Salon(const Salon &src)
 {
     _Name = src._Name;
     _SocketClient = src._SocketClient;
+    std::cout << "New salon created" << std::endl;
 }
 
 Salon& Salon::operator=(Salon const &rhs)
@@ -63,14 +64,16 @@ Client Salon::get_client(int ClientSocket)
     int i = 0;
     while (ClientSocket != this->_clients[i].getSocket())
         i++;
-    
     return _clients[i];
 }
 
 void Salon::set_client(Client client)
 {
-    int i = _clients.size();
+    int i = 0;
+    while (_clients[i])
+        i++;
     this->_clients[i] = client;
+    std::cout << "i had a client at emplacement " << i << std::endl;
 }
 
 void Salon::show_list_client()
@@ -83,4 +86,22 @@ void Salon::show_list_client()
         std::cout << this->_clients[len].getUsername();
         len--;
     }
+}
+
+int Salon::get_salon_client_len()
+{
+    int i = 0;
+    try
+	{
+		this->_SocketClient[i];
+	}
+	catch (std::exception &e)
+	{
+		std::cout << BOLD_RED << "error with socket_client " << e.what() << def << std::endl;
+	}
+    while (this->_SocketClient[i])
+    {
+        i++;
+    }
+    return i;
 }

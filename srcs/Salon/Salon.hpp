@@ -41,6 +41,7 @@ class Salon
 		Client get_client(int ClientSocket);
 		void set_client(Client client);
 		void show_list_client();
+		int get_salon_client_len();
 
 
 	private:
