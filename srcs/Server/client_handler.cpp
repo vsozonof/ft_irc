@@ -135,7 +135,7 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "par exemple voici le client ajouter " << this->_clients[clientSocket].getNickname() << std::endl; // trouver le client qui a fait cette commande
 		std::cout << "qui a ete ajouter dans ce salon: " << _salon[i].getName() << std::endl;
 		std::cout << "voici donc tous les clients ajouter: " << std::endl;
-		for(int i = 0; i < _salon[i].get_salon_client_len(); i++)
+		for(int j = _salon[i].get_salon_client_len(); j < 0; j--)
 		{
 			std::cout << "liste client " << this->_clients[clientSocket].getNickname() << std::endl;
 			clientSocket++;

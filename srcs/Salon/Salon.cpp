@@ -49,6 +49,13 @@ std::string Salon::getMessage(void)
 void Salon::increaseSocketClient(int socket)
 {
     _SocketClient.push_back(socket);
+    std::cout << "🔥voici tous mes socket 🔥" << std::endl;
+    int i = _SocketClient.size();
+    while (i > 0)
+    {
+        i--;
+        std::cout << "socket " << _SocketClient[i] << std::endl;
+    }
 }
 
 void showMessage()
@@ -69,11 +76,15 @@ Client Salon::get_client(int ClientSocket)
 
 void Salon::set_client(Client client)
 {
-    int i = 0;
-    while (_clients[i])
-        i++;
+    std::cout << "debut set_client" << std::endl;
+    int i = _clients.size();
+    while (i > 0)
+    {
+        std::cout <<  "bloquer a cet endroit" << std::endl;
+        i--;
+    }
     this->_clients[i] = client;
-    std::cout << "i had a client at emplacement " << i << std::endl;
+    std::cout << "i add a client at emplacement " << i << std::endl;
 }
 
 void Salon::show_list_client()
@@ -93,15 +104,12 @@ int Salon::get_salon_client_len()
     int i = 0;
     try
 	{
-		this->_SocketClient[i];
+        while (this->_SocketClient[i])
+            i++;
 	}
 	catch (std::exception &e)
 	{
 		std::cout << BOLD_RED << "error with socket_client " << e.what() << def << std::endl;
 	}
-    while (this->_SocketClient[i])
-    {
-        i++;
-    }
     return i;
 }
