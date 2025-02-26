@@ -49,6 +49,7 @@ class Salon
 		std::vector<int>				_SocketClient;		// nombre de client
 		std::string						_message;
 		std::map<int, Client>			_clients;
+		int								_va_test;
 };
 
 #endif

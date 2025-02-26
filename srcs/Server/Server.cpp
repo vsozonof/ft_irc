@@ -51,7 +51,6 @@ void Server::setSalon(Salon salon, int i)
 {
 	(void)i;
 	_salon.push_back(salon);
-	std::cout << "dsajkldsdjklsdajkldaskjldasjkladsljkadsljksadjlksa" << std::endl;
 }
 
 std::vector<Salon> Server::getSalon(void)

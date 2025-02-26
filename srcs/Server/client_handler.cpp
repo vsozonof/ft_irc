@@ -134,16 +134,18 @@ void Server::doClientAction(int clientSocket)
 		_salon[i].set_client(this->_clients[clientSocket]);
 		std::cout << "par exemple voici le client ajouter " << this->_clients[clientSocket].getNickname() << std::endl; // trouver le client qui a fait cette commande
 		std::cout << "qui a ete ajouter dans ce salon: " << _salon[i].getName() << std::endl;
-		std::cout << "voici donc tous les clients ajouter: " << std::endl;
-		for(int j = _salon[i].get_salon_client_len(); j < 0; j--)
+		int socket_tmp = clientSocket;
+		for(int j = _salon[i].get_salon_client_len(); j > 0; j--)
 		{
-			std::cout << "liste client " << this->_clients[clientSocket].getNickname() << std::endl;
-			clientSocket++;
+			std::cout << "liste client ⚠️⚠️" << this->_clients[socket_tmp].getNickname() << std::endl;
+			socket_tmp++;
 		}
 		std::cout << "donc la j'ai set un clien de plus dans le salon (normalement) 😁" << std::endl;
-
 		// donc la en theorie: mon salon avec son nom est cree, je dois maintenant stocker
 		// les gens qui entrent dedans pour pouvoir leurs faire parvenir le message
+		_salon[i].showMessage();
+		Client client = _salon[i].get_client(clientSocket);
+		std::cout << "DDSAADDAKSDALDKSALADKSL;jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj " << client.getSocket() << std::endl;
 	}
 	else if (msg.find("PING") != std::string::npos)
 	{
@@ -160,9 +162,11 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "Unknown command" << std::endl;
 		_clients[clientSocket].sendMsg("Unknown command\r\n");
 		std::vector<Salon> tab = getSalon();
+		std::cout << "voici " << _salon.size() << std::endl;
 		std::cout << "exemple " << tab.size() << std::endl;
 		if (tab.size() > 0)
 		{
+			Client client = tab[0].get_client(clientSocket);
 			std::cout << "voici le message " << msg << std::endl;
 			std::cout << "je rentre dans it != tab.begin()" << std::endl;
 			// while (i < tmp.size())
@@ -179,6 +183,7 @@ void Server::doClientAction(int clientSocket)
 			// 1[celui envois] 2[PRIVMSG] 3[celui qui recoit] 4[puis message]
 			// <no>
 			// light75018
+
 			// msg_client(clientSocket, tab, msg);
 			std::cout << "======" << std::endl;
 			// envoyer le message du serveur vers tous le monde
@@ -203,11 +208,9 @@ void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string ms
 	(void)clientSocket;
 	(void)msg;
 	envoyeur = tab[i].getName();
-	std::cout << "voici mon salon " << tab[i].getName() << std::endl; // le salon a le bon nom
+	std::cout << "voici mon salon " << envoyeur << std::endl; // le salon a le bon nom
 	// Salon salon = tab[i];
-	tab[i].show_list_client();
-	std::cout << "nouveau test " << std::endl;
-	std::cout << "par exemple " << tab[i].getName() << " mais encore ";
+	std::cout << " mais encore 🤩🤩🤩🤩🤩" << std::endl;
 	Client client = tab[i].get_client(clientSocket);
 	envoyeur = client.getNickname();
 	std::cout << "voici envoyeur " << envoyeur;
