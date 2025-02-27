@@ -6,6 +6,7 @@ Salon::Salon(const Salon &src)
 {
     _Name = src._Name;
     _SocketClient = src._SocketClient;
+    std::cout << "New salon created" << std::endl;
 }
 
 Salon& Salon::operator=(Salon const &rhs)
@@ -48,15 +49,76 @@ std::string Salon::getMessage(void)
 void Salon::increaseSocketClient(int socket)
 {
     _SocketClient.push_back(socket);
+    std::cout << "🔥voici tous mes socket 🔥" << std::endl;
+    int i = _SocketClient.size();
+    while (i > 0)
+    {
+        i--;
+        std::cout << "socket " << _SocketClient[i] << std::endl;
+    }
 }
 
-std::vector<int> Salon::getSocketClient()
-{
-    return _SocketClient;
-}
-
-void showMessage()
+void Salon::showMessage()
 {
     // faire circuler le message
-    std::cout << "je fais circuler le message" << std::endl;
+    std::cout << "je fais circuler le message du saint va_test " << _va_test << std::endl;
+}
+
+// get_client doit pouvoir parcourir la base de donnees des clients connecter dans le salon
+// et renvoyer le nom qui client qui possede le ClientSocket passer en parametre
+Client Salon::get_client(int ClientSocket)
+{
+    int i = 0;
+    std::cout << "donc maintenant je suis dans get_client pour obtenir le client repondant au socket";
+    std::cout << std::endl;
+    std::cout << "voici mon socket " << ClientSocket;
+    std::cout << " et voici ce qu'il y a dans l'emplacement du socket ";
+    std::cout << this->_clients[i].getSocket() << std::endl;
+    int j = 0;
+    std::cout << "parti test client" << std::endl << std::endl;
+    std::cout << "size " << _clients.size() << std::endl;
+    std::cout << "test vite fait" << _clients[i].getNickname() << std::endl;
+    std::cout << "voici va_test ";
+    std::cout << _va_test;
+    while (j < 10)
+    {
+        std::cout << "debut boucle : Client_socket " << ClientSocket;
+        std::cout << " La ou je suis " << i;
+        std::cout << " et ce que j'ai " << this->_clients[i].getSocket();
+        std::cout << std::endl;
+        if (this->_clients[i].getSocket() == ClientSocket)
+            break;
+        i++;
+        j++;
+    }
+    // while (ClientSocket != this->_clients[i].getSocket())
+    return _clients[i];
+}
+
+void Salon::set_client(Client client)
+{
+    std::cout << "debut set_client" << std::endl;
+    int i = _clients.size();
+    std::cout << "je suis dans set_client ";
+    this->_clients[i] = client;
+    std::cout << "i add a client at emplacement " << i << std::endl;
+    std::cout << "try " << this->_clients[i].getNickname() << std::endl;
+    _va_test = 1;
+}
+
+void Salon::show_list_client()
+{
+    std::cout << "here is clients list " << std::endl;
+    int len = this->_clients.size();
+    while (len > 0)
+    {
+        std::cout << this->_clients[len].getNickname();
+        std::cout << this->_clients[len].getUsername();
+        len--;
+    }
+}
+
+int Salon::get_salon_client_len()
+{
+    return this->_SocketClient.size();
 }
