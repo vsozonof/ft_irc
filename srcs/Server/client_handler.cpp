@@ -140,6 +140,7 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "donc la j'ai set un clien de plus dans le salon (normalement) 😁" << std::endl;
 		// donc la en theorie: mon salon avec son nom est cree, je dois maintenant stocker
 		// les gens qui entrent dedans pour pouvoir leurs faire parvenir le message
+		_salon[i].show_list_client();
 		_salon[i].showMessage();
 		Client client = _salon[i].get_client(clientSocket);
 		std::cout << "DDSAADDAKSDALDKSALADKSL;jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj " << client.getSocket() << std::endl;
@@ -163,6 +164,9 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "exemple " << tab.size() << std::endl;
 		if (tab.size() > 0)
 		{
+			std::cout << "voici le salon qui est recup " << tab[0].getName() << std::endl;
+			//Donc c'est le bon salon mais pas le bon client
+			tab[0].show_list_client();
 			Client client = tab[0].get_client(clientSocket);
 			std::cout << "voici le message " << msg << std::endl;
 			std::cout << "je rentre dans it != tab.begin()" << std::endl;
