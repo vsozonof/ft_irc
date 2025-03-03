@@ -156,39 +156,45 @@ void Server::doClientAction(int clientSocket)
 	}
 	else
 	{
-		// faire dire au chat le message, ca doit etre visible pour les autres
-		std::cout << "Unknown command" << std::endl;
-		_clients[clientSocket].sendMsg("Unknown command\r\n");
-		std::vector<Salon> tab = getSalon();
-		std::cout << "voici " << _salon.size() << std::endl;
-		std::cout << "exemple " << tab.size() << std::endl;
-		if (tab.size() > 0)
+		std::cout << msg << std::endl;
+		for (int i = 0; (int)this->_salon.size() > i; i++)
 		{
-			std::cout << "voici le salon qui est recup " << tab[0].getName() << std::endl;
-			//Donc c'est le bon salon mais pas le bon client
-			tab[0].show_list_client();
-			Client client = tab[0].get_client(clientSocket);
-			std::cout << "voici le message " << msg << std::endl;
-			std::cout << "je rentre dans it != tab.begin()" << std::endl;
-			// while (i < tmp.size())
-			// {
-			// 	tmp = tab[i].getSocketClient();
-			// 	std::cout << "voici tous les sockets des clients " << tmp[i] << std::endl;
-			// 	std::string msg_final = msg;
-			// 	msg_final.replace("sa", "4");
-			// 	send(tmp[i], msg.c_str(), msg.size() + 1, 0);
-			// 	i++;
-			// }
-			// std::cout << "======";
-
-			// 1[celui envois] 2[PRIVMSG] 3[celui qui recoit] 4[puis message]
-			// <no>
-			// light75018
-
-			// msg_client(clientSocket, tab, msg);
-			std::cout << "======" << std::endl;
-			// envoyer le message du serveur vers tous le monde
+			std::cout << this->_salon[i].getName() << std::endl;
+			_salon[i].show_list_client();
 		}
+		// faire dire au chat le message, ca doit etre visible pour les autres
+		// std::cout << "Unknown command" << std::endl;
+		// _clients[clientSocket].sendMsg("Unknown command\r\n");
+		// std::vector<Salon> tab = getSalon();
+		// std::cout << "voici " << _salon.size() << std::endl;
+		// std::cout << "exemple " << tab.size() << std::endl;
+		// if (tab.size() > 0)
+		// {
+		// 	std::cout << "voici le salon qui est recup " << tab[0].getName() << std::endl;
+		// 	//Donc c'est le bon salon mais pas le bon client
+		// 	tab[0].show_list_client();
+		// 	Client client = tab[0].get_client(clientSocket);
+		// 	std::cout << "voici le message " << msg << std::endl;
+		// 	std::cout << "je rentre dans it != tab.begin()" << std::endl;
+		// 	// while (i < tmp.size())
+		// 	// {
+		// 	// 	tmp = tab[i].getSocketClient();
+		// 	// 	std::cout << "voici tous les sockets des clients " << tmp[i] << std::endl;
+		// 	// 	std::string msg_final = msg;
+		// 	// 	msg_final.replace("sa", "4");
+		// 	// 	send(tmp[i], msg.c_str(), msg.size() + 1, 0);
+		// 	// 	i++;
+		// 	// }
+		// 	// std::cout << "======";
+
+		// 	// 1[celui envois] 2[PRIVMSG] 3[celui qui recoit] 4[puis message]
+		// 	// <no>
+		// 	// light75018
+
+		// 	// msg_client(clientSocket, tab, msg);
+		// 	std::cout << "======" << std::endl;
+		// 	// envoyer le message du serveur vers tous le monde
+		// }
 		std::cout << "fin affichage" << std::endl;
 	}
 }

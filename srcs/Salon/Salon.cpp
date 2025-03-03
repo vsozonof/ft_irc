@@ -110,10 +110,12 @@ void Salon::show_list_client()
 {
     std::cout << "here is clients list " << std::endl;
     int len = this->_clients.size();
+    std::cout << len << std::endl;
     while (len > 0)
     {
-        std::cout << this->_clients[len].getNickname();
-        std::cout << this->_clients[len].getUsername();
+        std::cout << this->_clients[len - 1].getNickname();
+        std::cout << this->_clients[len - 1].getUsername();
+        std::cout << "cc " << this->_SocketClient[0] << std::endl;
         len--;
     }
 }
