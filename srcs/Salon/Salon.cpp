@@ -46,6 +46,79 @@ std::string Salon::getMessage(void)
     return _message;
 }
 
+std::string Salon::get_topic()
+{
+    return _Topic;
+}
+
+void Salon::set_topic(std::string topic)
+{
+    _Topic = topic;
+}
+
+void Salon::set_password(std::string password)
+{
+    _password = password;
+}
+
+std::string Salon::get_password()
+{
+    return _password;
+}
+
+void Salon::set_opt(int opt, bool value)
+{
+    _opt[opt] = value;
+}
+
+bool Salon::get_opt(int opt)
+{
+    return _opt[opt];
+}
+
+void Salon::set_operator(int socket)
+{
+    _operator.push_back(socket);
+}
+
+void Salon::remove_operator(int socket)
+{
+    std::list<int>::iterator i;
+    i = _operator.begin();
+    while (i != _operator.end())
+    {
+        if (*i == socket)
+        {
+            _operator.erase(i);
+            break;
+        }
+        i++;
+    }
+}
+
+bool Salon::is_operator(int socket)
+{
+    std::list<int>::iterator i;
+    i = _operator.begin();
+    while (i != _operator.end())
+    {
+        if (*i == socket)
+            return true;
+        i++;
+    }
+    return false;
+}
+
+void Salon::set_client_limits(int limits)
+{
+    _client_limits = limits;
+}
+
+int Salon::get_client_limits()
+{
+    return _client_limits;
+}
+
 void Salon::increaseSocketClient(int socket)
 {
     _SocketClient.push_back(socket);
