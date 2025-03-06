@@ -38,7 +38,7 @@ class Salon
 		std::string getMessage(void);
 		void increaseSocketClient(int socket);
         void showMessage();
-		Client get_client(int ClientSocket);
+		Client get_client(int ClientSocket, std::map<int, Client> clients);
 		void set_client(Client client);
 		void show_list_client();
 		int get_salon_client_len();
@@ -49,7 +49,6 @@ class Salon
 		std::vector<int>				_SocketClient;		// nombre de client
 		std::string						_message;
 		std::map<int, Client>			_clients;
-		int								_va_test;
 };
 
 #endif

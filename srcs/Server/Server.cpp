@@ -55,8 +55,6 @@ void Server::setSalon(Salon salon, int i)
 
 std::vector<Salon> Server::getSalon(void)
 {
-	std::cout << "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" << std::endl;
-	std::cout << this->_salon[0].getName() << std::endl;
 	return _salon;
 }
 
