@@ -186,9 +186,16 @@ void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string ms
 	std::cout << "==== INFO POUR COMMENT LE MSG VA ETRE ENVOYER ====" << std::endl << std::endl;
 	std::cout << "voici mon salon " << envoyeur << std::endl; // le salon a le bon nom
 	std::cout << " mais encore 🤩🤩🤩🤩🤩" << std::endl;
+	std::cout << "=== verif salon et client" << std::endl;
 	Client client = tab[i].get_client(clientSocket, _clients);
+	std::cout << "voici le channel " << tab[i].getName();
+	tab[i].show_list_client();
+	std::cout << "voici les donnees clients" << std::endl;
+	std::cout << "nickname: " << client.getNickname() << std::endl;
+	std::cout << "username: " << client.getUsername() << std::endl;
+	std::cout << "=== verif salon et client === fin" << std::endl;
 	envoyeur = client.getNickname();
-	std::cout << "voici envoyeur " << envoyeur;
+	std::cout << std::endl << "voici envoyeur " << envoyeur << std::endl;
 	// std::cout << "ALOOOOOOOOOOOOOOOOOOOOOO " << tab[i].getName();
 	size_t pos = msg.find('#');
 	std::string message;
@@ -196,19 +203,19 @@ void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string ms
 		message = msg.substr(pos);
 	else
 		return ;
-	std::cout << "premier substr dans msg_client" << std::endl;
+	// std::cout << "premier substr dans msg_client" << std::endl;
 	// client.sendMsg(msg);
 	pos = message.find(':');
 	message = message.erase(0, pos);
-	std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
+	// std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
 	while (tab.size() > i)
 	{
-		std::cout << "voici les users et message diffuser: " << tab[i].getName() << " " << msg.c_str() << std::endl;
+		// std::cout << "voici les users et message diffuser: " << tab[i].getName() << " " << msg.c_str() << std::endl;
 		if (pos > 10000000)
 			return ;
 		std::cout << std::endl << std::endl;
-		std::cout << "voici mes taille pos " << pos << " msg " << msg.size() << std::endl; 
-		std::cout << "voici le message " << msg << std::endl;
+		// std::cout << "voici mes taille pos " << pos << " msg " << msg.size() << std::endl; 
+		// std::cout << "voici le message " << msg << std::endl;
 		std::string tmp;
 		try
 		{
