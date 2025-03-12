@@ -54,7 +54,7 @@ void Server::setupNewClient(int clientSocket)
 	_fds.push_back(newClient_fd);
 
 	std::string msg;
-	
+
 	int check = 0;
 	while (!check)
 	{
@@ -91,6 +91,8 @@ void Server::setupNewClient(int clientSocket)
 		throw std::runtime_error("User infos not correct");
 	}
 	std::cout << "second substr " << std::endl;
+	std::cout << _clients[clientSocket].getNickname() << std::endl;
+	std::cout << _clients[clientSocket].getUsername() << std::endl;
 	_clients[clientSocket].sendMsg(":127.0.0.1 001 test :Welcome to the IRC Network\r\n");
 }
 
@@ -121,8 +123,6 @@ void Server::doClientAction(int clientSocket)
 		size_t i = 0;
 		Salon salon(msg);
 		setSalon(salon, 0);
-		// std::map<int, Salon>::iterator it = _salon.begin();
-		// std::vector<Salon>::iterator it = _salon.begin();
 		_salon[i].increaseSocketClient(clientSocket);
 		_salon[i].set_client(this->_clients[clientSocket]);
 		int socket_tmp = clientSocket;
@@ -131,8 +131,6 @@ void Server::doClientAction(int clientSocket)
 			std::cout << "liste client ⚠️⚠️" << this->_clients[socket_tmp].getNickname() << std::endl;
 			socket_tmp++;
 		}
-		// donc la en theorie: mon salon avec son nom est cree, je dois maintenant stocker
-		// les gens qui entrent dedans pour pouvoir leurs faire parvenir le message
 		_salon[i].show_list_client();
 		_salon[i].showMessage();
 		Client client = _salon[i].get_client(clientSocket, _clients);
@@ -223,7 +221,7 @@ void Server::msg_client(int clientSocket, std::vector<Salon> tab, std::string ms
 			std::stringstream nb_recev;
 			nb_recev << tmp[i];
 			receveur = nb_recev.str();
-			std::cout << "DONC RESUME : envoyeur = " << envoyeur << " PRIVMSG " << std::endl;
+			std::cout << "DONC RESUME : envoyeur = " << envoyeur << " ,PRIVMSG " << std::endl;
 			std::cout << "receveur : " << receveur << " message " << message << std::endl;
 			final = envoyeur + " PRIVMSG " + receveur + " " + message;
 			std::cout << "donc voici mon final : " << final << std::endl;
