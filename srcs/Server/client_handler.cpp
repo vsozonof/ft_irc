@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/12/14 13:15:25 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:09:09 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,56 +44,63 @@ void Server::handleClient()
 
 void Server::setupNewClient(int clientSocket)
 {
-	std::cout << "\033[1m" << "Setting up new client" << std::endl;
+	std::cout << "\033[1m" << "----- Setting up new client ------" << std::endl;
+	std::cout << "Setting up client: " << clientSocket << std::endl;
+	
 	Client newClient(clientSocket);
 	_clients.insert(std::pair<int, Client>(clientSocket, newClient));
-
 	pollfd newClient_fd;
 	newClient_fd.fd = clientSocket;
 	newClient_fd.events = POLLIN;
 	_fds.push_back(newClient_fd);
 
 	std::string msg;
-
+	std::cout << '[' << clientSocket << ']' << ": Gathering data" << std::endl;
 	int check = 0;
 	while (!check)
 	{
 		msg += _clients[clientSocket].receiveMsg();
-		std::cout << clientSocket << " Received: " << msg << std::endl;
 		if (msg.find("USER") != std::string::npos
 			&& msg.find("NICK") != std::string::npos
 			&& msg.find("PASS") != std::string::npos)
 		{
-			std::cout << "All infos received" << std::endl;
+			std::cout << '[' << clientSocket << ']' << ": All informations successfully collected" << std::endl;
 			check = 1;
 		}
 		else
 		{
-			std::cout << "Not all infos received - implement TO" << std::endl;
+			std::cout << '[' << clientSocket << ']' << ": Missing informations.." << std::endl;
 		}
 	}
 
-	std::cout << "premier substr " << std::endl;
 	// ! Attention : quand find() fail, il retourne 18446744073709551615, ce qui fait peter le substr
 	// ! Il faut donc verifier si find() a trouve qqch avant de faire le substr
 	// ! Sinon, on peut faire find() + 1 pour eviter le probleme
 	// ! J'ai aussi modif les parentheses dans mon if, pour que ca soit plus lisible
 	// ! Voila tout, mon ami
-	size_t pos = msg.find("PASS");
-	size_t pos2 = msg.find("NICK");
-	size_t pos3 = msg.find("USER");
-	std::cout << "pos " << pos << " pos2 " << pos2 << " pos3 " << pos3 << std::endl;
+	std::string userPass = msg.substr((msg.find("PASS") + 5), _password.length());
+	std::string userNick = extractValue(msg, "NICK");
+	std::string userName = extractValue(msg, "USER");
 
-	if (checkUserInfos(
-		msg.substr((msg.find("PASS") + 5), _password.length()),
-		msg.substr(msg.find("NICK"), msg.find("USER") - msg.find("NICK"))))
-	{
-		throw std::runtime_error("User infos not correct");
-	}
-	std::cout << "second substr " << std::endl;
-	std::cout << _clients[clientSocket].getNickname() << std::endl;
-	std::cout << _clients[clientSocket].getUsername() << std::endl;
-	_clients[clientSocket].sendMsg(":127.0.0.1 001 test :Welcome to the IRC Network\r\n");
+	std::cout << "______________________________________" << std::endl;
+	std::cout << "\n[" << clientSocket << ']: ' << "INFOS RECEIVED:\n" 
+				<< "PASS: " << '[' << userPass << ']'
+				<< "\nNICK: " << '[' << userNick << ']' 
+				<< "\nNAME: " << '[' << userName << ']';
+	std::cout << "\n------------------------------------" << '\n';
+
+	
+	if (checkUserInfos(userPass, userNick))
+		throw std::runtime_error("User infos not correct"); // ! Fix le retour d'erreur
+		
+	_clients[clientSocket].setNickname(userNick);
+	_clients[clientSocket].setUsername(userName);
+	
+	
+	// std::cout << "______________________________________" << std::endl;
+	// std::cout << "NICKNAME =" << _clients[clientSocket].getNickname() << std::endl;
+	// std::cout << "USERNAME =" << _clients[clientSocket].getUsername() << std::endl;
+	_clients[clientSocket].sendMsg(":127.0.0.1 001 test :Welcome to the IRC Network AFWEIOPXJWEPFOIJA\r\n");
 }
 
 // ! Do-Client Action = fonction qui va gerer les cmd client, les messages...

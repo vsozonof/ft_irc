@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:03:09 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/11/12 15:22:29 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:44:32 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class Server
 		int checkUserInfos(std::string clientPassword, std::string clientNick);
 		int checkPassword(std::string clientPassword);
 		int checkNick(std::string clientNick);
+		std::string extractValue(const std::string& msg, const std::string& key);
 
 		
 		void doClientAction(int clientSocket);
