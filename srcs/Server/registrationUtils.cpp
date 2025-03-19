@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   registrationUtils.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 14:27:37 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/03/17 15:43:59 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/03/19 10:47:46 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,14 @@ int	Server::checkPassword(std::string clientPassword)
 // ! Checks if username is already in use
 int	Server::checkNick(std::string clientNick)
 {
-	std::map<int, Client>::iterator it = _clients.begin();
-	while (it != _clients.end())
-	{
-		if (it->second.getNickname() == clientNick)
-			return (1);
-		it++;
-	}
+	(void)clientNick;
+	// std::map<int, Client>::iterator it = _clients.begin();
+	// while (it != _clients.end())
+	// {
+	// 	if (it->second.getNickname() == clientNick)
+	// 		return (1);
+	// 	it++;
+	// }
 	return (0);
 }
 

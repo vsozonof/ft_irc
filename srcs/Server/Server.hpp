@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:03:09 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/03/17 15:44:32 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/03/19 15:52:29 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ class Server
 		void sendWelcome(int clientSocket);
 		void broadcastMessage(std::string const &message, int clientSocket);
 
-		void setSalon(Salon salon, int i);
+		int setSalon(Salon salon, int i);
 		std::vector<Salon> getSalon(void);
 
 		void msg_client(int clientSocket, std::vector<Salon> tab, std::string msg);

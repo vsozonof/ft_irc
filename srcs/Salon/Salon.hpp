@@ -32,17 +32,20 @@ class Salon
 		Salon();
 		~Salon();
 
-        std::string getName();
         void setName(std::string name);
 		void setMessage(std::string msg);
-		std::string getMessage(void);
-		void increaseSocketClient(int socket);
-        void showMessage();
-		Client get_client(int ClientSocket, std::map<int, Client> clients);
-		void set_client(Client client);
-		void show_list_client();
-		int get_salon_client_len();
 
+        std::string getName();
+		Client get_client(int ClientSocket, std::map<int, Client> clients);
+		std::string getMessage(void);
+		int get_salon_client_len();
+		int get_SocketClient(int pos);
+
+
+        void showMessage();
+		void set_client(std::map<int, Client>& client, int clientSocket);
+		void increaseSocketClient(int socket);
+		void show_list_client();
 
 	private:
 		std::string						_Name;				// name du Salon

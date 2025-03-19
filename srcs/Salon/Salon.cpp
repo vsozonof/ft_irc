@@ -65,6 +65,7 @@ void Salon::showMessage()
 
 // get_client doit pouvoir parcourir la base de donnees des clients connecter dans le salon
 // et renvoyer le nom qui client qui possede le ClientSocket passer en parametre
+
 Client Salon::get_client(int ClientSocket, std::map<int, Client> clients)
 {
     int i = 0;
@@ -91,14 +92,22 @@ Client Salon::get_client(int ClientSocket, std::map<int, Client> clients)
     return clients[i];
 }
 
-void Salon::set_client(Client client)
+void Salon::set_client(std::map<int, Client>& client, int clientSocket)
 {
     std::cout << "debut set_client" << std::endl;
-    int i = _clients.size();
-    std::cout << "je suis dans set_client ";
-    this->_clients[i] = client;
-    std::cout << "i add a client at emplacement " << i << std::endl;
-    std::cout << "try " << this->_clients[i].getNickname() << std::endl;
+	std::cout << "nick " << client[clientSocket].getNickname();
+	std::cout << " user " << client[clientSocket].getUsername();
+	std::pair <int, Client> clientpair(clientSocket, client[clientSocket]);
+	// if (_clients[clientSocket] )
+	_clients.insert(clientpair);
+    // this->_clients[i] = client;
+	if (client.find(clientSocket) != client.end())
+		std::cout << " ca existe" << std::endl;
+	else
+		std::cout << "Client avec ce socket n'existe pas!" << std::endl;
+	std::cout << "nick " << _clients[clientSocket].getNickname();
+	std::cout << " user " << _clients[clientSocket].getUsername();
+	std::cout << std::endl;
 }
 
 void Salon::show_list_client()
@@ -106,10 +115,11 @@ void Salon::show_list_client()
     std::cout << "here is clients list " << std::endl;
     int len = this->_clients.size();
     std::cout << len << std::endl;
-    while (len > 0)
+    std::cout << getName() << std::endl;
+	while (len > 0)
     {
-        std::cout << this->_clients[len - 1].getNickname();
-        std::cout << this->_clients[len - 1].getUsername();
+        std::cout << "nick " << this->_clients[len].getNickname();
+        std::cout << " user " << this->_clients[len].getUsername();
         std::cout << "cc " << this->_SocketClient[0] << std::endl;
         len--;
     }
@@ -118,4 +128,9 @@ void Salon::show_list_client()
 int Salon::get_salon_client_len()
 {
     return this->_SocketClient.size();
+}
+
+int Salon::get_SocketClient(int pos)
+{
+	return _SocketClient[pos];
 }
