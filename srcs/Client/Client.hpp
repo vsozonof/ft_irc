@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 10:15:47 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/09/08 16:33:19 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:55:51 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,16 @@ class Client
 
 
 	public:
+
 		int				getSocket() const;
 		int 			isAuth() const;
+		std::string		getNickname() const;
+		std::string		getUsername() const;
+		
 		void			setAuth(bool auth);
 		void			setNickname(std::string const &nickname);
-		std::string		getNickname() const;
 		void			setUsername(std::string const &username);
-		std::string		getUsername() const;
+		
 		std::string		receiveMsg();
 		void 			sendMsg(std::string const &msg);
 		void 			closeClient();

@@ -41,8 +41,8 @@ class Salon
 		int get_salon_client_len();
 		int get_SocketClient(int pos);
 
-
         void showMessage();
+		void show_client_infos(int ClientSocket);
 		void set_client(std::map<int, Client>& client, int clientSocket);
 		void increaseSocketClient(int socket);
 		void show_list_client();
