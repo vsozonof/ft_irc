@@ -105,7 +105,7 @@ void Salon::show_list_client()
     {
         std::cout << "nick " << this->_clients[this->_SocketClient[i]].getNickname();
         std::cout << " | user " << this->_clients[this->_SocketClient[i]].getUsername();
-    	std::cout << " cc " << this->_SocketClient[0] << std::endl;
+    	std::cout << " cc " << this->_SocketClient[i] << std::endl;
         i++;
 		if (get_salon_client_len() <= i)
 			break;

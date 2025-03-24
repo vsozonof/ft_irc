@@ -224,16 +224,10 @@ void Server::msg_client(int clientSocket, std::vector<Salon> &tab, std::string m
 	envoyeur = _clients[clientSocket].getNickname();
 	// std::cout << std::endl << "voici envoyeur " << envoyeur << std::endl;
 	// std::cout << "ALOOOOOOOOOOOOOOOOOOOOOO " << tab[i].getName();
-	size_t pos = msg.find('#');
-	envoyeur = msg.substr(pos + 1);
-	pos = msg.find(':');
-	std::string message = msg.substr(pos + 1);
-	std::cout << "donc voici message " << message << std::endl; // donc #sq : sa par exemple
+	std::cout << "donc voici le message de base " << msg << std::endl; // donc #sq : sa par exemple
 	while (_salon[0].get_salon_client_len() > i)
 	{
 		// std::cout << "voici les users et message diffuser: " << _salon[i].getName() << " " << msg.c_str() << std::endl;
-		if (pos > 10000000)
-			return ;
 		std::cout << std::endl << std::endl;
 		// std::cout << "voici mes taille pos " << pos << " msg " << msg.size() << std::endl; 
 		// std::cout << "voici le message " << msg << std::endl;
@@ -248,12 +242,17 @@ void Server::msg_client(int clientSocket, std::vector<Salon> &tab, std::string m
 				receveur = nb_recev.str();
 				// std::cout << _salon[0].getName() << std::endl;
 				// std::cout << "message a envoyer " << message << std::endl;
-				final = "PRIVMSG #" + _salon[0].getName() + message;
+				final = "#" + _salon[0].getName();
+				std::cout << "premiere partie " << final << std::endl;
+				final.insert(final.size(), " PRIVMSG ");
+				std::cout << "seconde partie " << final << std::endl;
 				// std::cout << "juste apres le final " << std::endl;
-				std::cout << "donc voici le mesage final " << final << std::endl;
+				std::cout << "donc voici le message final " << final << std::endl;
 				std::cout << final << std::endl;
 				// std::cout << "juste avant le send " << std::endl;
 				// std::cout << "voici le socket " << _salon[0].get_SocketClient(i) << std::endl;
+				std::cout << _salon[0].get_SocketClient(i) << std::endl;
+				std::cout << final << std::endl;
 				int bytes = send(_salon[0].get_SocketClient(i), final.c_str(), final.size(), 0);
 				if (bytes == -1)
 					throw std::runtime_error("Error sending message with send");
