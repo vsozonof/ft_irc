@@ -173,7 +173,6 @@ void Server::doClientAction(int clientSocket)
 		if (tab.size() > 0)
 		{
 			std::cout << "je suis rentrer dans le if des salons" << std::endl;
-			usleep(500000);
 			// Salon tab2 = _salon[0];
 			// std::cout << "voici le salon qui est recup [" << tab2.getName() << "]" << std::endl;
 			// Client client = tab2.get_client(clientSocket, _clients);
@@ -224,6 +223,13 @@ void Server::msg_client(int clientSocket, std::vector<Salon> &tab, std::string m
 	envoyeur = _clients[clientSocket].getNickname();
 	// std::cout << std::endl << "voici envoyeur " << envoyeur << std::endl;
 	// std::cout << "ALOOOOOOOOOOOOOOOOOOOOOO " << tab[i].getName();
+	std::cout << "voici le message de base " << msg << std::endl;
+	int pos = msg.find(":");
+	if (pos > 2147483647 || pos < 0)
+		return;
+	std::cout << "je suis apres et voici pos " << pos << std::endl;
+	std::string message;
+	message = msg.substr(pos, msg.size() - pos);
 	std::cout << "donc voici le message de base " << msg << std::endl; // donc #sq : sa par exemple
 	while (_salon[0].get_salon_client_len() > i)
 	{
@@ -242,10 +248,17 @@ void Server::msg_client(int clientSocket, std::vector<Salon> &tab, std::string m
 				receveur = nb_recev.str();
 				// std::cout << _salon[0].getName() << std::endl;
 				// std::cout << "message a envoyer " << message << std::endl;
-				final = "#" + _salon[0].getName();
+				Client client = _salon[0].get_client(_salon[0].get_SocketClient(i), _clients);
+				_salon[0].show_list_client();
+				_salon[0].show_client_infos(_salon[0].get_SocketClient(i));
+				final = client.getNickname();
+				std::cout << 
 				std::cout << "premiere partie " << final << std::endl;
-				final.insert(final.size(), " PRIVMSG ");
+				final.append(" PRIVMSG ");
+				final.append("#");
+				final.append(_salon[0].getName());
 				std::cout << "seconde partie " << final << std::endl;
+				final.append(msg);
 				// std::cout << "juste apres le final " << std::endl;
 				std::cout << "donc voici le message final " << final << std::endl;
 				std::cout << final << std::endl;
