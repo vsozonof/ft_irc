@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:03:09 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/03/23 20:45:58 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:28:53 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ class Server
 		int setSalon(Salon salon, int i);
 		std::vector<Salon> getSalon(void);
 
-		void msg_client(int clientSocket, std::vector<Salon> &tab, std::string msg);
+		void msg_client(int clientSocket, Salon &tab, std::string msg);
 
 };
 
