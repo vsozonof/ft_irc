@@ -234,6 +234,7 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	std::cout << std::endl << "==== INFO POUR COMMENT LE MSG VA ETRE ENVOYER ====" << std::endl << std::endl;
 	std::cout << "ENVOIS DE LA PART DE " << clientSocket << " ET VOICI LE MESSAGE " << std::endl;
 	std::cout << msg << std::endl;
+	msg = msg.erase(msg.size() - 1);
 	tab.show_list_client();
 	(void)clientSocket;
 	// std::cout << "voici mon salon " << envoyeur << std::endl; // le salon a le bon nom
@@ -250,19 +251,26 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	// std::cout << std::endl << "voici envoyeur " << envoyeur << std::endl;
 	// std::cout << "ALOOOOOOOOOOOOOOOOOOOOOO " << tab[i].getName();
 	std::cout << "voici le message de base " << msg << std::endl;
+	std::cout << "donc voici le message de base " << msg << "|" << std::endl; // donc #sq : sa par exemple
 	int pos = msg.find(":");
 	if (pos > 2147483647 || pos < 0)
 		return;
 	std::cout << "je suis apres et voici pos " << pos << std::endl;
 	std::string message;
+	std::cout << "voici pos " << pos << std::endl;
+	std::cout << "voici len " << msg.size() - pos << std::endl;
 	message = msg.substr(pos, msg.size() - pos);
-	std::cout << "donc voici le message de base " << msg << std::endl; // donc #sq : sa par exemple
+	std::cout << "voici message " << message;
 	std::cout << tab.getName() << " '"<< std::endl;
 	final = ":server_name PRIVMSG #";
 	final.append(tab.getName());
 	final.append(":");
-	final.append(message);
+	// final.append(message);
 	final.append("\r\n");
+	std::string nv = ":server_name ";
+	nv.append(msg);
+	std::cout << "nv = " << nv << std::endl;
+	nv.append("\r\n");
 	// std::string msg1 = ":server_name PRIVMSG #sa :Hello, IRSSI!\r\n";
 	std::cout << final << std::endl;
 	while (tab.get_salon_client_len() > i)
@@ -280,7 +288,7 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 				std::cout << "isolation" << std::endl;
 				std::cout << "voici final " << std::endl;
 				std::cout << final << std::endl;
-				int bytes = send(tab.get_SocketClient(i), final.c_str(), final.size(), 0);
+				int bytes = send(tab.get_SocketClient(i), nv.c_str(), nv.size(), 0);
 				if (bytes == -1)
 					throw std::runtime_error("Error sending message with send");
 				i++;
