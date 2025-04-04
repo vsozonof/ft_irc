@@ -157,6 +157,7 @@ void Server::doClientAction(int clientSocket)
 		int bytes = send(clientSocket, msg.c_str(), msg.size(), 0);
 			if (bytes == -1)
 				throw std::runtime_error("Error sending message with send");
+		_salon[i].show_client_infos(clientSocket);
 		std::cout << "FIN DE LA CREATION DU NOUVEAU SALON DONC FIN ETAPE 1" << std::endl << std::endl;
 	}
 	else if (msg.find("PING") != std::string::npos)
@@ -231,7 +232,7 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	//faire le brouillon du message ou il ne reste que les receveurs a ajouter
 	// on decoupe etape par etape
 
-	std::cout << std::endl << "==== INFO POUR COMMENT LE MSG VA ETRE ENVOYER ====" << std::endl << std::endl;
+	std::cout << std::endl << "==== INFO POUR COMMENT LE MSG VA ETRE ENVOYE ====" << std::endl << std::endl;
 	std::cout << "ENVOIS DE LA PART DE " << clientSocket << " ET VOICI LE MESSAGE " << std::endl;
 	std::cout << msg << std::endl;
 	msg = msg.erase(msg.size() - 1);
@@ -256,23 +257,35 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	if (pos > 2147483647 || pos < 0)
 		return;
 	std::cout << "je suis apres et voici pos " << pos << std::endl;
-	std::string message;
-	std::cout << "voici pos " << pos << std::endl;
-	std::cout << "voici len " << msg.size() - pos << std::endl;
-	message = msg.substr(pos, msg.size() - pos);
-	std::cout << "voici message " << message;
+	// std::string message;
+	// std::cout << "voici pos " << pos << std::endl;
+	// std::cout << "voici len " << msg.size() - pos << std::endl;
+	// message = msg.substr(pos, msg.size() - pos);
+	// std::cout << "voici message " << message;
 	std::cout << tab.getName() << " '"<< std::endl;
-	final = ":server_name PRIVMSG #";
-	final.append(tab.getName());
-	final.append(":");
+	// final = ":server_name PRIVMSG #";
+	// final.append(tab.getName());
+	// final.append(":");
 	// final.append(message);
-	final.append("\r\n");
-	std::string nv = ":server_name ";
-	nv.append(msg);
-	std::cout << "nv = " << nv << std::endl;
+	// final.append("\r\n");
+	std::string nv = ":";
+	std::cout << "voici nv " << nv << std::endl;
+	std::map<int, Client> client = tab.get_all_client();
+	
+	tab.show_list_client();
+	std::cout << clientSocket;
+	std::cout << " et voici le client " << client[clientSocket].getNickname() << std::endl;
+	// std::cout << .getNickname() << std::endl;
+	nv.append(client[clientSocket].getUsername());
+	std::cout << "voici nv " << nv << std::endl;
+	nv.append(" " + msg);
+	std::cout << "voici nv " << nv << std::endl;
 	nv.append("\r\n");
+	std::cout << "nv = ";
+	std::cout << nv << std::endl;
+	std::cout << "voila le message a ete envoye sa mere" << std::endl;
 	// std::string msg1 = ":server_name PRIVMSG #sa :Hello, IRSSI!\r\n";
-	std::cout << final << std::endl;
+	// std::cout << final << std::endl;
 	while (tab.get_salon_client_len() > i)
 	{
 		std::cout << std::endl << std::endl;

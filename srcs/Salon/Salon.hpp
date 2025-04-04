@@ -53,7 +53,7 @@ class Salon
 		std::string						_Name;				// name du Salon
 		std::vector<int>				_SocketClient;		// nombre de client
 		std::string						_message;
-		std::map<int, Client>			*_clients;
+		std::map<int, Client>			_clients;
 };
 
 #endif
