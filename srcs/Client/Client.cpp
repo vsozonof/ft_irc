@@ -22,6 +22,9 @@ Client::Client(const Client &src)
 {
 	_socket = src.getSocket();
 	_authenticated = src.isAuth();
+	_nickname = src._nickname;
+	_username = src._username;
+	_password = src._password;
 }
 
 Client& Client::operator=(Client const &rhs)
@@ -30,6 +33,9 @@ Client& Client::operator=(Client const &rhs)
 	{
 		_socket = rhs.getSocket();
 		_authenticated = rhs.isAuth();
+		_nickname = rhs._nickname;
+		_username = rhs._username;
+		_password = rhs._password;
 	}
 	return (*this);
 }

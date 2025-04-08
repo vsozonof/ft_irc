@@ -11,6 +11,7 @@ Salon::Salon(const Salon &src)
 	std::cout << "avant le if" << std::endl;
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
+	std::cout << "apres le if (meme s'il existe plus)" << std::endl;
 	// if (src._clients[0])
 	// {
 	// 	std::cout << "je vais cree ma map allouer de client" << std::endl;
@@ -86,7 +87,7 @@ void Salon::showMessage()
 // get_client doit pouvoir parcourir la base de donnees des clients connecter dans le salon
 // et renvoyer le nom qui client qui possede le ClientSocket passer en parametre
 
-Client Salon::get_client(int ClientSocket, std::map<int, Client> clients)
+Client Salon::get_client(int ClientSocket)
 {
 	// std::cout << "donc la je rentre dans le get_client" << std::endl;
 	// std::cout << "et je l'affiche" << std::endl;
@@ -104,7 +105,7 @@ Client Salon::get_client(int ClientSocket, std::map<int, Client> clients)
 	// 	if (get_salon_client_len() <= i)
 	// 		break;
     // }
-    return clients[ClientSocket];
+    return _clients[ClientSocket];
 }
 
 std::map<int, Client> Salon::get_all_client()
@@ -145,7 +146,7 @@ void Salon::set_client(std::map<int, Client>& client, int clientSocket)
 // 	std::cout << " =====" << std::endl;
 // 	std::pair <int, Client> clientpair(clientSocket, client[clientSocket]);
 // 	std::map<int, Client> _clients;
-	
+
 // 	// if (_clients[clientSocket] )
 
 // 	(*_clients).insert(clientpair);
@@ -164,8 +165,18 @@ void Salon::set_client(std::map<int, Client>& client, int clientSocket)
 void Salon::show_list_client()
 {
 	int i = 0;
-    std::cout << "here is clients list " << std::endl;
+    std::cout << "\033[31m" << "here is clients list " <<  "\033[0m" << std::endl;
     std::cout << "dans le salon " << getName() << std::endl;
+	//surement dus a la dif entre mon socket et la pos des infos genre nom
+	while (1)
+	{
+		std::cout << "voici tous les socket " << this->_SocketClient[i] << std::endl;
+		i++;
+		if (get_salon_client_len() <= i)
+			break;
+	}
+	i = 0;
+
 	while (1)
     {
         std::cout << "nick " << _clients[this->_SocketClient[i]].getNickname();

@@ -36,7 +36,7 @@ class Salon
 		void setMessage(std::string msg);
 
         std::string getName();
-		Client get_client(int ClientSocket, std::map<int, Client> clients);
+		Client get_client(int ClientSocket);
 		std::string getMessage(void);
 		int get_salon_client_len();
 		int get_SocketClient(int pos);
