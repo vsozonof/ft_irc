@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 10:45:06 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/09/08 16:31:24 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:04:12 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@ Client::Client(const Client &src)
 {
 	_socket = src.getSocket();
 	_authenticated = src.isAuth();
+	_nickname = src._nickname;
+	_username = src._username;
+	_password = src._password;
 }
 
 Client& Client::operator=(Client const &rhs)
@@ -30,6 +33,9 @@ Client& Client::operator=(Client const &rhs)
 	{
 		_socket = rhs.getSocket();
 		_authenticated = rhs.isAuth();
+		_nickname = rhs._nickname;
+		_username = rhs._username;
+		_password = rhs._password;
 	}
 	return (*this);
 }

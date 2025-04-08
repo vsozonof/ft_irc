@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:03:09 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/11/12 15:22:29 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:28:53 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ class Server
 		int checkUserInfos(std::string clientPassword, std::string clientNick);
 		int checkPassword(std::string clientPassword);
 		int checkNick(std::string clientNick);
+		std::string extractValue(const std::string& msg, const std::string& key);
 
 		
 		void doClientAction(int clientSocket);
@@ -51,10 +52,10 @@ class Server
 		void sendWelcome(int clientSocket);
 		void broadcastMessage(std::string const &message, int clientSocket);
 
-		void setSalon(Salon salon, int i);
+		int setSalon(Salon salon, int i);
 		std::vector<Salon> getSalon(void);
 
-		void msg_client(int clientSocket, std::vector<Salon> tab, std::string msg);
+		void msg_client(int clientSocket, Salon &tab, std::string msg);
 
 };
 

@@ -32,15 +32,12 @@ class Salon
 		Salon();
 		~Salon();
 
-        std::string getName();
         void setName(std::string name);
 		void setMessage(std::string msg);
-		std::string getMessage(void);
-		void increaseSocketClient(int socket);
-        void showMessage();
+
+        std::string getName();
 		Client get_client(int ClientSocket);
-		void set_client(Client client);
-		void show_list_client();
+		std::string getMessage(void);
 		int get_salon_client_len();
 		std::string get_topic();
 		void set_topic(std::string topic);
@@ -53,8 +50,15 @@ class Salon
 		bool is_operator(int socket);
 		void set_client_limits(int limits);
 		int get_client_limits();
+		int get_SocketClient(int pos);
+		std::map<int, Client> get_all_client();
 
 
+        void showMessage();
+		void show_client_infos(int ClientSocket);
+		void set_client(std::map<int, Client>& client, int clientSocket);
+		void increaseSocketClient(int socket);
+		void show_list_client();
 
 	private:
 		std::string						_Name;				// name du Salon

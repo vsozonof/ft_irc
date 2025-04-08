@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/11/08 09:50:08 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:02:47 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void Server::initServer()
 	_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socket == -1)
 		throw std::runtime_error(BOLD_RED "Socket creation failure" def);
-	
+
 	sockaddr_in servAddr;
 	servAddr.sin_family = AF_INET;
 	servAddr.sin_port = htons(_port);
@@ -47,10 +47,26 @@ void Server::initServer()
 	std::cout << BOLD_GREEN << "⚙️  Ft_IRC: Server successfully initialized" << def << std::endl;
 }
 
-void Server::setSalon(Salon salon, int i)
+int Server::setSalon(Salon salon, int i)
 {
-	(void)i;
+	i = 0;
+	size_t tmp = _salon.size();
+	std::cout << "voici le nom du salon " << salon.getName() << "et size" << _salon.size() << std::endl;
+	std::cout << "donc ici il y a un probleme" << std::endl;
+	while (tmp > 0)
+	{
+		std::cout << "ok voici l'interieur tmp " << tmp << std::endl;
+		if (_salon[i].getName() == salon.getName())
+		{
+			std::cout << "salon is already existing" << std::endl;
+			return 1;
+		}
+		i++;
+		tmp--;
+	}
+	std::cout << "le salon a bien ete set " << std::endl;
 	_salon.push_back(salon);
+	return 0;
 }
 
 std::vector<Salon> Server::getSalon(void)
