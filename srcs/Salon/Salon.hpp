@@ -39,6 +39,17 @@ class Salon
 		Client get_client(int ClientSocket);
 		std::string getMessage(void);
 		int get_salon_client_len();
+		std::string get_topic();
+		void set_topic(std::string topic);
+		void set_password(std::string password);
+		std::string get_password();
+		void set_opt(int opt, bool value);
+		bool get_opt(int opt);
+		void set_operator(int socket);
+		void remove_operator(int socket);
+		bool is_operator(int socket);
+		void set_client_limits(int limits);
+		int get_client_limits();
 		int get_SocketClient(int pos);
 		std::map<int, Client> get_all_client();
 
@@ -51,9 +62,15 @@ class Salon
 
 	private:
 		std::string						_Name;				// name du Salon
+		std::string						_Topic;				// topic du Salon
 		std::vector<int>				_SocketClient;		// nombre de client
 		std::string						_message;
 		std::map<int, Client>			_clients;
+		std::string						_password; // mot de passe du salon
+		std::list<int>					_operator; // liste des opérateurs
+		int								_client_limits; // nombre de client max
+		int								_va_test;
+		bool								_opt[4]; // 0 = invitation, 1 = mode topic, 2 = mode password, 3 = user limit
 };
 
 #endif
