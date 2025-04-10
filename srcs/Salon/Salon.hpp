@@ -52,6 +52,7 @@ class Salon
 		int get_client_limits();
 		int get_SocketClient(int pos);
 		std::map<int, Client> get_all_client();
+		bool verify_salon_name(std::string name);
 
 
         void showMessage();

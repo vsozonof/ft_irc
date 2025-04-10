@@ -8,10 +8,8 @@ Salon::Salon(const Salon &src)
     _Name = src._Name;
     _SocketClient = src._SocketClient;
 	_message = src._message;
-	std::cout << "avant le if" << std::endl;
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
-	std::cout << "apres le if (meme s'il existe plus)" << std::endl;
 	// if (src._clients[0])
 	// {
 	// 	std::cout << "je vais cree ma map allouer de client" << std::endl;

@@ -95,8 +95,8 @@ void Server::setupNewClient(int clientSocket)
 
 	_clients[clientSocket].setNickname(userNick);
 	_clients[clientSocket].setUsername(userName);
-	
-	
+
+
 	// std::cout << "______________________________________" << std::endl;
 	// std::cout << "NICKNAME =" << _clients[clientSocket].getNickname() << std::endl;
 	// std::cout << "USERNAME =" << _clients[clientSocket].getUsername() << std::endl;
@@ -131,13 +131,21 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "ETAPE 1 CREE MON SALON " << std::endl << std::endl;
 		// ajouter la creation du salon a ce moment la
 		msg = msg.erase(0, 6);
-		size_t i = this->getSalon().size();
-		std::cout << "voici le nombre de salon " << i << std::endl;
 		Salon salon(msg);
-		if (setSalon(salon, 0) == 1)
+		std::cout << "faire verif de nom de salon" << std::endl;
+		if (verif_Salon(salon, 0) == 1)
+		{
+			//juste add ce qu'il faut
 			std::cout << "he exit" << std::endl;
+		}
+		std::cout << "puis getSalon voir ce que ca donne " << std::endl;
+		size_t i = this->getSalon().size();
+		i--;
+		std::cout << "voici le nombre de salon " << i << std::endl;
+		// inverser avec le salon pour aovir la version de base
 		std::cout << "apres le set_salon voici son nom " << salon.getName() << std::endl;
 		_salon[i].increaseSocketClient(clientSocket);
+		std::cout << "apres increase socket" << std::endl; 
 		std::cout << "voici le client que j'envois " << _clients[clientSocket].getNickname() << std::endl;
 		_salon[i].set_client(_clients, clientSocket);
 		int socket_tmp = clientSocket;
@@ -186,6 +194,7 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "voici mon size salon " << _salon.size() << std::endl;
 		if (_salon.size() > 0)
 		{
+			i--;
 			std::cout << i << std::endl;
 			// Salon tab = _salon[0];
 			// std::cout << "nom " << tab.getName() << std::endl;
@@ -213,8 +222,8 @@ void Server::doClientAction(int clientSocket)
 			// std::cout << tab.get_SocketClient(0) << std::endl;
 			// std::cout << "voici le message " << msg << std::endl;
 			// std::cout << "je rentre dans it != tab.begin()" << std::endl;
-			_salon[0].show_list_client();
-			msg_client(clientSocket, _salon[0], msg);
+			_salon[i].show_list_client();
+			msg_client(clientSocket, _salon[i], msg);
 			std::cout << "FIN DU ELSE DONC FIN ETAPE 2" << std::endl << std::endl;
 		}
 
