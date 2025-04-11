@@ -53,7 +53,7 @@ class Server
 		void broadcastMessage(std::string const &message, int clientSocket);
 
 		int setSalon(Salon salon, int i);
-		int verif_Salon(Salon salon, int i);
+		int verif_Salon(Salon salon);
 		std::vector<Salon> getSalon(void);
 
 		void msg_client(int clientSocket, Salon &tab, std::string msg);

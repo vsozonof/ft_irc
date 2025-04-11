@@ -69,6 +69,7 @@ void Server::setupNewClient(int clientSocket)
 		}
 		else
 		{
+			usleep(50000000);
 			std::cout << '[' << clientSocket << ']' << ": Missing informations.." << std::endl;
 		}
 	}
@@ -133,20 +134,19 @@ void Server::doClientAction(int clientSocket)
 		msg = msg.erase(0, 6);
 		Salon salon(msg);
 		std::cout << "faire verif de nom de salon" << std::endl;
-		if (verif_Salon(salon, 0) == 1)
+		if (verif_Salon(salon) == 1)
 		{
 			//juste add ce qu'il faut
 			std::cout << "he exit" << std::endl;
 		}
-		std::cout << "puis getSalon voir ce que ca donne " << std::endl;
-		size_t i = this->getSalon().size();
-		i--;
+		// std::cout << "puis getSalon voir ce que ca donne " << std::endl;
+		size_t i = this->getSalon().size() - 1;
 		std::cout << "voici le nombre de salon " << i << std::endl;
 		// inverser avec le salon pour aovir la version de base
-		std::cout << "apres le set_salon voici son nom " << salon.getName() << std::endl;
+		// std::cout << "apres le set_salon voici son nom " << salon.getName() << std::endl;
 		_salon[i].increaseSocketClient(clientSocket);
-		std::cout << "apres increase socket" << std::endl; 
-		std::cout << "voici le client que j'envois " << _clients[clientSocket].getNickname() << std::endl;
+		// std::cout << "apres increase socket" << std::endl; 
+		// std::cout << "voici le client que j'envois " << _clients[clientSocket].getNickname() << std::endl;
 		_salon[i].set_client(_clients, clientSocket);
 		int socket_tmp = clientSocket;
 		for(int j = _salon[i].get_salon_client_len(); j > 0; j--)
@@ -154,20 +154,20 @@ void Server::doClientAction(int clientSocket)
 			std::cout << "liste client ⚠️⚠️" << this->_clients[socket_tmp].getNickname() << std::endl;
 			socket_tmp++;
 		}
-		_salon[i].show_list_client();
-		_salon[i].showMessage();
+		// _salon[i].show_list_client();
+		// _salon[i].showMessage();
 		Client client = _salon[i].get_client(clientSocket);
-		_salon[i].show_client_infos(clientSocket);
+		// _salon[i].show_client_infos(clientSocket);
 		std::cout << "et maintenant verif si dans le serv les infos sont bien enregistrer" << std::endl;
 		std::cout << _salon[i].getName() << std::endl;
-		std::cout << "nick " << _clients[clientSocket].getNickname();
-		std::cout << " | user " << _clients[clientSocket].getUsername();
-		std::cout << " cc " << clientSocket << std::endl;
+		// std::cout << "nick " << _clients[clientSocket].getNickname();
+		// std::cout << " | user " << _clients[clientSocket].getUsername();
+		// std::cout << " cc " << clientSocket << std::endl;
 		send(clientSocket, msg.c_str(), msg.size(), 0);
 		int bytes = send(clientSocket, msg.c_str(), msg.size(), 0);
 			if (bytes == -1)
 				throw std::runtime_error("Error sending message with send");
-		_salon[i].show_client_infos(clientSocket);
+		_salon[i].show_list_client();
 		std::cout << "FIN DE LA CREATION DU NOUVEAU SALON DONC FIN ETAPE 1" << std::endl << std::endl;
 	}
 	else if (msg.find("PING") != std::string::npos)
@@ -230,7 +230,7 @@ void Server::doClientAction(int clientSocket)
 		// 	// 1[celui envois] 2[PRIVMSG] 3[celui qui recoit] 4[puis message]
 		// 	// <no>
 		// 	// light75018
-		std::cout << "fin affichage" << std::endl;
+		std::cout << "fin affichage " << std::endl;
 	}
 }
 
@@ -240,7 +240,6 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	std::string envoyeur;
 	std::string final;
 	int i = 0;
-	(void)tab;
 	//faire le brouillon du message ou il ne reste que les receveurs a ajouter
 	// on decoupe etape par etape
 
@@ -248,8 +247,6 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	std::cout << "ENVOIS DE LA PART DE " << clientSocket << " ET VOICI LE MESSAGE " << std::endl;
 	std::cout << msg << std::endl;
 	msg = msg.erase(msg.size() - 1);
-	tab.show_list_client();
-	(void)clientSocket;
 	// std::cout << "voici mon salon " << envoyeur << std::endl; // le salon a le bon nom
 	// std::cout << " mais encore 🤩🤩🤩🤩🤩" << std::endl;
 	// std::cout << "=== verif salon et client" << std::endl;
@@ -263,12 +260,9 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	envoyeur = tab.getName();
 	// std::cout << std::endl << "voici envoyeur " << envoyeur << std::endl;
 	// std::cout << "ALOOOOOOOOOOOOOOOOOOOOOO " << tab[i].getName();
-	std::cout << "voici le message de base " << msg << std::endl;
-	std::cout << "donc voici le message de base " << msg << "|" << std::endl; // donc #sq : sa par exemple
 	int pos = msg.find(":");
 	if (pos > 2147483647 || pos < 0)
 		return;
-	std::cout << "je suis apres et voici pos " << pos << std::endl;
 	// std::string message;
 	// std::cout << "voici pos " << pos << std::endl;
 	// std::cout << "voici len " << msg.size() - pos << std::endl;
@@ -281,45 +275,33 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	// final.append(message);
 	// final.append("\r\n");
 	std::string nv = ":";
-	std::cout << "voici nv " << nv << std::endl;
 	Client client = tab.get_client(clientSocket);
-	
-	tab.show_list_client();
-	std::cout << clientSocket;
-	std::cout << " et voici le client " << client.getNickname() << std::endl;
 	// std::cout << .getNickname() << std::endl;
 	nv.append(client.getNickname());
-	std::cout << "voici nv " << nv << std::endl;
 	nv.append(" " + msg);
-	std::cout << "voici nv " << nv << std::endl;
 	nv.append("\r\n");
-	std::cout << "nv = ";
-	std::cout << nv << std::endl;
-	std::cout << "voila le message a ete envoye sa mere" << std::endl;
 	// std::string msg1 = ":server_name PRIVMSG #sa :Hello, IRSSI!\r\n";
 	// std::cout << final << std::endl;
+	std::cout << "liste client dans le salon " << std::endl;
+	tab.show_list_client();
 	while (tab.get_salon_client_len() > i)
 	{
 		std::cout << std::endl << std::endl;
 		try
 		{
-			std::cout << "liste client dans le salon " << std::endl;
-			tab.show_list_client();
 				while (tab.get_SocketClient(i) > 0)
 				{
+					std::cout << "voici les info du if " << tab.get_SocketClient(i) << " ";
+					std::cout << clientSocket << std::endl;
 					if (tab.get_SocketClient(i) != clientSocket)
 					{
 						std::cout << tab.get_SocketClient(i) << std::endl;
-						std::cout << "isolation" << std::endl;
-						tab.show_client_infos(tab.get_SocketClient(i));
-						std::cout << "isolation" << std::endl;
-						std::cout << "voici final " << std::endl;
-						std::cout << final << std::endl;
 						int bytes = send(tab.get_SocketClient(i), nv.c_str(), nv.size(), 0);
 						if (bytes == -1)
 							throw std::runtime_error("Error sending message with send");
 					}
 					i++;
+					std::cout << "voici mon index " << i << std::endl;
 					if (i >= tab.get_salon_client_len())
 						break;
 				}

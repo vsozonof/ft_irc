@@ -69,9 +69,9 @@ int Server::setSalon(Salon salon, int i)
 	return 0;
 }
 
-int Server::verif_Salon(Salon salon, int i)
+int Server::verif_Salon(Salon salon)
 {
-	i = 0;
+	int i = 0;
 	size_t tmp = _salon.size();
 	std::cout << "voici le nom du salon " << salon.getName() << "et size" << _salon.size() << std::endl;
 	std::cout << "donc ici il y a un probleme" << std::endl;
