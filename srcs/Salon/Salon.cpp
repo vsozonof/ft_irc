@@ -41,7 +41,7 @@ Salon::~Salon() {}
 Salon::Salon(std::string name) : _Name(name)
 {
     std::cout << "voici donc mon Name " << _Name << std::endl;
-	std::map<int, Client> _clients; 
+	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
 }
 
@@ -191,7 +191,7 @@ void Salon::set_client(std::map<int, Client>& client, int clientSocket)
 	std::cout << "✅nick " << client[clientSocket].getNickname();
 	std::cout << " ✅user " << client[clientSocket].getUsername();
 	std::cout << " =====" << std::endl;
-	if (_clients.size() < 0)
+	if (_clients.size() == 0)
 		std::map<int, Client> _clients;
 	std::pair <int, Client> clientpair(clientSocket, client[clientSocket]);
 	_clients.insert(clientpair);
@@ -276,4 +276,8 @@ int Salon::get_SocketClient(int pos)
         return _SocketClient[pos];
 	std::cerr << "Index hors limites : " << pos << std::endl;
 	return -1;
+}
+void Salon::remove_client(int socket)
+{
+   _clients.erase(socket);
 }

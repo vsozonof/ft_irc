@@ -53,7 +53,7 @@ class Salon
 		int get_SocketClient(int pos);
 		std::map<int, Client> get_all_client();
 		bool verify_salon_name(std::string name);
-
+		void remove_client(int socket);
 
         void showMessage();
 		void show_client_infos(int ClientSocket);

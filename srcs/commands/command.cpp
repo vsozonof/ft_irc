@@ -6,7 +6,7 @@
 /*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/03/05 10:48:49 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/04/15 09:31:30 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,52 @@ Command::~Command()
 {
 }
 
+void Command::selectCommand(std::string command, Salon *salon)
+{
+	if (command.find("kick") != std::string::npos)
+	{
+		std::string username = command.substr(command.find(" ") + 1);
+		kick(username, salon);
+	}
+	else if (command.find("invite") != std::string::npos)
+	{
+		std::string username = command.substr(command.find(" ") + 1);
+		invite(username, salon);
+	}
+	else if (command.find("topic") != std::string::npos)
+	{
+		std::string topics = command.substr(command.find(" ") + 1);
+		topic(topics, salon);
+	}
+	else if (command.find("mode") != std::string::npos)
+	{
+		std::string args = command.substr(command.find(" ") + 1);
+		mode(args, salon);
+	}
+	else
+	{
+		salon->setMessage("Invalid command");
+		salon->showMessage();
+	}
+}
+
 void Command::kick(std::string username, Salon *salon)
 {
-	std::cout << "Kicking " << username << std::endl;
+	Client client;
+	for (int i = 0; i < salon->get_salon_client_len(); i++)
+	{
+		client = salon->get_client(i);
+		if (client.getUsername() == username)
+		{
+			client.sendMsg("You have been kicked from the salon");
+			salon->setMessage("User " + username + " has been kicked from the salon");
+			salon->showMessage();
+			salon->remove_client(client.getSocket());
+			return;
+		}
+	}
+	salon->setMessage("User not found");
+	salon->showMessage();
 }
 
 void Command::invite(std::string username, Salon *salon)
