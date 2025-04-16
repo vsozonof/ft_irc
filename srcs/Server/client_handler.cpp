@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   client_handler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/03/26 21:09:16 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/04/16 10:23:43 by ertupop          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <stdlib.h>
+#include "../commands/command.hpp"
 
 void Server::handleClient()
 {
@@ -178,6 +179,17 @@ void Server::doClientAction(int clientSocket)
 	else if (msg.find("QUIT") != std::string::npos)
 	{
 		std::cout << "QUIT command" << std::endl;
+	}
+	else if (msg.find("KICK") != std::string::npos)
+	{
+		for(size_t i = 0; _salon.size() < i; i++)
+		{
+			std::map <int, Client> client = _salon[i].get_all_client();
+			int i2 = 0;
+			for(; client[i2].getSocket() != clientSocket; i2++);
+			if (client[i2].getSocket() != clientSocket)
+				Command::selectCommand(msg, &_salon[i]);
+		}
 	}
 	else
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/04/15 09:31:30 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/04/16 09:54:38 by ertupop          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void Command::selectCommand(std::string command, Salon *salon)
 
 void Command::kick(std::string username, Salon *salon)
 {
+	std::cout << "je suis la commande kick" << std::endl;
 	Client client;
 	for (int i = 0; i < salon->get_salon_client_len(); i++)
 	{
