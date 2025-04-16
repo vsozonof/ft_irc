@@ -73,11 +73,8 @@ int Server::verif_Salon(Salon salon)
 {
 	int i = 0;
 	size_t tmp = _salon.size();
-	std::cout << "voici le nom du salon " << salon.getName() << "et size" << _salon.size() << std::endl;
-	std::cout << "donc ici il y a un probleme" << std::endl;
 	while (tmp > 0)
 	{
-		std::cout << "ok voici l'interieur tmp " << tmp << std::endl;
 		if (_salon[i].getName() == salon.getName())
 		{
 			std::cout << "salon is already existing" << std::endl;
@@ -86,7 +83,6 @@ int Server::verif_Salon(Salon salon)
 		i++;
 		tmp--;
 	}
-	std::cout << "le salon a bien ete set " << std::endl;
 	_salon.push_back(salon);
 	return 0;
 }

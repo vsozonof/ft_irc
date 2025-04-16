@@ -4,7 +4,6 @@ Salon::Salon() {}
 
 Salon::Salon(const Salon &src)
 {
-    std::cout << "New salon created" << std::endl;
     _Name = src._Name;
     _SocketClient = src._SocketClient;
 	_message = src._message;
@@ -27,7 +26,6 @@ Salon& Salon::operator=(Salon const &rhs)
 {
     if (this != &rhs)
     {
-		std::cout << "constructeur par copy" << std::endl;
         _Name = rhs._Name;
         _SocketClient = rhs._SocketClient;
 		_message = rhs._message;
@@ -40,7 +38,6 @@ Salon::~Salon() {}
 
 Salon::Salon(std::string name) : _Name(name)
 {
-    std::cout << "voici donc mon Name " << _Name << std::endl;
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
 }
@@ -155,27 +152,9 @@ void Salon::showMessage()
     // faire circuler le message
 }
 
-// get_client doit pouvoir parcourir la base de donnees des clients connecter dans le salon
-// et renvoyer le nom qui client qui possede le ClientSocket passer en parametre
 
 Client Salon::get_client(int ClientSocket)
 {
-	// std::cout << "donc la je rentre dans le get_client" << std::endl;
-	// std::cout << "et je l'affiche" << std::endl;
-	// int i = 0;
-	// while (1)
-    // {
-	// 	// std::cout << "nick " << (*this->_clients)[this->_SocketClient[i]].getNickname();
-    //     // std::cout << " | user " << _clients[ClientSocket][i].getUsername();
-    // 	// std::cout << " cc " << this->_SocketClient[i] << std::endl;
-    //     std::cout << "nick " << (*this->_clients)[this->_SocketClient[i]].getNickname();
-    //     std::cout << " | user " << (*this->_clients)[this->_SocketClient[i]].getUsername();
-    // 	std::cout << " cc " << this->_SocketClient[i] << std::endl;
-    //     std::cout << " | user " << _clients[ClientSocket][i].getUsername();
-	// 	i++;
-	// 	if (get_salon_client_len() <= i)
-	// 		break;
-    // }
     return _clients[ClientSocket];
 }
 
@@ -195,10 +174,7 @@ void Salon::set_client(std::map<int, Client>& client, int clientSocket)
 		std::map<int, Client> _clients;
 	std::pair <int, Client> clientpair(clientSocket, client[clientSocket]);
 	_clients.insert(clientpair);
-	// if (_clients[clientSocket] )
 
-	// _clients.insert(clientpair);
-    // this->_clients[i] = client;
 	if (_clients.find(clientSocket) != client.end())
 		std::cout << " ca existe" << std::endl;
 	else
@@ -208,30 +184,6 @@ void Salon::set_client(std::map<int, Client>& client, int clientSocket)
 	show_client_infos(clientSocket);
 	std::cout << std::endl;
 }
-
-// void Salon::set_client(std::map<int, Client>& client, int clientSocket)
-// {
-//     std::cout << "debut set_client donc le client que je VAIS enregistrer" << std::endl;
-// 	std::cout << "✅nick " << client[clientSocket].getNickname();
-// 	std::cout << " ✅user " << client[clientSocket].getUsername();
-// 	std::cout << " =====" << std::endl;
-// 	std::pair <int, Client> clientpair(clientSocket, client[clientSocket]);
-// 	std::map<int, Client> _clients;
-
-// 	// if (_clients[clientSocket] )
-
-// 	(*_clients).insert(clientpair);
-// 	// _clients.insert(clientpair);
-//     // this->_clients[i] = client;
-// 	if ((*_clients).find(clientSocket) != client.end())
-// 		std::cout << " ca existe" << std::endl;
-// 	else
-// 		std::cout << "Client avec ce socket n'existe pas!" << std::endl;
-// 	(*_clients)[clientSocket].setNickname(client[clientSocket].getNickname());
-// 	(*_clients)[clientSocket].setUsername(client[clientSocket].getUsername());
-// 	show_client_infos(clientSocket);
-// 	std::cout << std::endl;
-// }
 
 void Salon::show_list_client()
 {

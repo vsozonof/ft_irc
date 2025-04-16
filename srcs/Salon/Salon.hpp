@@ -69,7 +69,6 @@ class Salon
 		std::string						_password; // mot de passe du salon
 		std::list<int>					_operator; // liste des opérateurs
 		int								_client_limits; // nombre de client max
-		int								_va_test;
 		bool								_opt[4]; // 0 = invitation, 1 = mode topic, 2 = mode password, 3 = user limit
 };
 
