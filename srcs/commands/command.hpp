@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:43:57 by rostrub           #+#    #+#             */
-/*   Updated: 2025/04/15 09:26:52 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:31:06 by ertupop          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define COMMAND_HPP
 
 #include "../../includes/inc.hpp"
+#include "../Salon/Salon.hpp"
+
+class Salon;
 
 class Command
 {

@@ -6,7 +6,7 @@
 /*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/04/16 10:23:43 by ertupop          ###   ########.fr       */
+/*   Updated: 2025/04/16 12:37:53 by ertupop          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,16 +180,17 @@ void Server::doClientAction(int clientSocket)
 	{
 		std::cout << "QUIT command" << std::endl;
 	}
-	else if (msg.find("KICK") != std::string::npos)
+	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
 	{
-		for(size_t i = 0; _salon.size() < i; i++)
-		{
-			std::map <int, Client> client = _salon[i].get_all_client();
-			int i2 = 0;
-			for(; client[i2].getSocket() != clientSocket; i2++);
-			if (client[i2].getSocket() != clientSocket)
-				Command::selectCommand(msg, &_salon[i]);
-		}
+		std::cout << "coucou je suis une commande" << std::endl;
+		// for(size_t i = 0; _salon.size() < i; i++)
+		// {
+		// 	std::map <int, Client> client = _salon[i].get_all_client();
+		// 	int i2 = 0;
+		// 	for(; client[i2].getSocket() != clientSocket; i2++);
+		// 	if (client[i2].getSocket() != clientSocket)
+				
+		// }
 	}
 	else
 	{
