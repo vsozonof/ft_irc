@@ -174,15 +174,17 @@ void Server::doClientAction(int clientSocket)
 		int i = 0;
 		for (; (int)this->_salon.size() > i; i++)
 		{
-			// std::cout << "salon numero " << i << " voici ses infos ====== :" << std::endl;
-			// std::cout << this->_salon[i].getName() << " : "<< std::endl;
+			std::cout << "salon numero " << i << " voici ses infos ====== :" << std::endl;
+			std::cout << this->_salon[i].getName() << " : "<< std::endl;
 		}
 		// std::cout << "voici mon size salon " << _salon.size() << std::endl;
 		if (_salon.size() > 0)
 		{
-			i--;
+			std::cout << "Voici le salon qui va envoyer un message ";
+			std::cout << _salon[search_salon_by_socket(clientSocket)].getName() << std::endl;
+			_salon[search_salon_by_socket(clientSocket)].show_list_client();
 			// std::cout << "et voici le nom de la copie" << std::endl;
-			msg_client(clientSocket, _salon[i], msg);
+			msg_client(clientSocket, _salon[search_salon_by_socket(clientSocket)], msg);
 		}
 
 		// 	// 1[celui envois] 2[PRIVMSG] 3[celui qui recoit] 4[puis message]
