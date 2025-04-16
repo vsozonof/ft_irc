@@ -139,10 +139,7 @@ void Server::doClientAction(int clientSocket)
 		_salon[i].set_client(_clients, clientSocket);
 		int socket_tmp = clientSocket;
 		for(int j = _salon[i].get_salon_client_len(); j > 0; j--)
-		{
-			// std::cout << "liste client ⚠️⚠️" << this->_clients[socket_tmp].getNickname() << std::endl;
 			socket_tmp++;
-		}
 		Client client = _salon[i].get_client(clientSocket);
 		send(clientSocket, msg.c_str(), msg.size(), 0);
 		int bytes = send(clientSocket, msg.c_str(), msg.size(), 0);

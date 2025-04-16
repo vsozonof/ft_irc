@@ -139,7 +139,6 @@ void Salon::showMessage()
     // faire circuler le message
 }
 
-
 Client Salon::get_client(int ClientSocket)
 {
     return _clients[ClientSocket];

@@ -56,6 +56,7 @@ class Server
 		int setSalon(Salon salon, int i);
 		int verif_Salon(Salon salon);
 		std::vector<Salon> getSalon(void);
+		int search_salon_by_socket(int clientSocket);
 
 		void msg_client(int clientSocket, Salon &tab, std::string msg);
 

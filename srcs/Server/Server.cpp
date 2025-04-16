@@ -89,6 +89,22 @@ std::vector<Salon> Server::getSalon(void)
 	return _salon;
 }
 
+int Server::search_salon_by_socket(int clientSocket) // renvois la pos du salon ou il y a le user
+{
+	int i = 0;
+	while (_salon.size() > i)
+	{
+		int j = 0;
+		std::map <int, Client> client = _salon[i].get_all_client();
+		while (client[j].getSocket() != clientSocket)
+			j++;
+		if (client[j].getSocket() == clientSocket)
+			return i;
+		i++;
+	}
+	return 0;
+}
+
 void Server::run()
 {
 	while (42)
