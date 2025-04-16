@@ -9,17 +9,6 @@ Salon::Salon(const Salon &src)
 	_message = src._message;
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
-	// if (src._clients[0])
-	// {
-	// 	std::cout << "je vais cree ma map allouer de client" << std::endl;
-	// 	// _clients = new std::map<int, Client>(*src._clients);
-	// 	this->_clients = src._clients;
-	// 	std::cout << "j'ai finis" << std::endl;
-	// }
-	// else
-	// {
-	// 	std::cout << "aucun client a copier " << std::endl;
-	// }
 }
 
 Salon& Salon::operator=(Salon const &rhs)
@@ -138,12 +127,10 @@ int Salon::get_client_limits()
 void Salon::increaseSocketClient(int socket)
 {
     _SocketClient.push_back(socket);
-    std::cout << "🔥voici tous mes socket 🔥" << std::endl;
     int i = _SocketClient.size();
     while (i > 0)
     {
         i--;
-        std::cout << "socket " << _SocketClient[i] << std::endl;
     }
 }
 
@@ -166,30 +153,20 @@ std::map<int, Client> Salon::get_all_client()
 
 void Salon::set_client(std::map<int, Client>& client, int clientSocket)
 {
-    std::cout << "debut set_client donc le client que je VAIS enregistrer" << std::endl;
-	std::cout << "✅nick " << client[clientSocket].getNickname();
-	std::cout << " ✅user " << client[clientSocket].getUsername();
-	std::cout << " =====" << std::endl;
 	if (_clients.size() == 0)
 		std::map<int, Client> _clients;
 	std::pair <int, Client> clientpair(clientSocket, client[clientSocket]);
 	_clients.insert(clientpair);
 
-	if (_clients.find(clientSocket) != client.end())
-		std::cout << " ca existe" << std::endl;
-	else
-		std::cout << "Client avec ce socket n'existe pas!" << std::endl;
 	_clients[clientSocket].setNickname(client[clientSocket].getNickname());
 	_clients[clientSocket].setUsername(client[clientSocket].getUsername());
 	show_client_infos(clientSocket);
-	std::cout << std::endl;
 }
 
 void Salon::show_list_client()
 {
 	int i = 0;
     std::cout << "\033[31m" << "here is clients list " <<  "\033[0m" << std::endl;
-    std::cout << "dans le salon " << getName() << std::endl;
 	//surement dus a la dif entre mon socket et la pos des infos genre nom
 	while (1)
 	{
@@ -226,9 +203,9 @@ int Salon::get_SocketClient(int pos)
 {
 	if (pos >= 0)
         return _SocketClient[pos];
-	std::cerr << "Index hors limites : " << pos << std::endl;
 	return -1;
 }
+
 void Salon::remove_client(int socket)
 {
    _clients.erase(socket);

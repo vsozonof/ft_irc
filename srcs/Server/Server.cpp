@@ -51,11 +51,8 @@ int Server::setSalon(Salon salon, int i)
 {
 	i = 0;
 	size_t tmp = _salon.size();
-	std::cout << "voici le nom du salon " << salon.getName() << "et size" << _salon.size() << std::endl;
-	std::cout << "donc ici il y a un probleme" << std::endl;
 	while (tmp > 0)
 	{
-		std::cout << "ok voici l'interieur tmp " << tmp << std::endl;
 		if (_salon[i].getName() == salon.getName())
 		{
 			std::cout << "salon is already existing" << std::endl;
