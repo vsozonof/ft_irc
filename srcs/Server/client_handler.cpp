@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_handler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
+/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/04/16 12:37:53 by ertupop          ###   ########.fr       */
+/*   Updated: 2025/04/17 15:25:47 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void Server::setupNewClient(int clientSocket)
 {
 	std::cout << "\033[1m" << "----- Setting up new client ------" << std::endl;
 	std::cout << "Setting up client: " << clientSocket << std::endl;
-	
+
 	Client newClient(clientSocket);
 	_clients.insert(std::pair<int, Client>(clientSocket, newClient));
 	pollfd newClient_fd;
@@ -85,13 +85,13 @@ void Server::setupNewClient(int clientSocket)
 	std::string userName = extractValue(msg, "USER");
 
 	std::cout << "______________________________________" << std::endl;
-	std::cout << "\n[" << clientSocket << "]: " << "INFOS RECEIVED:\n" 
+	std::cout << "\n[" << clientSocket << "]: " << "INFOS RECEIVED:\n"
 				<< "PASS: " << '[' << userPass << ']'
-				<< "\nNICK: " << '[' << userNick << ']' 
+				<< "\nNICK: " << '[' << userNick << ']'
 				<< "\nNAME: " << '[' << userName << ']';
 	std::cout << "\n------------------------------------" << '\n';
 
-	
+
 	if (checkUserInfos(userPass, userNick))
 		throw std::runtime_error("User infos not correct"); // ! Fix le retour d'erreur
 
@@ -158,15 +158,9 @@ void Server::doClientAction(int clientSocket)
 	}
 	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
 	{
-		std::cout << "coucou je suis une commande" << std::endl;
-		// for(size_t i = 0; _salon.size() < i; i++)
-		// {
-		// 	std::map <int, Client> client = _salon[i].get_all_client();
-		// 	int i2 = 0;
-		// 	for(; client[i2].getSocket() != clientSocket; i2++);
-		// 	if (client[i2].getSocket() != clientSocket)
-				
-		// }
+		Salon *salon;
+		salon = &this->_salon[search_salon_by_socket(clientSocket)];
+		Command::selectCommand(msg, salon);
 	}
 	else
 	{
