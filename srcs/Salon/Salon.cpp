@@ -25,10 +25,11 @@ Salon& Salon::operator=(Salon const &rhs)
 
 Salon::~Salon() {}
 
-Salon::Salon(std::string name) : _Name(name)
+Salon::Salon(std::string name)
 {
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
+    _Name = name;
 }
 
 std::string Salon::getName()
