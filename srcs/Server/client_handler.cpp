@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_handler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/04/18 17:41:50 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/04/21 18:37:59 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,54 +130,22 @@ void Server::doClientAction(int clientSocket)
 	if (msg.find("JOIN") != std::string::npos)
 	{
 		std::cout << "ETAPE 1 CREATION NOUVEAU SALON " << std::endl << std::endl;
-		for (int i = 0; (int)this->_salon.size() > i; i++)
-		{
-			std::cout << "salon numero " << i << " voici ses infos ====== :" << std::endl;
-			std::cout << this->_salon[i].getName() << " : "<< std::endl;
-			_salon[i].show_list_client();
-		}
 		std::cout << std::endl << std::endl << "OK MAINTENANT PASSONS A LA SUITE  " << std::endl << std::endl;
 		msg = msg.erase(0, 6);
 		Salon salon(msg);
-		for (int j = 0; (int)this->_salon.size() > j; j++)
-		{
-			std::cout << "salon numero " << j << " voici ses infos ====== :" << std::endl;
-			std::cout << this->_salon[j].getName() << " : "<< std::endl;
-			if (_salon[j].get_salon_client_len() > 0)
-				_salon[j].show_list_client();
-		}
 		std::cout << "au moment de verif salon" << std::endl;
 		if (verif_Salon(salon) == 1)
 			std::cout << "he exit" << std::endl;
 		size_t i = this->getSalon().size() - 1;
-		for (int j = 0; (int)this->_salon.size() > j; j++)
-		{
-			std::cout << "salon numero " << j << " voici ses infos ====== :" << std::endl;
-			std::cout << this->_salon[j].getName() << " : "<< std::endl;
-			if (_salon[j].get_salon_client_len() > 0)
-				_salon[j].show_list_client();
-		}
 		std::cout << std::endl << "voici le nom du salon " << _salon[i].getName() << std::endl;
 		_salon[i].increaseSocketClient(clientSocket);
 		_salon[i].set_client(_clients, clientSocket);
 		Client client = _salon[i].get_client(clientSocket);
-		for (int j = 0; (int)this->_salon.size() > j; j++)
-		{
-			std::cout << "salon numero " << j << " voici ses infos ====== :" << std::endl;
-			std::cout << this->_salon[j].getName() << " : "<< std::endl;
-			_salon[j].show_list_client();
-		}
 		std::cout << "juste avant le send " << std::endl;
 		send(clientSocket, msg.c_str(), msg.size(), 0);
 		int bytes = send(clientSocket, msg.c_str(), msg.size(), 0);
 			if (bytes == -1)
 				throw std::runtime_error("Error sending message with send");
-		for (int j = 0; (int)this->_salon.size() > j; j++)
-		{
-			std::cout << "salon numero " << j << " voici ses infos ====== :" << std::endl;
-			std::cout << this->_salon[j].getName() << " : "<< std::endl;
-			_salon[j].show_list_client();
-		}
 		std::cout << std::endl << "FIN DE LA CREATION DU NOUVEAU SALON DONC FIN ETAPE 1" << std::endl << std::endl;
 	}
 	else if (msg.find("PING") != std::string::npos)
