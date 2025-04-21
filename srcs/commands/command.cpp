@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
+/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/04/16 09:54:38 by ertupop          ###   ########.fr       */
+/*   Updated: 2025/04/21 18:27:31 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,136 +20,154 @@ Command::~Command()
 {
 }
 
-void Command::selectCommand(std::string command, Salon *salon)
-{
-	if (command.find("kick") != std::string::npos)
+void Command::selectCommand(std::string command, Salon &salon)
+{	std::cout << "===================================================" << std::endl;
+	if (command.find("KICK") != std::string::npos)
 	{
-		std::string username = command.substr(command.find(" ") + 1);
+		size_t start = command.find("KICK") + 6 + salon.getName().size();
+		size_t end = command.find_first_of(" :", start);
+		std::string username = command.substr(start, end - start);
 		kick(username, salon);
 	}
-	else if (command.find("invite") != std::string::npos)
+	else if (command.find("INVITE") != std::string::npos)
 	{
-		std::string username = command.substr(command.find(" ") + 1);
-		invite(username, salon);
+		std::cout << "je suis la commande invite" << std::endl;
 	}
-	else if (command.find("topic") != std::string::npos)
+	else if (command.find("TOPIC") != std::string::npos)
 	{
-		std::string topics = command.substr(command.find(" ") + 1);
-		topic(topics, salon);
+		std::cout << "je suis la commande topic" << std::endl;
 	}
-	else if (command.find("mode") != std::string::npos)
+	else if (command.find("MODE") != std::string::npos)
 	{
-		std::string args = command.substr(command.find(" ") + 1);
-		mode(args, salon);
+		std::cout << "je suis la commande mode" << std::endl;
 	}
-	else
-	{
-		salon->setMessage("Invalid command");
-		salon->showMessage();
-	}
+	(void) salon;
 }
 
-void Command::kick(std::string username, Salon *salon)
+void debug_print(const std::string& msg)
 {
-	std::cout << "je suis la commande kick" << std::endl;
+    for (size_t i = 0; i < msg.length(); ++i)
+    {
+        if (msg[i] == '\r')
+            std::cout << "\\r";
+        else if (msg[i] == '\n')
+            std::cout << "\\n";
+        else
+            std::cout << msg[i];
+    }
+    std::cout << std::endl;
+}
+
+std::string clean(std::string s) {
+    for (size_t i = 0; i < s.length(); ++i) {
+        if (s[i] == '\r' || s[i] == '\n')
+            s.erase(i--, 1);
+    }
+    return s;
+}
+
+void Command::kick(std::string username, Salon &salon)
+{
 	Client client;
-	for (int i = 0; i < salon->get_salon_client_len(); i++)
+	for (int i = 0; i < salon.get_salon_client_len(); i++)
 	{
-		client = salon->get_client(i);
-		if (client.getUsername() == username)
+		client = salon.get_client(i + 4);
+		if (client.getNickname() == username)
 		{
-			client.sendMsg("You have been kicked from the salon");
-			salon->setMessage("User " + username + " has been kicked from the salon");
-			salon->showMessage();
-			salon->remove_client(client.getSocket());
+			std::string kick_msg = ":127.0.0.1 KICK #" + clean(salon.getName()) + " " + clean(client.getNickname()) + " :Kicked from channel\r\n";
+			send(client.getSocket(), kick_msg.c_str(), kick_msg.length() + 1, 0);
+			debug_print(kick_msg);
+			std::cout << "kick_msg length: " << kick_msg.length() << std::endl;
+			salon.remove_client(client.getSocket());
 			return;
 		}
 	}
-	salon->setMessage("User not found");
-	salon->showMessage();
 }
 
-void Command::invite(std::string username, Salon *salon)
+
+
+void Command::invite(std::string username, Salon &salon)
 {
+	(void) salon;
 	std::cout << "Inviting " << username << std::endl;
 }
 
-void Command::topic(std::string topics, Salon *salon)
+void Command::topic(std::string topics, Salon &salon)
 {
 	if (topics.empty())
 	{
-		salon->setMessage(salon->get_topic());
-		salon->showMessage();
+		salon.setMessage(salon.get_topic());
+		salon.showMessage();
 	}
 	else
 	{
-		salon->set_topic(topics);
+		salon.set_topic(topics);
 	}
 }
 
-void Command::mode(std::string args, Salon *salon)
+void Command::mode(std::string args, Salon &salon)
 {
 	if (args.empty())
 	{
-		salon->setMessage("You need to specifie arguments to execute this command");
-		salon->showMessage();
+		salon.setMessage("You need to specifie arguments to execute this command");
+		salon.showMessage();
 	}
 	if (args.find("-i"))
 	{
-		if (salon->get_opt(0) == true)
-			salon->set_opt(0, false);
+		if (salon.get_opt(0) == true)
+			salon.set_opt(0, false);
 		else
-			salon->set_opt(0, true);
+			salon.set_opt(0, true);
 	}
 	else if (args.find("-t"))
 	{
-		if (salon->get_opt(1) == true)
-			salon->set_opt(1, false);
+		if (salon.get_opt(1) == true)
+			salon.set_opt(1, false);
 		else
-			salon->set_opt(1, true);
+			salon.set_opt(1, true);
 	}
 	else if (args.find("-k"))
 	{
-		if (salon->get_opt(2) == true)
+		if (salon.get_opt(2) == true)
 		{
-			salon->set_opt(2, false);
-			salon->set_password(NULL);
+			salon.set_opt(2, false);
+			salon.set_password(NULL);
 		}
 		else
 		{
-			salon->set_opt(2, true);
+			salon.set_opt(2, true);
 			std::string password = args.substr(args.find("-k") + 3);
 			if (password.empty())
 			{
-				salon->setMessage("Invalid arguments");
-				salon->showMessage();
+				salon.setMessage("Invalid arguments");
+				salon.showMessage();
 				return;
 			}
-			salon->set_password(args.substr(args.find("-k") + 3));
+			salon.set_password(args.substr(args.find("-k") + 3));
 		}
 
 	}
 	else if (args.find("-l"))
 	{
-		if (salon->get_opt(3) == true)
-			salon->set_opt(3, false);
+		if (salon.get_opt(3) == true)
+			salon.set_opt(3, false);
 		else
 		{
-			salon->set_opt(3, true);
-			int i = std::stoi(args.substr(args.find("-l") + 3));
+			salon.set_opt(3, true);
+			 int i = std::atoi(args.substr(args.find("-l") + 3).c_str());
 			if (i < 0 || (i == 0 && args.substr(args.find("-l") + 3) != "0"))
 			{
-				salon->setMessage("Invalid arguments");
-				salon->showMessage();
+				salon.setMessage("Invalid arguments");
+				salon.showMessage();
 				return;
 			}
-			salon->set_client_limits(std::stoi(args.substr(args.find("-l") + 3)));
+			// salon.set_client_limits(std::stoi(args.substr(args.find("-l") + 3)));
 		}
 	}
 	else
 	{
-		salon->setMessage("Invalid arguments");
-		salon->showMessage();
+		salon.setMessage("Invalid arguments");
+		salon.showMessage();
 	}
 
 }

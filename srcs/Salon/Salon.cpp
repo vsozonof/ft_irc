@@ -208,5 +208,13 @@ int Salon::get_SocketClient(int pos)
 
 void Salon::remove_client(int socket)
 {
-   _clients.erase(socket);
+    _clients.erase(socket);
+   for (int i = 0; (int)this->_SocketClient.size() > i; i++)
+    {
+        if (_SocketClient[i] == socket)
+        {
+            _SocketClient.erase(_SocketClient.begin() + i);
+            return;
+        }
+    }
 }

@@ -6,7 +6,7 @@
 /*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/04/17 15:25:47 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/04/18 17:41:50 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,8 +191,7 @@ void Server::doClientAction(int clientSocket)
 	}
 	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
 	{
-		Salon *salon;
-		salon = &this->_salon[search_salon_by_socket(clientSocket)];
+		Salon &salon = this->_salon[search_salon_by_socket(clientSocket)];
 		Command::selectCommand(msg, salon);
 	}
 	else

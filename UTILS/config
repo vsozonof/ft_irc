@@ -74,6 +74,15 @@ servers = (
     tls_verify = "no";
     no_cap = "yes";
   }
+  {
+    address = "localhost";
+    chatnet = "ft_irc2";
+    port = "6666";
+    password = "prout";
+    use_tls = "no";
+    tls_verify = "no";
+    no_cap = "yes";
+  }
 );
 
 chatnets = {

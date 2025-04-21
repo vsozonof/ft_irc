@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
+/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:43:57 by rostrub           #+#    #+#             */
-/*   Updated: 2025/04/16 12:31:06 by ertupop          ###   ########.fr       */
+/*   Updated: 2025/04/18 17:40:20 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ class Command
 		Command();
 	public:
 		~Command();
-		void selectCommand(std::string command, Salon *salon);
-		void kick(std::string username, Salon *salon);
-		void invite(std::string username, Salon *salon);
-		void topic(std::string topics, Salon *salon);
-		void mode(std::string args, Salon *salon);
+		static void selectCommand(std::string command, Salon &salon);
+		static void kick(std::string username, Salon &salon);
+		static void invite(std::string username, Salon &salon);
+		static void topic(std::string topics, Salon &salon);
+		static void mode(std::string args, Salon &salon);
 };
 
 #endif

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+         #
+#    By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/05 14:09:59 by vsozonof          #+#    #+#              #
-#    Updated: 2024/11/12 17:19:24 by vsozonof         ###   ########.fr        #
+#    Updated: 2025/04/21 16:21:25 by rostrub          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,13 +29,15 @@ SRCS = main.cpp \
 	   srcs/Server/registrationUtils.cpp \
 	   srcs/Client/Client.cpp \
 	   srcs/Salon/Salon.cpp \
-	   
-	   
+	   srcs/commands/command.cpp \
+
+
 DEPS = includes/inc.hpp \
 	   srcs/Server/Server.hpp \
 	   srcs/Client/Client.hpp \
 	   srcs/Salon/Salon.hpp \
-	   
+	   srcs/commands/command.hpp \
+
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -58,7 +60,7 @@ clean:
 	@$(RM) $(OBJS)
 	@echo "$(RD)FT_IRC -\t$(WH)$(BL)CLEANED $(OR)$(WH)"
 
-fclean: 
+fclean:
 	@echo "$(RD)FT_IRC -\t$(WH)$(BL)FCLEANING $(OR)$(WH)"
 	@$(RM) $(NAME) $(OBJS)
 	@echo "$(RD)FT_IRC -\t$(WH)$(BL)FCLEANED $(OR)$(WH)"
@@ -78,7 +80,7 @@ ready:
 	@echo "\n  $(OR)Usage:$(WH) ./ircserv [port] [password]"
 	@echo "  $(OR)- port$(WH) - port number to listen on"
 	@echo "  $(OR)- password$(WH) - server password"
-	@echo "  $(OR)- Example:$(WH) ./ircserv 6667 norminet-the-god\n"
+	@echo "  $(OR)- Example:$(WH) ./ircserv 6666 prout\n"
 
 re: fclean all
 
