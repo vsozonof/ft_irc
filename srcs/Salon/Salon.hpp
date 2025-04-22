@@ -53,6 +53,7 @@ class Salon
 		int get_SocketClient(int pos);
 		std::map<int, Client> get_all_client();
 		void remove_client(int socket);
+		void send_to_all(std::string msg);
 
         void showMessage();
 		void show_client_infos(int ClientSocket);

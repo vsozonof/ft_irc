@@ -218,3 +218,14 @@ void Salon::remove_client(int socket)
         }
     }
 }
+
+void Salon::send_to_all(std::string msg)
+{
+    std::map<int, Client>::iterator it;
+    for (size_t i = 0; this->_SocketClient.size() > i; i++)
+    {
+        ssize_t bytes_sent = send(_SocketClient[i], msg.c_str(), msg.length() + 1, 0);
+        if (bytes_sent == -1)
+            std::cerr << "Failed to send to client fd " << it->first << ": " << strerror(errno) << std::endl;
+    }
+}
