@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/04/21 19:21:36 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/04/22 08:46:37 by ertupop          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ void Command::kick(std::string username, Salon &salon)
 		if (client.getNickname() == username)
 		{
 			std::string kick_msg = ":127.0.0.1 KICK #" + clean(salon.getName()) + " " + clean(client.getNickname()) + " :Kicked from channel\r\n";
-			send(client.getSocket(), kick_msg.c_str(), kick_msg.length() + 1, 0);
+			// send(client.getSocket(), kick_msg.c_str(), kick_msg.length() + 1, 0);
+			salon.send_to_all(kick_msg);
 			debug_print(kick_msg);
 			std::cout << "kick_msg length: " << kick_msg.length() << std::endl;
 			salon.remove_client(client.getSocket());
@@ -95,8 +96,10 @@ void Command::invite(std::string username, Salon &salon)
 
 void Command::topic(std::string topics, Salon &salon, Client client)
 {
-	std::string topic = topics.substr(topics.find("TOPIC") + 6);
-
+	std::string topic = clean(topics.substr(topics.find(":") + 1));
+	std::cout << "==================" << std::endl;
+	std::cout << "Topic = ";
+	debug_print(topic);
 	if (topic.empty())
 	{
 		std::string topic_msg;
@@ -109,9 +112,13 @@ void Command::topic(std::string topics, Salon &salon, Client client)
 	else
 	{
 		salon.set_topic(topic);
-		std::string topic_msg = ":" + client.getNickname() + " TOPIC #" + clean(salon.getName()) + " :" + topic + "\r\n";
+		std::string topic_msg = ":" + client.getNickname()+ "!" + client.getUsername() + "@" + "127.0.0.1" + " TOPIC #" + clean(salon.getName()) + " :" + topic + "\r\n";
+		std::cout << "topic message = ";
+		debug_print(topic_msg);
+		for (size_t i = 0; i < topic_msg.size(); ++i)
+    		std::cout << std::hex << (int)(unsigned char)topic_msg[i] << " ";
+		std::cout << std::endl;
 		salon.send_to_all(topic_msg);
-
 	}
 }
 
