@@ -76,9 +76,8 @@ void Command::kick(std::string username, Salon &salon)
 		if (client.getNickname() == username)
 		{
 			std::string kick_msg = ":127.0.0.1 KICK #" + clean(salon.getName()) + " " + clean(client.getNickname()) + " :Kicked from channel\r\n";
-			send(client.getSocket(), kick_msg.c_str(), kick_msg.length() + 1, 0);
+			salon.send_to_all(kick_msg);
 			debug_print(kick_msg);
-			std::cout << "kick_msg length: " << kick_msg.length() << std::endl;
 			salon.remove_client(client.getSocket());
 			return;
 		}
