@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/03/19 16:02:47 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/04/21 18:38:15 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,6 @@ int Server::verif_Salon(Salon salon)
 		}
 		i++;
 		tmp--;
-	}
-	for (int j = 0; (int)this->_salon.size() > j; j++)
-	{
-		std::cout << "salon numero " << j << " voici ses infos ====== :" << std::endl;
-		std::cout << this->_salon[j].getName() << " : "<< std::endl;
-		if (_salon[j].get_salon_client_len() > 0)
-			_salon[j].show_list_client();
 	}
 	std::cout << "juste apres verif salon " << std::endl;
 	std::cout << "voici les salon push " << salon.getName() << std::endl;
