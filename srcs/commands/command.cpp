@@ -59,7 +59,7 @@ void debug_print(const std::string& msg)
     std::cout << std::endl;
 }
 
-std::string clean(std::string s) {
+std::string Command::clean(std::string s) {
     for (size_t i = 0; i < s.length(); ++i) {
         if (s[i] == '\r' || s[i] == '\n')
             s.erase(i--, 1);

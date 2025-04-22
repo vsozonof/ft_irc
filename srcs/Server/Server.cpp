@@ -47,24 +47,16 @@ void Server::initServer()
 	std::cout << BOLD_GREEN << "⚙️  Ft_IRC: Server successfully initialized" << def << std::endl;
 }
 
-int Server::setSalon(Salon salon, int i)
-{
-	i = 0;
-	size_t tmp = _salon.size();
-	while (tmp > 0)
-	{
-		if (_salon[i].getName() == salon.getName())
-		{
-			std::cout << "salon is already existing" << std::endl;
-			return 1;
-		}
-		i++;
-		tmp--;
-	}
-	std::cout << "le salon a bien ete set " << std::endl;
-	_salon.push_back(salon);
-	return 0;
-}
+// int Server::setSalon(Salon salon, int i, int clientSocket)
+// {
+// 	size_t i = this->getSalon().size() - 1;
+// 	std::cout << std::endl << "voici le nom du salon " << _salon[i].getName() << std::endl;
+// 	_salon[i].increaseSocketClient(clientSocket);
+// 	_salon[i].set_client(_clients, clientSocket);
+// 	Client client = _salon[i].get_client(clientSocket);
+// 	_salon[i].show_list_client();
+// 	return 0;
+// }
 
 int Server::verif_Salon(Salon salon)
 {
@@ -89,8 +81,6 @@ int Server::verif_Salon(Salon salon)
 			_salon[j].show_list_client();
 	}
 	std::cout << "voici les salon push " << salon.getName() << std::endl;
-	if (_salon.size() > 1)
-		std::cout << "voici les salon push " << _salon[0].getName() << std::endl;
 	std::cout << "voici la len des salons " << _salon.size() << std::endl;
 	_salon.push_back(salon);
 	std::cout << "voici la len des salons " << _salon.size() << std::endl;

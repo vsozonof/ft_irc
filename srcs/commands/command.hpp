@@ -26,6 +26,7 @@ class Command
 		Command();
 	public:
 		~Command();
+		static std::string clean(std::string s);
 		static void selectCommand(std::string command, Salon &salon, Client client);
 		static void kick(std::string username, Salon &salon);
 		static void invite(std::string username, Salon &salon);

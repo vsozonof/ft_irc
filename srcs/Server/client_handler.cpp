@@ -143,8 +143,9 @@ void Server::doClientAction(int clientSocket)
 		Client client = _salon[i].get_client(clientSocket);
 		_salon[i].show_list_client();
 		std::cout << "juste avant le send " << std::endl;
-		send(clientSocket, msg.c_str(), msg.size(), 0);
-		int bytes = send(clientSocket, msg.c_str(), msg.size(), 0);
+		std::string success_join = ":" + Command::clean(client.getNickname()) + "!" + Command::clean(client.getUsername()) + "@127.0.0.1 JOIN #" + Command::clean(salon.getName()) +"\r\n";
+		std::cout << success_join << std::endl;
+		int bytes = send(clientSocket, success_join.c_str(), success_join.size(), 0);
 			if (bytes == -1)
 				throw std::runtime_error("Error sending message with send");
 		std::cout << std::endl << "FIN DE LA CREATION DU NOUVEAU SALON DONC FIN ETAPE 1" << std::endl << std::endl;
@@ -205,9 +206,9 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	int pos = msg.find(":");
 	if (pos > 2147483647 || pos < 0)
 		return;
-	std::string nv = ":";
-	tab.show_list_client();
 	Client client = tab.get_client(clientSocket);
+	tab.show_list_client();
+	std::string nv = ":";
 	nv.append(client.getNickname());
 	std::cout << "voici le name de celui qui envois " << client.getNickname() << std::endl;
 	std::cout << "et voici son socket " << client.getSocket() << std::endl; 
