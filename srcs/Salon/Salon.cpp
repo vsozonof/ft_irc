@@ -7,8 +7,7 @@ Salon::Salon(const Salon &src)
     _Name = src._Name;
     _SocketClient = src._SocketClient;
 	_message = src._message;
-	std::map<int, Client> _clients;
-	_clients = std::map<int, Client>();
+	_clients = src._clients;
 }
 
 Salon& Salon::operator=(Salon const &rhs)
