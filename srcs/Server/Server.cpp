@@ -81,7 +81,17 @@ int Server::verif_Salon(Salon salon)
 		tmp--;
 	}
 	std::cout << "juste apres verif salon " << std::endl;
+	for (int j = 0; (int)this->_salon.size() > j; j++)
+	{
+		std::cout << "salon numero " << j << " voici ses infos ====== :" << std::endl;
+		std::cout << this->_salon[j].getName() << " : "<< std::endl;
+		if (_salon[j].get_salon_client_len() > 0)
+			_salon[j].show_list_client();
+	}
 	std::cout << "voici les salon push " << salon.getName() << std::endl;
+	if (_salon.size() > 1)
+		std::cout << "voici les salon push " << _salon[0].getName() << std::endl;
+	std::cout << "voici la len des salons " << _salon.size() << std::endl;
 	_salon.push_back(salon);
 	std::cout << "voici la len des salons " << _salon.size() << std::endl;
 	for (int j = 0; (int)this->_salon.size() > j; j++)

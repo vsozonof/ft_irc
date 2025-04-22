@@ -141,6 +141,7 @@ void Server::doClientAction(int clientSocket)
 		_salon[i].increaseSocketClient(clientSocket);
 		_salon[i].set_client(_clients, clientSocket);
 		Client client = _salon[i].get_client(clientSocket);
+		_salon[i].show_list_client();
 		std::cout << "juste avant le send " << std::endl;
 		send(clientSocket, msg.c_str(), msg.size(), 0);
 		int bytes = send(clientSocket, msg.c_str(), msg.size(), 0);
@@ -209,6 +210,7 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	Client client = tab.get_client(clientSocket);
 	nv.append(client.getNickname());
 	std::cout << "voici le name de celui qui envois " << client.getNickname() << std::endl;
+	std::cout << "et voici son socket " << client.getSocket() << std::endl; 
 	nv.append(" " + msg);
 	nv.append("\r\n");
 	while (tab.get_salon_client_len() > i)

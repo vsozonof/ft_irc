@@ -167,7 +167,6 @@ void Salon::show_list_client()
 {
 	int i = 0;
     std::cout << "\033[31m" << "here is clients list " <<  "\033[0m" << std::endl;
-	//surement dus a la dif entre mon socket et la pos des infos genre nom
 	while (1)
 	{
 		std::cout << "voici tous les socket " << this->_SocketClient[i] << std::endl;
