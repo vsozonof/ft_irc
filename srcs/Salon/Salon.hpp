@@ -48,6 +48,9 @@ class Salon
 		void set_operator(int socket);
 		void remove_operator(int socket);
 		bool is_operator(int socket);
+		void set_invite(int socket);
+		void remove_invite(int socket);
+		bool is_invite(int socket);
 		void set_client_limits(int limits);
 		int get_client_limits();
 		int get_SocketClient(int pos);
@@ -69,6 +72,7 @@ class Salon
 		std::map<int, Client>			_clients;
 		std::string						_password; // mot de passe du salon
 		std::list<int>					_operator; // liste des opérateurs
+		std::list<int>					_invite; // liste des invites
 		int								_client_limits; // nombre de client max
 		bool								_opt[4]; // 0 = invitation, 1 = mode topic, 2 = mode password, 3 = user limit
 };

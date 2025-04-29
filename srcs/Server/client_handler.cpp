@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_handler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
+/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/04/22 07:22:27 by ertupop          ###   ########.fr       */
+/*   Updated: 2025/04/26 18:00:31 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,18 +152,15 @@ void Server::doClientAction(int clientSocket)
 	}
 	else if (msg.find("PING") != std::string::npos)
 	{
-		std::string pong = "PONG localhost\r\n";
-		_clients[clientSocket].sendMsg(pong);
+		std::string pong = "PONG 127.0.0.1 :" + Command::clean(msg.substr(5)) + "\r\n";
+		send(clientSocket, pong.c_str(), pong.size(), 0);
 	}
 	else if (msg.find("QUIT") != std::string::npos)
 	{
 		std::cout << "QUIT command" << std::endl;
 	}
 	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
-	{
-		Salon &salon = this->_salon[search_salon_by_socket(clientSocket)];
-		Command::selectCommand(msg, salon, _clients[clientSocket]);
-	}
+		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
 	else
 	{
 		// std::cout << "je rentre dans le ELSEEEEEEEEEEEEEE DONC ETAPE 2:" << std::endl << std::endl;
@@ -211,7 +208,7 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	std::string nv = ":";
 	nv.append(client.getNickname());
 	std::cout << "voici le name de celui qui envois " << client.getNickname() << std::endl;
-	std::cout << "et voici son socket " << client.getSocket() << std::endl; 
+	std::cout << "et voici son socket " << client.getSocket() << std::endl;
 	nv.append(" " + msg);
 	nv.append("\r\n");
 	while (tab.get_salon_client_len() > i)

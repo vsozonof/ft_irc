@@ -81,6 +81,38 @@ bool Salon::get_opt(int opt)
     return _opt[opt];
 }
 
+
+void Salon::set_invite(int socket)
+{
+    _invite.push_back(socket);
+}
+void Salon::remove_invite(int socket)
+{
+    std::list<int>::iterator i;
+    i = _invite.begin();
+    while (i != _invite.end())
+    {
+        if (*i == socket)
+        {
+            _invite.erase(i);
+            break;
+        }
+        i++;
+    }
+}
+bool Salon::is_invite(int socket)
+{
+    std::list<int>::iterator i;
+    i = _invite.begin();
+    while (i != _invite.end())
+    {
+        if (*i == socket)
+        return true;
+        i++;
+    }
+    return false;
+}
+
 void Salon::set_operator(int socket)
 {
     _operator.push_back(socket);
