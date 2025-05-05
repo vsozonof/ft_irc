@@ -104,6 +104,7 @@ std::vector<Salon> Server::getSalon(void)
 int Server::search_salon_by_socket(int clientSocket)
 {
 	size_t i = 0;
+	std::cout << std::endl << " DEBUT FONCTION SEARCH SALON " << std::endl;
 	while (_salon.size() > i)
 	{
 		size_t j = 0;
@@ -111,11 +112,19 @@ int Server::search_salon_by_socket(int clientSocket)
 		while (client[j].getSocket() != clientSocket && client.size() < j)
 			j++;
 		if (client[j].getSocket() == clientSocket)
+		{
+			std::cout << std::endl << "donc voici socket " << clientSocket << client[j].getSocket();
+			std::cout << std::endl << " FIN FONCTION SEARCH SALON I = " << i << std::endl;
 			return (int)i;
-		i++;
+		}
+			i++;
 	}
-	return 0;
-} // renvois la pos du salon ou il y a le user
+	std::cout << "AUCUNE OCCURENCE DONC AUCUN SALON N'A ETE TROUVE" << std::endl;
+	return -1;
+}
+// renvois la pos du salon ou il y a le user
+// donc le probleme est que si aucune occurence est trouver c'est le salon 0 qui est
+// selectionner donc mettre le -1 a la place
 
 void Server::run()
 {

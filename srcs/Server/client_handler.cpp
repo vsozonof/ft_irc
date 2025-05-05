@@ -165,38 +165,36 @@ void Server::doClientAction(int clientSocket)
 		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
 	else
 	{
-		// std::cout << "je rentre dans le ELSEEEEEEEEEEEEEE DONC ETAPE 2:" << std::endl << std::endl;
+		std::cout << "je rentre dans le ELSEEEEEEEEEEEEEE DONC ETAPE 2:" << std::endl << std::endl;
 		int i = 0;
 		for (; (int)this->_salon.size() > i; i++)
 		{
 			std::cout << "salon numero " << i << " voici ses infos ====== :" << std::endl;
-			std::cout << this->_salon[i].getName() << " : "<< std::endl;
+			std::cout << _salon[i].getName() << " : "<< std::endl;
 			_salon[i].show_list_client();
 		}
-		// std::cout << "voici mon size salon " << _salon.size() << std::endl;
 		if (_salon.size() > 0)
 		{
 			std::cout << "Voici le salon qui va envoyer un message ";
-			std::cout << _salon[search_salon_by_socket(clientSocket)].getName() << std::endl;
-			_salon[search_salon_by_socket(clientSocket)].show_list_client();
-			// std::cout << "et voici le nom de la copie" << std::endl;
-			msg_client(clientSocket, _salon[search_salon_by_socket(clientSocket)], msg);
+			int nb_salon = search_salon_by_socket(clientSocket);
+			std::cout << "voici le numero du salon recup " << nb_salon;
+			if (nb_salon != -1)
+			{
+				std::cout << _salon[search_salon_by_socket(clientSocket)].getName() << std::endl;
+				std::cout << "voici la liste client dans le salon qui est selectionner " << std::endl;
+				_salon[search_salon_by_socket(clientSocket)].show_list_client();
+				msg_client(clientSocket, _salon[search_salon_by_socket(clientSocket)], msg);
+			}
+			std::cout << "no salon found with this socket" << std::endl;
 		}
-
-		// 	// 1[celui envois] 2[PRIVMSG] 3[celui qui recoit] 4[puis message]
-		// 	// <no>
-		// 	// light75018
 	}
 }
 
 void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 {
-	// std::cout << "debut de la methode de msg_client" << std::endl;
 	std::string envoyeur;
 	std::string final;
 	int i = 0;
-	//faire le brouillon du message ou il ne reste que les receveurs a ajouter
-	// on decoupe etape par etape
 
 	// std::cout << std::endl << "==== INFO POUR COMMENT LE MSG VA ETRE ENVOYE ====" << std::endl << std::endl;
 	// std::cout << "ENVOIS DE LA PART DE " << clientSocket << " ET VOICI LE MESSAGE " << std::endl;
@@ -206,6 +204,8 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	if (pos > 2147483647 || pos < 0)
 		return;
 	Client client = tab.get_client(clientSocket);
+	std::cout << "client recup " << client.getNickname() << " socket " << clientSocket;
+	std::cout << " et " << client.getSocket() << std::endl;
 	tab.show_list_client();
 	std::string nv = ":";
 	nv.append(client.getNickname());
@@ -228,7 +228,6 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 							throw std::runtime_error("Error sending message with send");
 					}
 					i++;
-					// std::cout << "voici mon index " << i << std::endl;
 					if (i >= tab.get_salon_client_len())
 						break;
 				}
@@ -237,15 +236,7 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 		{
 			throw std::runtime_error("a problem happend when sending message");
 		}
-		// donc la j'ai mon message, le nom du serv, il me manque qu'a assembler tout
-		// pour faire serv PRIVMSG receveur message
-		// message set serv_name set
-		// PRIVMSG doit etre mis a la mano
-		// manque plus que le receveur
 		std::cout << "==== FIN DES INFOS POUR COMMENT LE MSG VA ETRE ENVOYER ====" << std::endl << std::endl;
-		// int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
-		// if (bytes == -1)
-		// 	throw std::runtime_error("Error sending message");
 		std::cout << std::endl;
 		i++;
 	}
