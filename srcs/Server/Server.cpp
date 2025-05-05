@@ -104,28 +104,33 @@ std::vector<Salon> Server::getSalon(void)
 int Server::search_salon_by_socket(int clientSocket)
 {
 	size_t i = 0;
-	std::cout << std::endl << " DEBUT FONCTION SEARCH SALON " << std::endl;
+	std::cout << std::endl << " ====== DEBUT FONCTION SEARCH SALON ====== " << std::endl;
 	while (_salon.size() > i)
 	{
 		size_t j = 0;
 		std::map <int, Client> client = _salon[i].get_all_client();
+		std::cout << "Voici le socket qui va etre comparer " << clientSocket << " -> ";
 		while (client[j].getSocket() != clientSocket && client.size() < j)
+		{
+			std::cout << client[j].getSocket() << " ";
 			j++;
+		}
+		std::cout << "<-" << std::endl;
 		if (client[j].getSocket() == clientSocket)
 		{
 			std::cout << std::endl << "donc voici socket " << clientSocket << client[j].getSocket();
 			std::cout << std::endl << " FIN FONCTION SEARCH SALON I = " << i << std::endl;
 			return (int)i;
 		}
-			i++;
+		i++;
 	}
-	std::cout << "AUCUNE OCCURENCE DONC AUCUN SALON N'A ETE TROUVE" << std::endl;
+	std::cout << " ====== AUCUNE OCCURENCE DONC AUCUN SALON N'A ETE TROUVE ====== " << std::endl;
 	return -1;
 }
 // renvois la pos du salon ou il y a le user
 // donc le probleme est que si aucune occurence est trouver c'est le salon 0 qui est
 // selectionner donc mettre le -1 a la place
-
+// je suis trop con il suffit de faire un find de socket pour comparer ou un truc du genre
 void Server::run()
 {
 	while (42)
