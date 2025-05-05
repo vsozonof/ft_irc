@@ -134,11 +134,13 @@ void Server::doClientAction(int clientSocket)
 		msg = msg.erase(0, 6);
 		Salon salon(msg);
 		std::cout << "au moment de verif salon" << std::endl;
-		if (verif_Salon(salon) == 1)
+		// size_t i = verif_Salon(salon);
+		if (verif_Salon(salon) == 0)
 			std::cout << "he exit" << std::endl;
-		size_t i = this->getSalon().size() - 1;
+		size_t i = verif_Salon(salon); // trouver autre moyen
 		std::cout << std::endl << "voici le nom du salon " << _salon[i].getName() << std::endl;
 		_salon[i].increaseSocketClient(clientSocket);
+		std::cout << "voici le socket " << clientSocket << std::endl;
 		_salon[i].set_client(_clients, clientSocket);
 		Client client = _salon[i].get_client(clientSocket);
 		_salon[i].show_list_client();

@@ -188,10 +188,11 @@ void Salon::set_client(std::map<int, Client>& client, int clientSocket)
 		std::map<int, Client> _clients;
 	std::pair <int, Client> clientpair(clientSocket, client[clientSocket]);
 	_clients.insert(clientpair);
-
+    std::cout << "je suis dans set_client" << std::endl;
 	_clients[clientSocket].setNickname(client[clientSocket].getNickname());
 	_clients[clientSocket].setUsername(client[clientSocket].getUsername());
 	show_client_infos(clientSocket);
+    std::cout << "infos nouveau client au dessus " << std::endl; 
 }
 
 void Salon::show_list_client()

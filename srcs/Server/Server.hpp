@@ -54,7 +54,7 @@ class Server
 		void broadcastMessage(std::string const &message, int clientSocket);
 
 		int setSalon(Salon salon, int i);
-		int verif_Salon(Salon salon);
+		size_t verif_Salon(Salon salon);
 		std::vector<Salon> getSalon(void);
 		int search_salon_by_socket(int clientSocket);
 
