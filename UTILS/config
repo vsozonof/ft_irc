@@ -76,7 +76,7 @@ servers = (
   }
   {
     address = "localhost";
-    chatnet = "ft_irc2";
+    chatnet = "ft_irc";
     port = "6666";
     password = "prout";
     use_tls = "no";

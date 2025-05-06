@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_handler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/04/26 18:00:31 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/06 21:45:35 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,20 @@ void Server::handleClient()
 		throw std::runtime_error("Poll error");
 }
 
+void Server::deleteClient(int clientSocket)
+{
+	close(clientSocket);
+    for (std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it)
+    {
+        if (it->fd == clientSocket)
+        {
+            _fds.erase(it);
+            break;
+        }
+    }
+    _clients.erase(clientSocket);
+}
+
 void Server::setupNewClient(int clientSocket)
 {
 	std::cout << "\033[1m" << "----- Setting up new client ------" << std::endl;
@@ -54,10 +68,12 @@ void Server::setupNewClient(int clientSocket)
 	newClient_fd.fd = clientSocket;
 	newClient_fd.events = POLLIN;
 	_fds.push_back(newClient_fd);
+	fcntl(clientSocket, F_SETFL, O_NONBLOCK);
 
 	std::string msg;
 	std::cout << '[' << clientSocket << ']' << ": Gathering data" << std::endl;
 	int check = 0;
+	int timeout = 0;
 	while (!check)
 	{
 		msg += _clients[clientSocket].receiveMsg();
@@ -70,8 +86,15 @@ void Server::setupNewClient(int clientSocket)
 		}
 		else
 		{
-			usleep(50000000);
+			sleep(1);
 			std::cout << '[' << clientSocket << ']' << ": Missing informations.." << std::endl;
+			timeout++;
+			if (timeout == 5) 
+			{
+				std::cout << '[' << clientSocket << ']' << ": TimeOut, disconnecting client.." << std::endl;
+				deleteClient(clientSocket);
+				return ;
+			}
 		}
 	}
 
@@ -91,9 +114,18 @@ void Server::setupNewClient(int clientSocket)
 				<< "\nNAME: " << '[' << userName << ']';
 	std::cout << "\n------------------------------------" << '\n';
 
-
-	if (checkUserInfos(userPass, userNick))
-		throw std::runtime_error("User infos not correct"); // ! Fix le retour d'erreur
+	if (checkPassword(userPass))
+	{
+		_clients[clientSocket].sendMsg(":127.0.0.1 464 * :Password incorrect\r\n");
+		deleteClient(clientSocket);
+		return ;
+	}
+	else if (checkNick(userName))
+	{
+		_clients[clientSocket].sendMsg(":127.0.0.1 433 * :Nickname is already in use\r\n");
+		deleteClient(clientSocket);
+		return ;
+	}
 
 	_clients[clientSocket].setNickname(userNick);
 	_clients[clientSocket].setUsername(userName);
