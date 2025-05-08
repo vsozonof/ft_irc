@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_handler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/04/26 18:00:31 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/06 21:45:35 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,20 @@ void Server::handleClient()
 		throw std::runtime_error("Poll error");
 }
 
+void Server::deleteClient(int clientSocket)
+{
+	close(clientSocket);
+    for (std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it)
+    {
+        if (it->fd == clientSocket)
+        {
+            _fds.erase(it);
+            break;
+        }
+    }
+    _clients.erase(clientSocket);
+}
+
 void Server::setupNewClient(int clientSocket)
 {
 	std::cout << "\033[1m" << "----- Setting up new client ------" << std::endl;
@@ -54,10 +68,12 @@ void Server::setupNewClient(int clientSocket)
 	newClient_fd.fd = clientSocket;
 	newClient_fd.events = POLLIN;
 	_fds.push_back(newClient_fd);
+	fcntl(clientSocket, F_SETFL, O_NONBLOCK);
 
 	std::string msg;
 	std::cout << '[' << clientSocket << ']' << ": Gathering data" << std::endl;
 	int check = 0;
+	int timeout = 0;
 	while (!check)
 	{
 		msg += _clients[clientSocket].receiveMsg();
@@ -70,8 +86,15 @@ void Server::setupNewClient(int clientSocket)
 		}
 		else
 		{
-			usleep(50000000);
+			sleep(1);
 			std::cout << '[' << clientSocket << ']' << ": Missing informations.." << std::endl;
+			timeout++;
+			if (timeout == 5) 
+			{
+				std::cout << '[' << clientSocket << ']' << ": TimeOut, disconnecting client.." << std::endl;
+				deleteClient(clientSocket);
+				return ;
+			}
 		}
 	}
 
@@ -91,9 +114,18 @@ void Server::setupNewClient(int clientSocket)
 				<< "\nNAME: " << '[' << userName << ']';
 	std::cout << "\n------------------------------------" << '\n';
 
-
-	if (checkUserInfos(userPass, userNick))
-		throw std::runtime_error("User infos not correct"); // ! Fix le retour d'erreur
+	if (checkPassword(userPass))
+	{
+		_clients[clientSocket].sendMsg(":127.0.0.1 464 * :Password incorrect\r\n");
+		deleteClient(clientSocket);
+		return ;
+	}
+	else if (checkNick(userName))
+	{
+		_clients[clientSocket].sendMsg(":127.0.0.1 433 * :Nickname is already in use\r\n");
+		deleteClient(clientSocket);
+		return ;
+	}
 
 	_clients[clientSocket].setNickname(userNick);
 	_clients[clientSocket].setUsername(userName);
@@ -134,11 +166,13 @@ void Server::doClientAction(int clientSocket)
 		msg = msg.erase(0, 6);
 		Salon salon(msg);
 		std::cout << "au moment de verif salon" << std::endl;
-		if (verif_Salon(salon) == 1)
+		// size_t i = verif_Salon(salon);
+		if (verif_Salon(salon) == 0)
 			std::cout << "he exit" << std::endl;
-		size_t i = this->getSalon().size() - 1;
+		size_t i = verif_Salon(salon); // trouver autre moyen
 		std::cout << std::endl << "voici le nom du salon " << _salon[i].getName() << std::endl;
 		_salon[i].increaseSocketClient(clientSocket);
+		std::cout << "voici le socket " << clientSocket << std::endl;
 		_salon[i].set_client(_clients, clientSocket);
 		Client client = _salon[i].get_client(clientSocket);
 		_salon[i].show_list_client();
@@ -163,38 +197,36 @@ void Server::doClientAction(int clientSocket)
 		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
 	else
 	{
-		// std::cout << "je rentre dans le ELSEEEEEEEEEEEEEE DONC ETAPE 2:" << std::endl << std::endl;
+		std::cout << "je rentre dans le ELSEEEEEEEEEEEEEE DONC ETAPE 2:" << std::endl << std::endl;
 		int i = 0;
 		for (; (int)this->_salon.size() > i; i++)
 		{
 			std::cout << "salon numero " << i << " voici ses infos ====== :" << std::endl;
-			std::cout << this->_salon[i].getName() << " : "<< std::endl;
+			std::cout << _salon[i].getName() << " : "<< std::endl;
 			_salon[i].show_list_client();
 		}
-		// std::cout << "voici mon size salon " << _salon.size() << std::endl;
 		if (_salon.size() > 0)
 		{
 			std::cout << "Voici le salon qui va envoyer un message ";
-			std::cout << _salon[search_salon_by_socket(clientSocket)].getName() << std::endl;
-			_salon[search_salon_by_socket(clientSocket)].show_list_client();
-			// std::cout << "et voici le nom de la copie" << std::endl;
-			msg_client(clientSocket, _salon[search_salon_by_socket(clientSocket)], msg);
+			int nb_salon = search_salon_by_socket(clientSocket);
+			std::cout << "voici le numero du salon recup " << nb_salon;
+			if (nb_salon != -1)
+			{
+				std::cout << _salon[search_salon_by_socket(clientSocket)].getName() << std::endl;
+				std::cout << "voici la liste client dans le salon qui est selectionner " << std::endl;
+				_salon[search_salon_by_socket(clientSocket)].show_list_client();
+				msg_client(clientSocket, _salon[search_salon_by_socket(clientSocket)], msg);
+			}
+			std::cout << "no salon found with this socket" << std::endl;
 		}
-
-		// 	// 1[celui envois] 2[PRIVMSG] 3[celui qui recoit] 4[puis message]
-		// 	// <no>
-		// 	// light75018
 	}
 }
 
 void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 {
-	// std::cout << "debut de la methode de msg_client" << std::endl;
 	std::string envoyeur;
 	std::string final;
 	int i = 0;
-	//faire le brouillon du message ou il ne reste que les receveurs a ajouter
-	// on decoupe etape par etape
 
 	// std::cout << std::endl << "==== INFO POUR COMMENT LE MSG VA ETRE ENVOYE ====" << std::endl << std::endl;
 	// std::cout << "ENVOIS DE LA PART DE " << clientSocket << " ET VOICI LE MESSAGE " << std::endl;
@@ -204,6 +236,8 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	if (pos > 2147483647 || pos < 0)
 		return;
 	Client client = tab.get_client(clientSocket);
+	std::cout << "client recup " << client.getNickname() << " socket " << clientSocket;
+	std::cout << " et " << client.getSocket() << std::endl;
 	tab.show_list_client();
 	std::string nv = ":";
 	nv.append(client.getNickname());
@@ -226,7 +260,6 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 							throw std::runtime_error("Error sending message with send");
 					}
 					i++;
-					// std::cout << "voici mon index " << i << std::endl;
 					if (i >= tab.get_salon_client_len())
 						break;
 				}
@@ -235,15 +268,7 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 		{
 			throw std::runtime_error("a problem happend when sending message");
 		}
-		// donc la j'ai mon message, le nom du serv, il me manque qu'a assembler tout
-		// pour faire serv PRIVMSG receveur message
-		// message set serv_name set
-		// PRIVMSG doit etre mis a la mano
-		// manque plus que le receveur
 		std::cout << "==== FIN DES INFOS POUR COMMENT LE MSG VA ETRE ENVOYER ====" << std::endl << std::endl;
-		// int bytes = send(tmp[i], msg.c_str(), msg.size() + 1, 0);
-		// if (bytes == -1)
-		// 	throw std::runtime_error("Error sending message");
 		std::cout << std::endl;
 		i++;
 	}

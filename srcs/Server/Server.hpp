@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:03:09 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/04/16 10:03:00 by ertupop          ###   ########.fr       */
+/*   Updated: 2025/05/06 21:43:24 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "../Client/Client.hpp"
 #include "../Salon/Salon.hpp"
 #include "../commands/command.hpp"
+#include <fcntl.h>
 
 class Client;
 class Salon;
@@ -42,6 +43,7 @@ class Server
 
 		// ? Client Regisration
 		void setupNewClient(int clientSocket);
+		void deleteClient(int clientSocket);
 		int checkUserInfos(std::string clientPassword, std::string clientNick);
 		int checkPassword(std::string clientPassword);
 		int checkNick(std::string clientNick);
@@ -54,7 +56,7 @@ class Server
 		void broadcastMessage(std::string const &message, int clientSocket);
 
 		int setSalon(Salon salon, int i);
-		int verif_Salon(Salon salon);
+		size_t verif_Salon(Salon salon);
 		std::vector<Salon> getSalon(void);
 		int search_salon_by_socket(int clientSocket);
 
