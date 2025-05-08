@@ -6,7 +6,7 @@
 /*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/04/29 14:21:11 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/08 22:25:12 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,6 @@ void Command::selectCommand(std::string command, std::vector<Salon> &_salon, Cli
 	std::cout << "Command: " << command << std::endl;
 	std::cout << "Client: " << client.getNickname() << std::endl;
 	std::cout << "===================================================" << std::endl;
-	std::cout << "Find salon" << std::endl;
-
-	std::cout << "============================================" << std::endl;
 	if (command.find("KICK") != std::string::npos)
 	{
 		Salon salon;
@@ -116,7 +113,24 @@ void Command::selectCommand(std::string command, std::vector<Salon> &_salon, Cli
 	}
 	else if (command.find("MODE") != std::string::npos)
 	{
-		std::cout << "je suis la commande mode" << std::endl;
+		Salon salon;
+		for (size_t i = 0; i < _salon.size(); ++i)
+		{
+			size_t start = command.find("#") + 1;
+			size_t end = command.find(" ", start);
+			if (clean(_salon[i].getName()) == command.substr(start, end - start))
+			{
+				salon = _salon[i];
+				break;
+			}
+		}
+		if (salon.getName().empty())
+		{
+			std::string error = ":127.0.0.1 403 " + client.getNickname() + " #" + command.substr(command.find("#") + 1, command.find(" ", command.find("#") + 1) - command.find("#") - 1) + " :No such channel\r\n";
+			send(client.getSocket(), error.c_str(), error.size(), 0);
+			return;
+		}
+		mode(command, salon, client);
 	}
 }
 
@@ -170,10 +184,11 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 void Command::invite(std::string command, Salon &salon, std::map<int, Client> &clients, Client client)
 {
 	std::string username = command.substr(command.find(" ") + 1, command.find("#") - command.find(" ") - 2);
+	std::map<int, Client> salon_clients = salon.get_all_client();
 	bool is_in = false;
 	for (int i = 0; i < salon.get_salon_client_len(); i++)
 	{
-		if (clients[i + 4].getNickname() == client.getNickname())
+		if (salon_clients[i + 4].getNickname() == client.getNickname())
 		{
 			is_in = true;
 			break;
@@ -213,6 +228,25 @@ void Command::invite(std::string command, Salon &salon, std::map<int, Client> &c
 
 void Command::topic(std::string topics, Salon &salon, Client client)
 {
+	if (salon.get_mode(1) == true)
+	{
+		bool is_op = false;
+		std::map<int, Client> clients = salon.get_all_client();
+		for (int i = 0; i < salon._operator_size(); i++)
+		{
+			if (clients[salon.get_SocketClient(i + 4)].getNickname() == client.getNickname())
+			{
+				is_op = true;
+				break;
+			}
+		}
+		if (is_op == false)
+		{
+			std::string error = ":127.0.0.1 482 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";
+			send(client.getSocket(), error.c_str(), error.size(), 0);
+			return;
+		}
+	}
 	std::string topic = clean(topics.substr(topics.find(":") + 1));
 	if (topic.empty())
 	{
@@ -231,71 +265,171 @@ void Command::topic(std::string topics, Salon &salon, Client client)
 	}
 }
 
-void Command::mode(std::string args, Salon &salon)
+void Command::mode(std::string args, Salon &salon, Client client)
 {
-	if (args.empty())
+	// bool is_in = false;
+	// bool is_op = false;
+	std::map<int, Client> clients = salon.get_all_client();
+	// for (int i = 0; i < salon.get_salon_client_len(); i++)
+	// {
+	// 	if (clients[i + 4].getNickname() == client.getNickname())
+	// 	{
+	// 		is_in = true;
+	// 		break;
+	// 	}
+	// }
+	// if (is_in == false)
+	// {
+	// 	std::string error = "'127.0.0.1 442 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not on that channel\r\n";
+	// 		debug_print(error);
+	// 		send(client.getSocket(), error.c_str(), error.size(), 0);
+	// 		return;
+	// }
+	// for (int i = 0; i < salon._operator_size(); i++)
+	// {
+	// 	if (clients[salon.get_SocketClient(i + 4)].getNickname() == client.getNickname())
+	// 	{
+	// 		is_op = true;
+	// 		break;
+	// 	}
+	// }
+	// if (is_op == false)
+	// {
+	// 	std::string error = ":127.0.0.1 482 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";
+	// send(client.getSocket(), error.c_str(), error.size(), 0);
+	// 	return;
+	// }
+	size_t start = args.find("-");
+	if (start == std::string::npos)
+		start = args.find("+");
+	if (start == std::string::npos)
 	{
-		salon.setMessage("You need to specifie arguments to execute this command");
-		salon.showMessage();
+		std::string error = ":127.0.1 501 " + client.getNickname() + " #" + clean(salon.getName()) + " :Unknown mode\r\n";
+		send(client.getSocket(), error.c_str(), error.size(), 0);
+		return;
 	}
-	if (args.find("-i"))
+	size_t end = args.find(" ", start);
+	if (end == std::string::npos)
+		end = args.find("\r", start);
+	std::string option = args.substr(start, end - start);
+	if (option.empty())
 	{
-		if (salon.get_opt(0) == true)
-			salon.set_opt(0, false);
-		else
-			salon.set_opt(0, true);
+		std::cout << "option empty" << std::endl;
+		std::string error = ":127.0.1 501 " + client.getNickname() + " #" + clean(salon.getName()) + " :Unknown mode\r\n";
+		send(client.getSocket(), error.c_str(), error.size(), 0);
+		return;
 	}
-	else if (args.find("-t"))
-	{
-		if (salon.get_opt(1) == true)
-			salon.set_opt(1, false);
-		else
-			salon.set_opt(1, true);
-	}
-	else if (args.find("-k"))
-	{
-		if (salon.get_opt(2) == true)
-		{
-			salon.set_opt(2, false);
-			salon.set_password(NULL);
-		}
-		else
-		{
-			salon.set_opt(2, true);
-			std::string password = args.substr(args.find("-k") + 3);
-			if (password.empty())
-			{
-				salon.setMessage("Invalid arguments");
-				salon.showMessage();
-				return;
-			}
-			salon.set_password(args.substr(args.find("-k") + 3));
-		}
+	start = args.find("\r", end);
+	std::string value = args.substr(end, start - end);
+	if (args.find("-") != std::string::npos)
+		minus_mode(option, salon, client, value);
+	else
+		plus_mode(option, value, salon, client);
+	(void) client;
+}
 
-	}
-	else if (args.find("-l"))
+void Command::minus_mode(std::string option, Salon &salon, Client client, std::string value)
+{
+	if (option == "-i")
 	{
-		if (salon.get_opt(3) == true)
-			salon.set_opt(3, false);
-		else
+		salon.set_mode(false, 0);
+		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.0.1 MODE #" + clean(salon.getName()) + " -i\r\n";
+		salon.send_to_all(msg);
+	}
+	else if (option == "-t")
+	{
+		salon.set_mode(false, 1);
+		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.0.1 MODE #" + clean(salon.getName()) + " -t\r\n";
+		salon.send_to_all(msg);
+	}
+	else if (option == "-k")
+	{
+		salon.set_mode(false, 2);
+		salon.set_password("");
+		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.1 MODE #" + clean(salon.getName()) + " -k\r\n";
+		salon.send_to_all(msg);
+	}
+	else if (option == "-o")
+	{
+		Client user;
+		for (int i = 0; i < salon.get_salon_client_len(); i++)
 		{
-			salon.set_opt(3, true);
-			 int i = std::atoi(args.substr(args.find("-l") + 3).c_str());
-			if (i < 0 || (i == 0 && args.substr(args.find("-l") + 3) != "0"))
+			user = salon.get_client(i + 4);
+			if (user.getNickname() == value)
 			{
-				salon.setMessage("Invalid arguments");
-				salon.showMessage();
+				salon.remove_operator(user.getSocket());
+				std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.1 MODE #" + clean(salon.getName()) + " -o " + user.getNickname() + "\r\n";
+				salon.send_to_all(msg);
 				return;
 			}
-			// salon.set_client_limits(std::stoi(args.substr(args.find("-l") + 3)));
 		}
+		std::string error = ":127.0.1 441 " + client.getNickname() + " " + value + " #" + clean(salon.getName()) + " :They aren't on that channel\r\n";
+		send(client.getSocket(), error.c_str(), error.size(), 0);
+	}
+	else if (option == "-l")
+	{
+		salon.set_mode(false, 3);
+		salon.set_client_limits(atoi(value.c_str()));
+		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.1 MODE #" + clean(salon.getName()) + " -l\r\n";
+		salon.send_to_all(msg);
 	}
 	else
 	{
-		salon.setMessage("Invalid arguments");
-		salon.showMessage();
+		std::string error = ":127.0.1 501 " + client.getNickname() + " #" + clean(salon.getName()) + " :Unknown mode\r\n";
+		send(client.getSocket(), error.c_str(), error.size(), 0);
 	}
+}
 
+void Command::plus_mode(std::string option, std::string value, Salon &salon, Client client)
+{
+	if (option == "+i")
+	{
+		salon.set_mode(true, 0);
+		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.0.1 MODE #" + clean(salon.getName()) + " +i\r\n";
+		salon.send_to_all(msg);
+	}
+	else if (option == "+t")
+	{
+		salon.set_mode(true, 1);
+		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.0.1 MODE #" + clean(salon.getName()) + " +t\r\n";
+		salon.send_to_all(msg);
+	}
+	else if (option == "+k")
+	{
+		salon.set_mode(true, 2);
+		salon.set_password(value);
+		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.1 MODE #" + clean(salon.getName()) + " +k\r\n";
+		salon.send_to_all(msg);
+	}
+	else if (option == "+o")
+	{
+		Client user;
+		for (int i = 0; i < salon.get_salon_client_len(); i++)
+		{
+			user = salon.get_client(i + 4);
+			if (user.getNickname() == value)
+			{
+				salon.set_operator(user.getSocket());
+				std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.1 MODE #" + clean(salon.getName()) + " +o " + user.getNickname() + "\r\n";
+				salon.send_to_all(msg);
+				return;
+			}
+		}
+		std::string error = ":127.0.1 441 " + client.getNickname() + " " + value + " #" + clean(salon.getName()) + " :They aren't on that channel\r\n";
+		send(client.getSocket(), error.c_str(), error.size(), 0);
+	}
+	else if (option == "+l")
+	{
+		salon.set_mode(true, 3);
+		salon.set_client_limits(0);
+		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.1 MODE #" + clean(salon.getName()) + " +l\r\n";
+		salon.send_to_all(msg);
+	}
+	else
+	{
+		std::string error = ":127.0.1 501 " + client.getNickname() + " #" + clean(salon.getName()) + " :Unknown mode\r\n";
+		send(client.getSocket(), error.c_str(), error.size(), 0);
+	}
 }
 
 

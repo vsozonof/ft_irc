@@ -26,7 +26,7 @@ class Client;
 class Salon
 {
 	public:
-        Salon(std::string name);
+		Salon(std::string name);
 		Salon(const Salon &src);
 		Salon& operator=(Salon const &rhs);
 		Salon();
@@ -54,9 +54,12 @@ class Salon
 		void set_client_limits(int limits);
 		int get_client_limits();
 		int get_SocketClient(int pos);
+		void set_mode(bool value, int mode);
+		bool get_mode(int mode);
 		std::map<int, Client> get_all_client();
 		void remove_client(int socket);
 		void send_to_all(std::string msg);
+		int _operator_size();
 
         void showMessage();
 		void show_client_infos(int ClientSocket);

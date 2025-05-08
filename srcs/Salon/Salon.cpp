@@ -259,3 +259,17 @@ void Salon::send_to_all(std::string msg)
             std::cerr << "Failed to send to client fd " << it->first << ": " << strerror(errno) << std::endl;
     }
 }
+
+int Salon::_operator_size()
+{
+    return _operator.size();
+}
+
+void Salon::set_mode(bool value, int mode)
+{
+    _opt[mode] = value;
+}
+bool Salon::get_mode(int mode)
+{
+    return _opt[mode];
+}
