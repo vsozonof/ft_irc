@@ -6,7 +6,7 @@
 /*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/05/08 22:38:08 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/08 22:43:47 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 	std::map<int, Client> clients = salon.get_all_client();
 	for (int i = 0; i < salon._operator_size(); i++)
 	{
-		if (clients[salon.get_SocketClient(i + 4)].getNickname() == client.getNickname())
+		if (clients[salon.get_SocketClient(i + 4)].getNickname() == kicker.getNickname())
 		{
 			is_op = true;
 			break;
@@ -165,8 +165,8 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 	}
 	if (is_op == false)
 	{
-		std::string error = ":127.0.0.1 482 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";
-	send(client.getSocket(), error.c_str(), error.size(), 0);
+		std::string error = ":127.0.0.1 482 " + kicker.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";
+	send(kicker.getSocket(), error.c_str(), error.size(), 0);
 		return;
 	}
 	size_t start = command.find("KICK") + 6 + salon.getName().size();
