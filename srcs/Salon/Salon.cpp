@@ -100,6 +100,7 @@ void Salon::remove_invite(int socket)
         i++;
     }
 }
+
 bool Salon::is_invite(int socket)
 {
     std::list<int>::iterator i;
@@ -178,7 +179,6 @@ Client Salon::get_client(int ClientSocket)
 
 std::map<int, Client> Salon::get_all_client()
 {
-
     return this->_clients;
 }
 
@@ -259,4 +259,45 @@ void Salon::send_to_all(std::string msg)
         if (bytes_sent == -1)
             std::cerr << "Failed to send to client fd " << it->first << ": " << strerror(errno) << std::endl;
     }
+}
+
+int Salon::getOwner()
+{
+    return this->_owner;
+}
+
+void Salon::setOwner(int clientSocket)
+{
+    this->_owner = clientSocket;
+}
+
+bool Salon::check_opt(int clientsocket)
+{
+	std::cout << "je rentre dans opt" << std::endl;
+	std::cout << "voici les entrees de _opt " << std::endl;
+	std::cout << "opt[0] " << _opt[0];
+	std::cout << " opt[2] " << _opt[2];
+	std::cout << " opt[3] " << _opt[3];
+	if (_opt[0] == true)
+	{
+		std::cout << "is invite " << is_invite(clientsocket) << std::endl;
+		if (is_invite(clientsocket) == false)
+			return false ;
+	}
+	else if (_opt[2] == true)
+	{
+		std::string pass;
+		std::cin >> pass;
+		std::cout << "voici pass " << pass << std::endl;
+		if (pass != get_password())
+			return false ;
+	}
+	else if (_opt[3] == true)
+	{
+		std::cout << "ok la il faut test " << get_client_limits();
+		std::cout << " et " << get_salon_client_len() << std::endl;
+		if (get_client_limits() == get_salon_client_len())
+			return false ;
+	}
+	return true;
 }

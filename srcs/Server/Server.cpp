@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/04/21 18:38:15 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/05/10 10:43:40 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,10 @@ int Server::search_salon_by_socket(int clientSocket)
 	while (_salon.size() > i)
 	{
 		size_t j = 0;
-		std::map <int, Client> client = _salon[i].get_all_client();
+		(void)clientSocket;
+		std::cout << std::endl << "et le i " << i << std::endl;
+		std::map<int, Client> client = _salon[i].get_all_client();
+		std::cout << "ok donc test " << client.size() << std::endl;
 		std::cout << "Voici le socket qui va etre comparer " << clientSocket << " -> ";
 		while (client[j].getSocket() != clientSocket && client.size() < j)
 		{
@@ -120,17 +123,19 @@ int Server::search_salon_by_socket(int clientSocket)
 		{
 			std::cout << std::endl << "donc voici socket " << clientSocket << client[j].getSocket();
 			std::cout << std::endl << " FIN FONCTION SEARCH SALON I = " << i << std::endl;
-			return (int)i;
+			return i;
 		}
 		i++;
 	}
-	std::cout << " ====== AUCUNE OCCURENCE DONC AUCUN SALON N'A ETE TROUVE ====== " << std::endl;
+	std::cout << std::endl << " ====== AUCUNE OCCURENCE DONC AUCUN SALON N'A ETE TROUVE ====== " << std::endl << std::endl;
 	return -1;
 }
+
 // renvois la pos du salon ou il y a le user
 // donc le probleme est que si aucune occurence est trouver c'est le salon 0 qui est
 // selectionner donc mettre le -1 a la place
 // je suis trop con il suffit de faire un find de socket pour comparer ou un truc du genre
+
 void Server::run()
 {
 	while (42)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_handler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/06 21:45:35 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/10 11:04:08 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,11 +166,19 @@ void Server::doClientAction(int clientSocket)
 		msg = msg.erase(0, 6);
 		Salon salon(msg);
 		std::cout << "au moment de verif salon" << std::endl;
-		// size_t i = verif_Salon(salon);
 		if (verif_Salon(salon) == 0)
 			std::cout << "he exit" << std::endl;
-		size_t i = verif_Salon(salon); // trouver autre moyen
+		size_t i = verif_Salon(salon);
 		std::cout << std::endl << "voici le nom du salon " << _salon[i].getName() << std::endl;
+		// ici faire les verifs de _opt 0 2 3
+		// mettre en op si tu es le premier a etre dans channel
+		if (_salon[i].get_salon_client_len() == 0)
+		{
+			_salon[i].setOwner(clientSocket);
+			std::cout << "verif du owner " << _salon[i].getOwner() << std::endl;
+		}
+		else if (_salon[i].check_opt(clientSocket) == false)
+			return ;
 		_salon[i].increaseSocketClient(clientSocket);
 		std::cout << "voici le socket " << clientSocket << std::endl;
 		_salon[i].set_client(_clients, clientSocket);
@@ -207,9 +215,9 @@ void Server::doClientAction(int clientSocket)
 		}
 		if (_salon.size() > 0)
 		{
-			std::cout << "Voici le salon qui va envoyer un message ";
+			std::cout << "Voici le salon qui va envoyer un message " << std::endl;
 			int nb_salon = search_salon_by_socket(clientSocket);
-			std::cout << "voici le numero du salon recup " << nb_salon;
+			std::cout << "voici le numero du salon recup " << nb_salon << std::endl;
 			if (nb_salon != -1)
 			{
 				std::cout << _salon[search_salon_by_socket(clientSocket)].getName() << std::endl;
@@ -217,7 +225,7 @@ void Server::doClientAction(int clientSocket)
 				_salon[search_salon_by_socket(clientSocket)].show_list_client();
 				msg_client(clientSocket, _salon[search_salon_by_socket(clientSocket)], msg);
 			}
-			std::cout << "no salon found with this socket" << std::endl;
+			std::cout << " no salon found with this socket" << std::endl;
 		}
 	}
 }
