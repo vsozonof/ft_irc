@@ -61,7 +61,7 @@ class Salon
 		void send_to_all(std::string msg);
 		int _operator_size();
 
-        void showMessage();
+		void showMessage();
 		void show_client_infos(int ClientSocket);
 		void set_client(std::map<int, Client>& client, int clientSocket);
 		void increaseSocketClient(int socket);
