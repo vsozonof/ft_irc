@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/10 11:04:08 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/05/11 18:47:24 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,24 +185,24 @@ void Server::doClientAction(int clientSocket)
 		Client client = _salon[i].get_client(clientSocket);
 		_salon[i].show_list_client();
 		std::cout << "juste avant le send " << std::endl;
-		std::string success_join = ":" + Command::clean(client.getNickname()) + "!" + Command::clean(client.getUsername()) + "@127.0.0.1 JOIN #" + Command::clean(salon.getName()) +"\r\n";
-		std::cout << success_join << std::endl;
-		int bytes = send(clientSocket, success_join.c_str(), success_join.size(), 0);
-			if (bytes == -1)
-				throw std::runtime_error("Error sending message with send");
+		// std::string success_join = ":" + Command::clean(client.getNickname()) + "!" + Command::clean(client.getUsername()) + "@127.0.0.1 JOIN #" + Command::clean(salon.getName()) +"\r\n";
+		// std::cout << success_join << std::endl;
+		// int bytes = send(clientSocket, success_join.c_str(), success_join.size(), 0);
+			// if (bytes == -1)
+				// throw std::runtime_error("Error sending message with send");
 		std::cout << std::endl << "FIN DE LA CREATION DU NOUVEAU SALON DONC FIN ETAPE 1" << std::endl << std::endl;
 	}
 	else if (msg.find("PING") != std::string::npos)
 	{
-		std::string pong = "PONG 127.0.0.1 :" + Command::clean(msg.substr(5)) + "\r\n";
-		send(clientSocket, pong.c_str(), pong.size(), 0);
+		// std::string pong = "PONG 127.0.0.1 :" + Command::clean(msg.substr(5)) + "\r\n";
+		// send(clientSocket, pong.c_str(), pong.size(), 0);
 	}
 	else if (msg.find("QUIT") != std::string::npos)
 	{
 		std::cout << "QUIT command" << std::endl;
 	}
-	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
-		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
+	// else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
+		// Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
 	else
 	{
 		std::cout << "je rentre dans le ELSEEEEEEEEEEEEEE DONC ETAPE 2:" << std::endl << std::endl;

@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/10 10:43:40 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/05/11 19:01:09 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,30 +104,20 @@ std::vector<Salon> Server::getSalon(void)
 int Server::search_salon_by_socket(int clientSocket)
 {
 	size_t i = 0;
-	std::cout << std::endl << " ====== DEBUT FONCTION SEARCH SALON ====== " << std::endl;
 	while (_salon.size() > i)
 	{
 		size_t j = 0;
-		(void)clientSocket;
-		std::cout << std::endl << "et le i " << i << std::endl;
 		std::map<int, Client> client = _salon[i].get_all_client();
-		std::cout << "ok donc test " << client.size() << std::endl;
-		std::cout << "Voici le socket qui va etre comparer " << clientSocket << " -> ";
-		while (client[j].getSocket() != clientSocket && client.size() < j)
+		while (client.size() > j)
 		{
 			std::cout << client[j].getSocket() << " ";
+			if (client[j].getSocket() == clientSocket)
+				return i;
 			j++;
 		}
 		std::cout << "<-" << std::endl;
-		if (client[j].getSocket() == clientSocket)
-		{
-			std::cout << std::endl << "donc voici socket " << clientSocket << client[j].getSocket();
-			std::cout << std::endl << " FIN FONCTION SEARCH SALON I = " << i << std::endl;
-			return i;
-		}
 		i++;
 	}
-	std::cout << std::endl << " ====== AUCUNE OCCURENCE DONC AUCUN SALON N'A ETE TROUVE ====== " << std::endl << std::endl;
 	return -1;
 }
 
