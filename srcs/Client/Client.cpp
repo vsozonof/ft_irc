@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 10:45:06 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/03/13 15:04:12 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:02:40 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ Client& Client::operator=(Client const &rhs)
 {
 	if (this != &rhs)
 	{
+		std::cout << "je passe par la copie" << std::endl;
 		_socket = rhs.getSocket();
 		_authenticated = rhs.isAuth();
 		_nickname = rhs._nickname;

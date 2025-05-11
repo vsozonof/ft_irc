@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/04/21 18:38:15 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/05/11 19:01:09 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,33 +104,28 @@ std::vector<Salon> Server::getSalon(void)
 int Server::search_salon_by_socket(int clientSocket)
 {
 	size_t i = 0;
-	std::cout << std::endl << " ====== DEBUT FONCTION SEARCH SALON ====== " << std::endl;
 	while (_salon.size() > i)
 	{
 		size_t j = 0;
-		std::map <int, Client> client = _salon[i].get_all_client();
-		std::cout << "Voici le socket qui va etre comparer " << clientSocket << " -> ";
-		while (client[j].getSocket() != clientSocket && client.size() < j)
+		std::map<int, Client> client = _salon[i].get_all_client();
+		while (client.size() > j)
 		{
 			std::cout << client[j].getSocket() << " ";
+			if (client[j].getSocket() == clientSocket)
+				return i;
 			j++;
 		}
 		std::cout << "<-" << std::endl;
-		if (client[j].getSocket() == clientSocket)
-		{
-			std::cout << std::endl << "donc voici socket " << clientSocket << client[j].getSocket();
-			std::cout << std::endl << " FIN FONCTION SEARCH SALON I = " << i << std::endl;
-			return (int)i;
-		}
 		i++;
 	}
-	std::cout << " ====== AUCUNE OCCURENCE DONC AUCUN SALON N'A ETE TROUVE ====== " << std::endl;
 	return -1;
 }
+
 // renvois la pos du salon ou il y a le user
 // donc le probleme est que si aucune occurence est trouver c'est le salon 0 qui est
 // selectionner donc mettre le -1 a la place
 // je suis trop con il suffit de faire un find de socket pour comparer ou un truc du genre
+
 void Server::run()
 {
 	while (42)

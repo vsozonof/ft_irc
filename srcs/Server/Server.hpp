@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:03:09 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/06 21:43:24 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:59:56 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class Server
 	public:
 		Server(unsigned int port, std::string password);
 		~Server();
-		
+
 		void initServer();
 		void run();
 		void handleClient();
@@ -49,7 +49,7 @@ class Server
 		int checkNick(std::string clientNick);
 		std::string extractValue(const std::string& msg, const std::string& key);
 
-		
+
 		void doClientAction(int clientSocket);
 
 		void sendWelcome(int clientSocket);

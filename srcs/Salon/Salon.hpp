@@ -40,23 +40,27 @@ class Salon
 		std::string getMessage(void);
 		int get_salon_client_len();
 		std::string get_topic();
-		void set_topic(std::string topic);
-		void set_password(std::string password);
 		std::string get_password();
-		void set_opt(int opt, bool value);
 		bool get_opt(int opt);
-		void set_operator(int socket);
-		void remove_operator(int socket);
-		bool is_operator(int socket);
-		void set_invite(int socket);
-		void remove_invite(int socket);
-		bool is_invite(int socket);
-		void set_client_limits(int limits);
 		int get_client_limits();
 		int get_SocketClient(int pos);
 		void set_mode(bool value, int mode);
 		bool get_mode(int mode);
 		std::map<int, Client> get_all_client();
+		int getOwner();
+
+		void setOwner(int clientSocket);
+		void set_topic(std::string topic);
+		void set_password(std::string password);
+		void set_opt(int opt, bool value);
+		void set_operator(int socket);
+		void set_invite(int socket);
+		void set_client_limits(int limits);
+
+		void remove_operator(int socket);
+		bool is_operator(int socket);
+		void remove_invite(int socket);
+		bool is_invite(int socket);
 		void remove_client(int socket);
 		void send_to_all(std::string msg);
 		int _operator_size();
@@ -66,6 +70,8 @@ class Salon
 		void set_client(std::map<int, Client>& client, int clientSocket);
 		void increaseSocketClient(int socket);
 		void show_list_client();
+
+		bool check_opt(int clientsocket);
 
 	private:
 		std::string						_Name;				// name du Salon
@@ -77,7 +83,8 @@ class Salon
 		std::list<int>					_operator; // liste des opérateurs
 		std::list<int>					_invite; // liste des invites
 		int								_client_limits; // nombre de client max
-		bool								_opt[4]; // 0 = invitation, 1 = mode topic, 2 = mode password, 3 = user limit
+		bool							_opt[4]; // 0 = invitation, 1 = mode topic, 2 = mode password, 3 = user limit
+		int								_owner;
 };
 
 #endif
