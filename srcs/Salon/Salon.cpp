@@ -192,7 +192,7 @@ void Salon::set_client(std::map<int, Client>& client, int clientSocket)
 	_clients[clientSocket].setNickname(client[clientSocket].getNickname());
 	_clients[clientSocket].setUsername(client[clientSocket].getUsername());
 	show_client_infos(clientSocket);
-    std::cout << "infos nouveau client au dessus " << std::endl; 
+    std::cout << "infos nouveau client au dessus " << std::endl;
 }
 
 void Salon::show_list_client()
@@ -300,4 +300,18 @@ bool Salon::check_opt(int clientsocket)
 			return false ;
 	}
 	return true;
+}
+
+int Salon::_operator_size()
+{
+    return _operator.size();
+}
+
+void Salon::set_mode(bool value, int mode)
+{
+    _opt[mode] = value;
+}
+bool Salon::get_mode(int mode)
+{
+    return _opt[mode];
 }

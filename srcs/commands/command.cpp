@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/05/11 18:46:25 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/05/11 20:47:51 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
 #include "command.hpp"
 
 Command::Command()
@@ -449,4 +448,3 @@ void Command::plus_mode(std::string option, std::string value, Salon &salon, Cli
 	}
 }
 
-*/
