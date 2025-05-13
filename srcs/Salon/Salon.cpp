@@ -284,12 +284,14 @@ bool Salon::check_opt(int clientsocket)
 	std::cout << " opt[3] " << _opt[3] << " ";
 	if (_opt[0] == true)
 	{
+        std::cout << "passage dans le opt[0]" << std::endl;
 		std::cout << "is invite " << is_invite(clientsocket) << std::endl;
 		if (is_invite(clientsocket) == false)
 			return false;
 	}
 	else if (_opt[2] == true)
 	{
+        std::cout << "passage dans le opt[2]" << std::endl;
 		std::string pass;
 		std::cin >> pass;
 		std::cout << "voici pass " << pass << std::endl;
@@ -298,9 +300,10 @@ bool Salon::check_opt(int clientsocket)
 	}
 	else if (_opt[3] == true)
 	{
+        std::cout << "passage dans le opt[3]" << std::endl;
 		std::cout << "ok la il faut test " << get_client_limits();
 		std::cout << " et " << get_salon_client_len() << std::endl;
-		if (get_client_limits() == get_salon_client_len())
+		if (get_client_limits() < get_salon_client_len())
 			return false;
 	}
 	return true;
