@@ -47,17 +47,6 @@ void Server::initServer()
 	std::cout << BOLD_GREEN << "⚙️  Ft_IRC: Server successfully initialized" << def << std::endl;
 }
 
-// int Server::setSalon(Salon salon, int i, int clientSocket)
-// {
-// 	size_t i = this->getSalon().size() - 1;
-// 	std::cout << std::endl << "voici le nom du salon " << _salon[i].getName() << std::endl;
-// 	_salon[i].increaseSocketClient(clientSocket);
-// 	_salon[i].set_client(_clients, clientSocket);
-// 	Client client = _salon[i].get_client(clientSocket);
-// 	_salon[i].show_list_client();
-// 	return 0;
-// }
-
 size_t Server::verif_Salon(Salon salon)
 {
 	int i = 0;
@@ -65,20 +54,13 @@ size_t Server::verif_Salon(Salon salon)
 	while (tmp > 0)
 	{
 		if (_salon[i].getName() == salon.getName())
-		{
-			std::cout << "salon is already existing" << std::endl;
-			std::cout << "voici le nom du salon qui existe " << _salon[i].getName();
-			std::cout << " et voici le i du channel " << i << std::endl;
 			return i;
-		}
 		i++;
 		tmp--;
 	}
-	std::cout << "juste apres verif salon " << std::endl;
 	salon.set_mode(0, 0);
 	salon.set_mode(0, 2);
 	salon.set_mode(0, 3);
-	std::cout << salon.get_mode(0) << " " << salon.get_mode(2) << " " << salon.get_mode(3) << std::endl;
 	_salon.push_back(salon);
 	return 0;
 }
@@ -97,21 +79,14 @@ int Server::search_salon_by_socket(int clientSocket)
 		std::map<int, Client> client = _salon[i].get_all_client();
 		while (client.size() > j)
 		{
-			std::cout << client[j].getSocket() << " ";
 			if (client[j].getSocket() == clientSocket)
 				return i;
 			j++;
 		}
-		std::cout << "<-" << std::endl;
 		i++;
 	}
 	return -1;
 }
-
-// renvois la pos du salon ou il y a le user
-// donc le probleme est que si aucune occurence est trouver c'est le salon 0 qui est
-// selectionner donc mettre le -1 a la place
-// je suis trop con il suffit de faire un find de socket pour comparer ou un truc du genre
 
 void Server::run()
 {

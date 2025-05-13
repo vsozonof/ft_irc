@@ -295,12 +295,9 @@ void Command::mode(std::string args, Salon &salon, Client client)
 			break;
 		}
 	}
-	std::cout << "checkpoint 1" << std::endl;
 	if (is_in == false)
 	{
-		std::cout << "checkpoint 10........" << std::endl;
 		std::string error = "'127.0.0.1 442 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not on that channel\r\n";
-		std::cout << "checkpoint ...........10........" << std::endl;	
 		debug_print(error);
 		send(client.getSocket(), error.c_str(), error.size(), 0);
 		return;
@@ -313,7 +310,6 @@ void Command::mode(std::string args, Salon &salon, Client client)
 			break;
 		}
 	}
-	std::cout << "checkpoint 2" << std::endl;
 	if (is_op == false)
 	{
 		std::string error = ":127.0.0.1 482 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";

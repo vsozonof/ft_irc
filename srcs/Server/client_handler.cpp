@@ -130,15 +130,8 @@ void Server::setupNewClient(int clientSocket)
 	_clients[clientSocket].setNickname(userNick);
 	_clients[clientSocket].setUsername(userName);
 
-
-	// std::cout << "______________________________________" << std::endl;
-	// std::cout << "NICKNAME =" << _clients[clientSocket].getNickname() << std::endl;
-	// std::cout << "USERNAME =" << _clients[clientSocket].getUsername() << std::endl;
-	// std::cout << "CLIENTSOCKET =" << _clients[clientSocket].getSocket() << std::endl;
 	_clients[clientSocket].sendMsg(":127.0.0.1 001 test :Welcome to the IRC Network AFWEIOPXJWEPFOIJA\r\n");
 }
-
-// ! Do-Client Action = fonction qui va gerer les cmd client, les messages...
 
 void Server::doClientAction(int clientSocket)
 {
@@ -161,37 +154,27 @@ void Server::doClientAction(int clientSocket)
 	std::cout << clientSocket << " Received: " << msg << std::endl;
 	if (msg.find("JOIN") != std::string::npos)
 	{
-		std::cout << "ETAPE 1 CREATION NOUVEAU SALON " << std::endl << std::endl;
-		std::cout << std::endl << std::endl << "OK MAINTENANT PASSONS A LA SUITE  " << std::endl << std::endl;
 		msg = msg.erase(0, 6);
 		Salon salon(msg);
-		std::cout << "au moment de verif salon" << std::endl;
-		if (verif_Salon(salon) == 0)
-			std::cout << "he exit" << std::endl;
+		verif_Salon(salon);
+		// if (verif_Salon(salon) == 0)
+			// std::cout << "he exit" << std::endl;
 		size_t i = verif_Salon(salon);
-		std::cout << std::endl << "voici le nom du salon " << _salon[i].getName() << std::endl;
-		// ici faire les verifs de _opt 0 2 3
-		// mettre en op si tu es le premier a etre dans channel
 		if (_salon[i].get_salon_client_len() == 0)
 		{
 			_salon[i].setOwner(clientSocket);
 			_salon[i].set_operator(clientSocket);
-			std::cout << "verif du owner " << _salon[i].getOwner() << std::endl;
 		}
 		else if (_salon[i].check_opt(clientSocket) == false)
 			return ;
 		_salon[i].increaseSocketClient(clientSocket);
-		std::cout << "voici le socket " << clientSocket << std::endl;
 		_salon[i].set_client(_clients, clientSocket);
 		Client client = _salon[i].get_client(clientSocket);
-		_salon[i].show_list_client();
-		std::cout << "juste avant le send " << std::endl;
 		std::string success_join = ":" + Command::clean(client.getNickname()) + "!" + Command::clean(client.getUsername()) + "@127.0.0.1 JOIN #" + Command::clean(salon.getName()) +"\r\n";
 		std::cout << success_join << std::endl;
 		int bytes = send(clientSocket, success_join.c_str(), success_join.size(), 0);
 			if (bytes == -1)
 				throw std::runtime_error("Error sending message with send");
-		std::cout << std::endl << "FIN DE LA CREATION DU NOUVEAU SALON DONC FIN ETAPE 1" << std::endl << std::endl;
 	}
 	else if (msg.find("PING") != std::string::npos)
 	{
@@ -203,33 +186,25 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "QUIT command" << std::endl;
 	}
 	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
-	{
-		std::cout << "voici les infos des clients " << _clients[clientSocket].getNickname() << std::endl;	
 		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
-	}
 	else
 	{
-		std::cout << "je rentre dans le ELSEEEEEEEEEEEEEE DONC ETAPE 2:" << std::endl << std::endl;
-		int i = 0;
-		for (; (int)this->_salon.size() > i; i++)
-		{
-			std::cout << "salon numero " << i << " voici ses infos ====== :" << std::endl;
-			std::cout << _salon[i].getName() << " : "<< std::endl;
-			_salon[i].show_list_client();
-		}
+		// int i = 0;
+		// for (; (int)this->_salon.size() > i; i++)
+		// {
+		// 	std::cout << "salon numero " << i << " voici ses infos ====== :" << std::endl;
+		// 	std::cout << _salon[i].getName() << " : "<< std::endl;
+		// 	_salon[i].show_list_client();
+		// }
 		if (_salon.size() > 0)
 		{
-			std::cout << "Voici le salon qui va envoyer un message " << std::endl;
 			int nb_salon = search_salon_by_socket(clientSocket);
-			std::cout << "voici le numero du salon recup " << nb_salon << std::endl;
 			if (nb_salon != -1)
 			{
 				std::cout << _salon[search_salon_by_socket(clientSocket)].getName() << std::endl;
-				std::cout << "voici la liste client dans le salon qui est selectionner " << std::endl;
 				_salon[search_salon_by_socket(clientSocket)].show_list_client();
 				msg_client(clientSocket, _salon[search_salon_by_socket(clientSocket)], msg);
 			}
-			std::cout << " no salon found with this socket" << std::endl;
 		}
 	}
 }
@@ -240,21 +215,15 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 	std::string final;
 	int i = 0;
 
-	// std::cout << std::endl << "==== INFO POUR COMMENT LE MSG VA ETRE ENVOYE ====" << std::endl << std::endl;
-	// std::cout << "ENVOIS DE LA PART DE " << clientSocket << " ET VOICI LE MESSAGE " << std::endl;
 	msg = msg.erase(msg.size() - 1);
 	envoyeur = tab.getName();
 	int pos = msg.find(":");
 	if (pos > 2147483647 || pos < 0)
 		return;
 	Client client = tab.get_client(clientSocket);
-	std::cout << "client recup " << client.getNickname() << " socket " << clientSocket;
-	std::cout << " et " << client.getSocket() << std::endl;
 	tab.show_list_client();
 	std::string nv = ":";
 	nv.append(client.getNickname());
-	std::cout << "voici le name de celui qui envois " << client.getNickname() << std::endl;
-	std::cout << "et voici son socket " << client.getSocket() << std::endl;
 	nv.append(" " + msg);
 	nv.append("\r\n");
 	while (tab.get_salon_client_len() > i)
@@ -280,28 +249,6 @@ void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
 		{
 			throw std::runtime_error("a problem happend when sending message");
 		}
-		std::cout << "==== FIN DES INFOS POUR COMMENT LE MSG VA ETRE ENVOYER ====" << std::endl << std::endl;
-		std::cout << std::endl;
 		i++;
 	}
 }
-
-// std::string msg = ":server_name PRIVMSG #sa :Hello, IRSSI!\r\n";
-// donc 			 ":server_name PRIVMSG #channel : *le message*"
-//essayer de faire serv PRIVMSG receveur : message
-
-// Donc je dois cree mon serv 									-> fait
-// Depuis un client, envoyer un message							-> fait
-// Message recu par le serveur									-> fait
-// Le serveur doit ensuite envoyer le message a tous le monde
-
-// la j'ai PRIVMSG channel *le message*
-
-// le probleme viens peut etre du formatage de ma commande
-// -> utiliser les schema ci dessous
-
-// schema de base	 envoyeur PRIVMSG receveur
-// donc pour un serv Envoyeur PRIVMSG serv
-// pour mp 			 Envoyeur PRIVmsg serv
-
-//Thus, there are 510 characters maximum allowed for the command and its parameters

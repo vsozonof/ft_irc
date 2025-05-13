@@ -31,7 +31,6 @@ Client& Client::operator=(Client const &rhs)
 {
 	if (this != &rhs)
 	{
-		std::cout << "je passe par la copie" << std::endl;
 		_socket = rhs.getSocket();
 		_authenticated = rhs.isAuth();
 		_nickname = rhs._nickname;
