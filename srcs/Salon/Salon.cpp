@@ -8,6 +8,12 @@ Salon::Salon(const Salon &src)
     _SocketClient = src._SocketClient;
 	_message = src._message;
 	_clients = src._clients;
+    _opt[0] = src._opt[0];
+    _opt[1] = src._opt[1];
+    _opt[2] = src._opt[2];
+    _opt[3] = src._opt[3];
+    _owner = src._owner;
+    _operator = src._operator;
 }
 
 Salon& Salon::operator=(Salon const &rhs)
@@ -18,6 +24,12 @@ Salon& Salon::operator=(Salon const &rhs)
         _SocketClient = rhs._SocketClient;
 		_message = rhs._message;
 		_clients = rhs._clients;
+        _opt[0] = rhs._opt[0];
+        _opt[1] = rhs._opt[1];
+        _opt[2] = rhs._opt[2];
+        _opt[3] = rhs._opt[3];
+        _owner = rhs._owner;
+        _operator = rhs._operator;
     }
     return *this;
 }
@@ -277,12 +289,12 @@ bool Salon::check_opt(int clientsocket)
 	std::cout << "voici les entrees de _opt " << std::endl;
 	std::cout << "opt[0] " << _opt[0];
 	std::cout << " opt[2] " << _opt[2];
-	std::cout << " opt[3] " << _opt[3];
+	std::cout << " opt[3] " << _opt[3] << " ";
 	if (_opt[0] == true)
 	{
 		std::cout << "is invite " << is_invite(clientsocket) << std::endl;
 		if (is_invite(clientsocket) == false)
-			return false ;
+			return false;
 	}
 	else if (_opt[2] == true)
 	{
@@ -290,14 +302,14 @@ bool Salon::check_opt(int clientsocket)
 		std::cin >> pass;
 		std::cout << "voici pass " << pass << std::endl;
 		if (pass != get_password())
-			return false ;
+			return false;
 	}
 	else if (_opt[3] == true)
 	{
 		std::cout << "ok la il faut test " << get_client_limits();
 		std::cout << " et " << get_salon_client_len() << std::endl;
 		if (get_client_limits() == get_salon_client_len())
-			return false ;
+			return false;
 	}
 	return true;
 }
@@ -311,6 +323,7 @@ void Salon::set_mode(bool value, int mode)
 {
     _opt[mode] = value;
 }
+
 bool Salon::get_mode(int mode)
 {
     return _opt[mode];

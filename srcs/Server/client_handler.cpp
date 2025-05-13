@@ -175,6 +175,7 @@ void Server::doClientAction(int clientSocket)
 		if (_salon[i].get_salon_client_len() == 0)
 		{
 			_salon[i].setOwner(clientSocket);
+			_salon[i].set_operator(clientSocket);
 			std::cout << "verif du owner " << _salon[i].getOwner() << std::endl;
 		}
 		else if (_salon[i].check_opt(clientSocket) == false)

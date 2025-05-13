@@ -285,6 +285,7 @@ void Command::mode(std::string args, Salon &salon, Client client)
 {
 	bool is_in = false;
 	bool is_op = false;
+	std::cout << "le getsocket est ici " << std::endl;
 	std::map<int, Client> clients = salon.get_all_client();
 	for (int i = 0; i < salon.get_salon_client_len(); i++)
 	{
@@ -294,25 +295,34 @@ void Command::mode(std::string args, Salon &salon, Client client)
 			break;
 		}
 	}
+	std::cout << "checkpoint 1" << std::endl;
 	if (is_in == false)
 	{
+		std::cout << "checkpoint 10........" << std::endl;
 		std::string error = "'127.0.0.1 442 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not on that channel\r\n";
-			debug_print(error);
-			send(client.getSocket(), error.c_str(), error.size(), 0);
-			return;
+		std::cout << "checkpoint ...........10........" << std::endl;	
+		debug_print(error);
+		send(client.getSocket(), error.c_str(), error.size(), 0);
+		return;
 	}
 	for (int i = 0; i < salon._operator_size(); i++)
 	{
+		std::cout << "coucou c'est la dedans" << std::endl;
+		std::cout << "voici ce qui est check " << i + 4;
+		std::cout << std::endl;
+		salon.show_list_client();
+		std::cout << clients[salon.get_SocketClient(i + 4)].getSocket() << std::endl;
 		if (clients[salon.get_SocketClient(i + 4)].getNickname() == client.getNickname())
 		{
 			is_op = true;
 			break;
 		}
 	}
+	std::cout << "checkpoint 2" << std::endl;
 	if (is_op == false)
 	{
 		std::string error = ":127.0.0.1 482 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";
-	send(client.getSocket(), error.c_str(), error.size(), 0);
+		send(client.getSocket(), error.c_str(), error.size(), 0);
 		return;
 	}
 	size_t start = args.find("-");
