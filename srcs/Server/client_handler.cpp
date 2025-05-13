@@ -203,7 +203,10 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "QUIT command" << std::endl;
 	}
 	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
+	{
+		std::cout << "voici les infos des clients " << _clients[clientSocket].getNickname() << std::endl;	
 		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
+	}
 	else
 	{
 		std::cout << "je rentre dans le ELSEEEEEEEEEEEEEE DONC ETAPE 2:" << std::endl << std::endl;

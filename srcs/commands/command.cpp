@@ -307,12 +307,7 @@ void Command::mode(std::string args, Salon &salon, Client client)
 	}
 	for (int i = 0; i < salon._operator_size(); i++)
 	{
-		std::cout << "coucou c'est la dedans" << std::endl;
-		std::cout << "voici ce qui est check " << i + 4;
-		std::cout << std::endl;
-		salon.show_list_client();
-		std::cout << clients[salon.get_SocketClient(i + 4)].getSocket() << std::endl;
-		if (clients[salon.get_SocketClient(i + 4)].getNickname() == client.getNickname())
+		if (clients[salon.get_SocketClient(i)].getNickname() == client.getNickname())
 		{
 			is_op = true;
 			break;
