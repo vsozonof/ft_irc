@@ -6,7 +6,7 @@
 /*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/05/11 20:47:51 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/14 21:58:52 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 	std::map<int, Client> clients = salon.get_all_client();
 	for (int i = 0; i < salon._operator_size(); i++)
 	{
-		if (clients[salon.get_SocketClient(i + 4)].getNickname() == kicker.getNickname())
+		if (clients[salon.get_SocketClient(i)].getNickname() == kicker.getNickname())
 		{
 			is_op = true;
 			break;
@@ -166,7 +166,7 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 	if (is_op == false)
 	{
 		std::string error = ":127.0.0.1 482 " + kicker.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";
-	send(kicker.getSocket(), error.c_str(), error.size(), 0);
+		send(kicker.getSocket(), error.c_str(), error.size(), 0);
 		return;
 	}
 	size_t start = command.find("KICK") + 6 + salon.getName().size();
@@ -174,9 +174,9 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 	std::string username = command.substr(start, end - start);
 	start = command.find(":");
 	end = command.find("\r", start);
-	std::string raison = command.substr(start, end - start);
+	std::string raison = command.substr(start + 1, end - start - 1);
 	if (raison.empty())
-		raison = ":Kicked by operator";
+		raison = " :Kicked by operator";
 	else
 		raison = " " + raison;
 	for (int i = 0; i < salon.get_salon_client_len(); i++)
@@ -184,9 +184,8 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 		client = salon.get_client(i + 4);
 		if (client.getNickname() == username)
 		{
-			std::string kick_msg = ":" + kicker.getNickname() + "!" + " KICK #" + clean(salon.getName()) + " " + clean(client.getNickname()) + raison + "\r\n";
+			std::string kick_msg = ":" + kicker.getNickname() + "!" + kicker.getUsername() + " KICK #" + clean(salon.getName()) + " " + clean(client.getNickname()) + raison + "\r\n";
 			salon.send_to_all(kick_msg);
-			debug_print(kick_msg);
 			salon.remove_client(client.getSocket());
 			return;
 		}
@@ -250,7 +249,7 @@ void Command::topic(std::string topics, Salon &salon, Client client)
 		std::map<int, Client> clients = salon.get_all_client();
 		for (int i = 0; i < salon._operator_size(); i++)
 		{
-			if (clients[salon.get_SocketClient(i + 4)].getNickname() == client.getNickname())
+			if (clients[salon.get_SocketClient(i)].getNickname() == client.getNickname())
 			{
 				is_op = true;
 				break;
@@ -285,7 +284,6 @@ void Command::mode(std::string args, Salon &salon, Client client)
 {
 	bool is_in = false;
 	bool is_op = false;
-	std::cout << "le getsocket est ici " << std::endl;
 	std::map<int, Client> clients = salon.get_all_client();
 	for (int i = 0; i < salon.get_salon_client_len(); i++)
 	{
@@ -331,18 +329,16 @@ void Command::mode(std::string args, Salon &salon, Client client)
 	std::string option = args.substr(start, end - start);
 	if (option.empty())
 	{
-		std::cout << "option empty" << std::endl;
 		std::string error = ":127.0.1 501 " + client.getNickname() + " #" + clean(salon.getName()) + " :Unknown mode\r\n";
 		send(client.getSocket(), error.c_str(), error.size(), 0);
 		return;
 	}
 	start = args.find("\r", end);
-	std::string value = args.substr(end, start - end);
+	std::string value = args.substr(end + 1, start - end - 1);
 	if (args.find("-") != std::string::npos)
 		minus_mode(option, salon, client, value);
 	else
 		plus_mode(option, value, salon, client);
-	(void) client;
 }
 
 void Command::minus_mode(std::string option, Salon &salon, Client client, std::string value)
@@ -386,7 +382,7 @@ void Command::minus_mode(std::string option, Salon &salon, Client client, std::s
 	else if (option == "-l")
 	{
 		salon.set_mode(false, 3);
-		salon.set_client_limits(atoi(value.c_str()));
+		salon.set_client_limits(0);
 		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.1 MODE #" + clean(salon.getName()) + " -l\r\n";
 		salon.send_to_all(msg);
 	}
@@ -438,7 +434,7 @@ void Command::plus_mode(std::string option, std::string value, Salon &salon, Cli
 	else if (option == "+l")
 	{
 		salon.set_mode(true, 3);
-		salon.set_client_limits(0);
+		salon.set_client_limits(atoi(value.c_str()));
 		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.1 MODE #" + clean(salon.getName()) + " +l\r\n";
 		salon.send_to_all(msg);
 	}
