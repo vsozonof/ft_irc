@@ -70,8 +70,6 @@ class Salon
 		void set_client(std::map<int, Client>& client, int clientSocket);
 		void increaseSocketClient(int socket);
 		void show_list_client();
-		void show_list_operator();
-
 		bool check_opt(int clientsocket);
 
 	private:

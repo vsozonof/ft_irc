@@ -6,7 +6,7 @@
 /*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/05/14 21:58:52 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/14 22:07:23 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,14 +155,7 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 		return;
 	}
 	std::map<int, Client> clients = salon.get_all_client();
-	for (int i = 0; i < salon._operator_size(); i++)
-	{
-		if (clients[salon.get_SocketClient(i)].getNickname() == kicker.getNickname())
-		{
-			is_op = true;
-			break;
-		}
-	}
+	is_op = salon.is_operator(kicker.getSocket());
 	if (is_op == false)
 	{
 		std::string error = ":127.0.0.1 482 " + kicker.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";
@@ -247,14 +240,7 @@ void Command::topic(std::string topics, Salon &salon, Client client)
 	{
 		bool is_op = false;
 		std::map<int, Client> clients = salon.get_all_client();
-		for (int i = 0; i < salon._operator_size(); i++)
-		{
-			if (clients[salon.get_SocketClient(i)].getNickname() == client.getNickname())
-			{
-				is_op = true;
-				break;
-			}
-		}
+		is_op = salon.is_operator(client.getSocket());
 		if (is_op == false)
 		{
 			std::string error = ":127.0.0.1 482 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";

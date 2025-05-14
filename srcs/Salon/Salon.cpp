@@ -329,14 +329,3 @@ bool Salon::get_mode(int mode)
 {
     return _opt[mode];
 }
-
-void Salon::show_list_operator()
-{
-    std::list<int>::iterator i;
-    i = _operator.begin();
-    while (i != _operator.end())
-    {
-        std::cout << "op : " << *i << std::endl;
-        i++;
-    }
-}
