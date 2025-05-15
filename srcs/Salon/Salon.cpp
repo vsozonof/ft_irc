@@ -1,6 +1,7 @@
 #include "Salon.hpp"
 
-Salon::Salon() {}
+Salon::Salon() {
+}
 
 Salon::Salon(const Salon &src)
 {
@@ -41,6 +42,11 @@ Salon::Salon(std::string name)
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
     _Name = name;
+    _opt[0] = false;
+    _opt[1] = false;
+    _opt[2] = false;
+    _opt[3] = false;
+    _client_limits = 0;
 }
 
 std::string Salon::getName()
@@ -363,4 +369,15 @@ size_t Server::verif_Salon(Salon salon)
 	salon.set_mode(0, 3);
 	_salon.push_back(salon);
 	return 0;
+}
+
+void Salon::show_list_operator()
+{
+    std::list<int>::iterator i;
+    i = _operator.begin();
+    while (i != _operator.end())
+    {
+        std::cout << "op : " << *i << std::endl;
+        i++;
+    }
 }
