@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/15 17:44:57 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/15 18:14:41 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void Server::deleteClient(int clientSocket)
         }
     }
     _clients.erase(clientSocket);
-	close(clientSocket);
 }
 
 // * void setupNewClient(int clientSocket)
@@ -155,7 +154,7 @@ void Server::doClientAction(int clientSocket)
 	}
 	else if (msg.find("QUIT") != std::string::npos)
 	{
-		std::cout << "QUIT command" << std::endl;
+		deleteClient(clientSocket);
 	}
 	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
 		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
