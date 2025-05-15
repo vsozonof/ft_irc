@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/11 19:01:09 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:30:18 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
 
 Server::Server(unsigned int port, std::string password) : _port(port), _password(password)
 {
@@ -20,7 +21,7 @@ Server::Server(unsigned int port, std::string password) : _port(port), _password
 
 Server::~Server()
 {
-	std::cout << BOLD_GREEN << "Ft_IRC: Server destroyed" << def << std::endl;
+	std::cout << BOLD_GREEN << "🗑️  Ft_IRC: Server destroyed" << def << std::endl;
 }
 
 void Server::initServer()
@@ -28,6 +29,10 @@ void Server::initServer()
 	_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socket == -1)
 		throw std::runtime_error(BOLD_RED "Socket creation failure" def);
+
+	int opt = 1;
+	if (setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+		throw std::runtime_error("setsockopt(SO_REUSEADDR) failure");
 
 	sockaddr_in servAddr;
 	servAddr.sin_family = AF_INET;
@@ -44,52 +49,39 @@ void Server::initServer()
 	listening_fd.fd = _socket;
 	listening_fd.events = POLLIN;
 	_fds.push_back(listening_fd);
+	_shutdown = 0;
 	std::cout << BOLD_GREEN << "⚙️  Ft_IRC: Server successfully initialized" << def << std::endl;
 }
 
-size_t Server::verif_Salon(Salon salon)
-{
-	int i = 0;
-	size_t tmp = _salon.size();
-	while (tmp > 0)
-	{
-		if (_salon[i].getName() == salon.getName())
-			return i;
-		i++;
-		tmp--;
-	}
-	salon.set_mode(0, 0);
-	salon.set_mode(0, 2);
-	salon.set_mode(0, 3);
-	_salon.push_back(salon);
-	return 0;
+void Server::initServerShutdown() {
+	_shutdown = 1;
 }
 
-std::vector<Salon> Server::getSalon(void)
+Server* g_server = NULL;
+
+void sigHandler(int s)
 {
-	return _salon;
+	(void)s;
+	g_server->initServerShutdown();
 }
 
-int Server::search_salon_by_socket(int clientSocket)
-{
-	size_t i = 0;
-	while (_salon.size() > i)
-	{
-		size_t j = 0;
-		std::map<int, Client> client = _salon[i].get_all_client();
-		while (client.size() > j)
-		{
-			if (client[j].getSocket() == clientSocket)
-				return i;
-			j++;
-		}
-		i++;
-	}
-	return -1;
+void Server::initSigHandler() {
+	struct sigaction sigIntHandler;
+	
+	sigIntHandler.sa_handler = sigHandler;
+	sigemptyset(&sigIntHandler.sa_mask);
+	sigIntHandler.sa_flags = 0;
+	
+	sigaction(SIGINT, &sigIntHandler, NULL);
+	
+	g_server = this;
 }
 
 void Server::run()
-{
-	while (42)
+{	
+	initSigHandler();
+	while (!_shutdown)
 		handleClient();
+	std::cout << BOLD_GREEN << "\n⚙️  Ft_IRC: Successfully stopped the server!" << std::endl;
+	close(_socket);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_handler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/11 20:48:16 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/15 17:44:57 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 #include <stdlib.h>
 #include "../commands/command.hpp"
 
+// * void handleClient()
+// * This is the main function for handling clients
+// * The function will mainly do two different things:
+// * ==> Set-up and authenticate new clients
+// * ==> Do authenticated clients actions (handling their commands, messages).
 void Server::handleClient()
 {
 	int ret = poll(_fds.data(), _fds.size(), -1);
@@ -40,9 +45,16 @@ void Server::handleClient()
 		}
 	}
 	else if (ret == -1)
-		throw std::runtime_error("Poll error");
+	{
+		if (errno == EINTR && _shutdown == 1)
+			return ;
+		else
+			throw std::runtime_error("Poll error");
+	}
 }
 
+// * void deleteClient(int clientSocket)
+// * This function will erase a clientSocket from both our fd and client lists.
 void Server::deleteClient(int clientSocket)
 {
 	close(clientSocket);
@@ -55,12 +67,18 @@ void Server::deleteClient(int clientSocket)
         }
     }
     _clients.erase(clientSocket);
+	close(clientSocket);
 }
 
+// * void setupNewClient(int clientSocket)
+// * This function will help authenticating new clients
+// * ==> The function will handle auth messages from the client and treat them.
+// * ===> The server will reject the new clients if they provide incorrect password or already in use names.
+// * ==> If everything is correct, the client will be successfully connected to the IRC server.
 void Server::setupNewClient(int clientSocket)
 {
-	std::cout << "\033[1m" << "----- Setting up new client ------" << std::endl;
-	std::cout << "Setting up client: " << clientSocket << std::endl;
+	std::cout << "\033[1m" << "__________________________" << std::endl;
+	std::cout << "Setting up new client: " << clientSocket << std::endl;
 
 	Client newClient(clientSocket);
 	_clients.insert(std::pair<int, Client>(clientSocket, newClient));
@@ -71,68 +89,22 @@ void Server::setupNewClient(int clientSocket)
 	fcntl(clientSocket, F_SETFL, O_NONBLOCK);
 
 	std::string msg;
-	std::cout << '[' << clientSocket << ']' << ": Gathering data" << std::endl;
-	int check = 0;
-	int timeout = 0;
-	while (!check)
-	{
-		msg += _clients[clientSocket].receiveMsg();
-		if (msg.find("USER") != std::string::npos
-			&& msg.find("NICK") != std::string::npos
-			&& msg.find("PASS") != std::string::npos)
-		{
-			std::cout << '[' << clientSocket << ']' << ": All informations successfully collected" << std::endl;
-			check = 1;
-		}
-		else
-		{
-			sleep(1);
-			std::cout << '[' << clientSocket << ']' << ": Missing informations.." << std::endl;
-			timeout++;
-			if (timeout == 5)
-			{
-				std::cout << '[' << clientSocket << ']' << ": TimeOut, disconnecting client.." << std::endl;
-				deleteClient(clientSocket);
-				return ;
-			}
-		}
-	}
 
-	// ! Attention : quand find() fail, il retourne 18446744073709551615, ce qui fait peter le substr
-	// ! Il faut donc verifier si find() a trouve qqch avant de faire le substr
-	// ! Sinon, on peut faire find() + 1 pour eviter le probleme
-	// ! J'ai aussi modif les parentheses dans mon if, pour que ca soit plus lisible
-	// ! Voila tout, mon ami
-	std::string userPass = msg.substr((msg.find("PASS") + 5), _password.length());
-	std::string userNick = extractValue(msg, "NICK");
-	std::string userName = extractValue(msg, "USER");
-
-	std::cout << "______________________________________" << std::endl;
-	std::cout << "\n[" << clientSocket << "]: " << "INFOS RECEIVED:\n"
-				<< "PASS: " << '[' << userPass << ']'
-				<< "\nNICK: " << '[' << userNick << ']'
-				<< "\nNAME: " << '[' << userName << ']';
-	std::cout << "\n------------------------------------" << '\n';
-
-	if (checkPassword(userPass))
-	{
-		_clients[clientSocket].sendMsg(":127.0.0.1 464 * :Password incorrect\r\n");
-		deleteClient(clientSocket);
+	if (gatherInfos(clientSocket, msg))
 		return ;
-	}
-	else if (checkNick(userName))
-	{
-		_clients[clientSocket].sendMsg(":127.0.0.1 433 * :Nickname is already in use\r\n");
-		deleteClient(clientSocket);
+
+	if (authClient(msg, clientSocket))
 		return ;
-	}
-
-	_clients[clientSocket].setNickname(userNick);
-	_clients[clientSocket].setUsername(userName);
-
-	_clients[clientSocket].sendMsg(":127.0.0.1 001 test :Welcome to the IRC Network AFWEIOPXJWEPFOIJA\r\n");
+		
+	_clients[clientSocket].sendMsg(":127.0.0.1 001 test :Welcome to the IRC Server\r\n");
 }
 
+// * void doClientAction(int clientSocket)
+// * This function will treat different client-based actions such as:
+// * - joining / quitting channels,
+// * - sending messages,
+// * - kick users
+// * - etc....
 void Server::doClientAction(int clientSocket)
 {
 	std::cout << std::endl << "===== Doing action of client " << clientSocket << "======" << std::endl;
