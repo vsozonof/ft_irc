@@ -74,6 +74,7 @@ void Server::deleteClient(int clientSocket)
 // * ==> The function will handle auth messages from the client and treat them.
 // * ===> The server will reject the new clients if they provide incorrect password or already in use names.
 // * ==> If everything is correct, the client will be successfully connected to the IRC server.
+
 void Server::setupNewClient(int clientSocket)
 {
 	std::cout << "\033[1m" << "__________________________" << std::endl;
@@ -138,19 +139,7 @@ void Server::doClientAction(int clientSocket)
 	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
 		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
 	else
-	{
-		msg_client();
-		if (_salon.size() > 0)
-		{
-			int nb_salon = search_salon_by_socket(clientSocket);
-			if (nb_salon != -1)
-			{
-				std::cout << _salon[search_salon_by_socket(clientSocket)].getName() << std::endl;
-				_salon[search_salon_by_socket(clientSocket)].show_list_client();
-				msg_client(clientSocket, _salon[search_salon_by_socket(clientSocket)], msg);
-			}
-		}
-	}
+		msg_client(clientSocket, msg);
 }
 
 bool Server::join_channel(int clientSocket, std::string msg)
@@ -176,21 +165,30 @@ bool Server::join_channel(int clientSocket, std::string msg)
 	return 1;
 }
 
-void Server::msg_client(int clientSocket, Salon &tab, std::string msg)
+void Server::msg_client(int clientSocket, std::string msg)
 {
 	std::string envoyeur;
 	std::string final;
 
-	msg = msg.erase(msg.size() - 1);
-	envoyeur = tab.getName();
-	int pos = msg.find(":");
-	if (pos > 2147483647 || pos < 0)
-		return;
-	Client client = tab.get_client(clientSocket);
-	std::string nv = ":";
-	nv.append(client.getNickname());
-	nv.append(" " + msg);
-	nv.append("\r\n");
+	if (_salon.size() > 0)
+	{
+		int nb_salon = search_salon_by_socket(clientSocket);
+		if (nb_salon != -1)
+		{
+			Salon tab = _salon[search_salon_by_socket(clientSocket)];
+			msg = msg.erase(msg.size() - 1);
+			envoyeur = tab.getName();
+			int pos = msg.find(":");
+			if (pos > 2147483647 || pos < 0)
+				return;
+			Client client = tab.get_client(clientSocket);
+			std::string nv = ":";
+			nv.append(client.getNickname());
+			nv.append(" " + msg);
+			nv.append("\r\n");
+			send_msg_client(clientSocket, nv, tab);
+		}
+	}
 }
 
 void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)

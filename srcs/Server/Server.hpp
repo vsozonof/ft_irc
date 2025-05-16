@@ -62,7 +62,7 @@ class Server
 		std::vector<Salon> getSalon(void);
 		int search_salon_by_socket(int clientSocket);
 
-		void msg_client(int clientSocket, Salon &tab, std::string msg);
+		void msg_client(int clientSocket, std::string msg);
 
 		bool join_channel(int clientSocket, std::string msg);
 		void send_msg_client(int clientSocket, std::string nv, Salon &tab);
