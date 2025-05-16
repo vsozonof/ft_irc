@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 14:43:24 by vsozonof          #+#    #+#             */
-/*   Updated: 2024/11/08 09:46:36 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/14 15:12:18 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 #include <poll.h>
 #include <cstdio>
 #include <netdb.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "../srcs/Server/Server.hpp"
 

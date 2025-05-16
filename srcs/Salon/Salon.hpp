@@ -15,6 +15,7 @@
 #include <netdb.h>
 #include <bits/stdc++.h>
 #include "../Client/Client.hpp"
+#include "../Server/Server.hpp"
 
 //classe salon
 //-> doit avoir plusieurs clients qui pourront s'envoyer des messages

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+         #
+#    By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/05 14:09:59 by vsozonof          #+#    #+#              #
-#    Updated: 2025/04/21 16:21:25 by rostrub          ###   ########.fr        #
+#    Updated: 2025/05/15 14:46:37 by vsozonof         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,6 @@ SRCS = main.cpp \
 	   srcs/Parsing.cpp \
 	   srcs/Server/Server.cpp \
 	   srcs/Server/client_handler.cpp \
-	   srcs/Server/msg_handler.cpp \
 	   srcs/Server/registrationUtils.cpp \
 	   srcs/Client/Client.cpp \
 	   srcs/Salon/Salon.cpp \

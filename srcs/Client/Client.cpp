@@ -3,25 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 10:45:06 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/07 14:02:40 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:35:37 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
-Client::Client() : _socket(-1), _authenticated(false) {}
+Client::Client() : _socket(-1) {}
 
-Client::Client(int socket) : _socket(socket), _authenticated(false) {}
+Client::Client(int socket) : _socket(socket) {}
 
 Client::~Client() {}
 
 Client::Client(const Client &src)
 {
 	_socket = src.getSocket();
-	_authenticated = src.isAuth();
 	_nickname = src._nickname;
 	_username = src._username;
 	_password = src._password;
@@ -32,7 +31,6 @@ Client& Client::operator=(Client const &rhs)
 	if (this != &rhs)
 	{
 		_socket = rhs.getSocket();
-		_authenticated = rhs.isAuth();
 		_nickname = rhs._nickname;
 		_username = rhs._username;
 		_password = rhs._password;
@@ -41,10 +39,6 @@ Client& Client::operator=(Client const &rhs)
 }
 
 int	Client::getSocket() const { return (_socket); }
-
-void Client::setAuth(bool auth) { _authenticated = auth; }
-
-int Client::isAuth() const { return (_authenticated); }
 
 void Client::closeClient()
 {

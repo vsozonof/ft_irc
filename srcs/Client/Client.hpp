@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 10:15:47 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/03/21 13:55:51 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:31:06 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ class Client
 {
 	private:
 		int		_socket;			// Socket du client
-		bool	_authenticated;		// Si le client est authentifié ou non
 		std::string _nickname;		// Pseudo du client
 		std::string _username;		// Username du client
 		std::string _password;		// Mot de passe du client
@@ -29,11 +28,9 @@ class Client
 	public:
 
 		int				getSocket() const;
-		int 			isAuth() const;
 		std::string		getNickname() const;
 		std::string		getUsername() const;
 		
-		void			setAuth(bool auth);
 		void			setNickname(std::string const &nickname);
 		void			setUsername(std::string const &username);
 		

@@ -330,6 +330,48 @@ bool Salon::get_mode(int mode)
     return _opt[mode];
 }
 
+std::vector<Salon> Server::getSalon(void)
+{
+	return _salon;
+}
+
+int Server::search_salon_by_socket(int clientSocket)
+{
+	size_t i = 0;
+	while (_salon.size() > i)
+	{
+		size_t j = 0;
+		std::map<int, Client> client = _salon[i].get_all_client();
+		while (client.size() > j)
+		{
+			if (client[j].getSocket() == clientSocket)
+			return i;
+			j++;
+		}
+		i++;
+	}
+	return -1;
+}
+
+size_t Server::verif_Salon(Salon salon)
+{
+	int i = 0;
+	size_t tmp = _salon.size();
+	while (tmp > 0)
+	{
+		if (_salon[i].getName() == salon.getName())
+			return i;
+		i++;
+		tmp--;
+	}
+	salon.set_mode(0, 0);
+    salon.set_mode(0, 1);
+	salon.set_mode(0, 2);
+	salon.set_mode(0, 3);
+	_salon.push_back(salon);
+	return 0;
+}
+
 void Salon::print_opt()
 {
     std::cout << "opt[0] ";

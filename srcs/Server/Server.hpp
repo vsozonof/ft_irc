@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:03:09 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/07 16:59:56 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/05/15 16:49:45 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,36 +32,40 @@ class Server
 		std::vector<pollfd>				_fds;			// Liste des fds des clients connectés
 		std::vector<Salon>				_salon;			// Liste des salons cree
 		// std::vector<Salon>::iterator	_salonList;		// iterateur pour les salons crees
+		int								_shutdown;
 
 	public:
 		Server(unsigned int port, std::string password);
 		~Server();
 
 		void initServer();
+		void initSigHandler();
 		void run();
 		void handleClient();
 
 		// ? Client Regisration
 		void setupNewClient(int clientSocket);
 		void deleteClient(int clientSocket);
-		int checkUserInfos(std::string clientPassword, std::string clientNick);
+		int	gatherInfos(int clientSocket, std::string & msg);
+		int authClient(std::string msg, int clientSocket);
 		int checkPassword(std::string clientPassword);
 		int checkNick(std::string clientNick);
 		std::string extractValue(const std::string& msg, const std::string& key);
+		void	initServerShutdown();
 
 
 		void doClientAction(int clientSocket);
 
-		void sendWelcome(int clientSocket);
-		void broadcastMessage(std::string const &message, int clientSocket);
 
 		int setSalon(Salon salon, int i);
 		size_t verif_Salon(Salon salon);
 		std::vector<Salon> getSalon(void);
 		int search_salon_by_socket(int clientSocket);
 
-		void msg_client(int clientSocket, Salon &tab, std::string msg);
+		void msg_client(int clientSocket, std::string msg);
 
+		bool join_channel(int clientSocket, std::string msg);
+		void send_msg_client(int clientSocket, std::string nv, Salon &tab);
 };
 
 #endif
