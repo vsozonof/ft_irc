@@ -71,6 +71,7 @@ class Salon
 		void increaseSocketClient(int socket);
 		void show_list_client();
 		bool check_opt(int clientsocket);
+		void print_opt();
 
 	private:
 		std::string						_Name;				// name du Salon

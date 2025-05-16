@@ -329,3 +329,28 @@ bool Salon::get_mode(int mode)
 {
     return _opt[mode];
 }
+
+void Salon::print_opt()
+{
+    std::cout << "opt[0] ";
+    if (_opt[0] == true)
+        std::cout << "true" << std::endl;
+    else
+        std::cout << "false" << std::endl;
+    std::cout << "opt[1] ";
+    if (_opt[1] == true)
+        std::cout << "true" << std::endl;
+    else
+        std::cout << "false" << std::endl;
+    std::cout << "opt[2] ";
+    if (_opt[2] == true)
+        std::cout << "true" << std::endl;
+    else
+        std::cout << "false" << std::endl;
+    std::cout << "opt[3] ";
+    if (_opt[3] == true)
+        std::cout << "true" << std::endl;
+    else
+        std::cout << "false" << std::endl;
+
+}

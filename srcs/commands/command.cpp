@@ -6,7 +6,7 @@
 /*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/05/14 22:07:23 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/15 22:49:29 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,17 @@ void Command::selectCommand(std::string command, std::vector<Salon> &_salon, Cli
 	std::cout << "===================================================" << std::endl;
 	if (command.find("KICK") != std::string::npos)
 	{
-		Salon salon;
+		Salon *salon;
 		for (size_t i = 0; i < _salon.size(); ++i)
 		{
 			size_t start = command.find("#") + 1;
 			size_t end = command.find(" ", start);
 			if (clean(_salon[i].getName()) == command.substr(start, end - start))
 			{
-				salon = _salon[i];
-				kick(command, salon, client);
+				salon = &_salon[i];
+				std::cout << "salon option " << std::endl;
+				salon->print_opt();
+				kick(command, *salon, client);
 				return;
 			}
 		}
@@ -72,19 +74,19 @@ void Command::selectCommand(std::string command, std::vector<Salon> &_salon, Cli
 	}
 	else if (command.find("INVITE") != std::string::npos)
 	{
-		Salon salon;
+		Salon *salon = NULL;
 		size_t start = command.find("#") + 1;
 		size_t end = command.find("\r", start);
 		for (size_t i = 0; i < _salon.size(); ++i)
 		{
 			if (clean(_salon[i].getName()) == command.substr(start, end - start))
 			{
-				salon = _salon[i];
+				salon = &_salon[i];
 				invite(command, _salon[i], clients, client);
 				return;
 			}
 		}
-		if (salon.getName().empty())
+		if (salon == NULL)
 		{
 			std::string error = "'127.0.0.1 442 " + client.getNickname() + " #" + command.substr(start, end - start) + " :You're not on that channel\r\n";
 			send(client.getSocket(), error.c_str(), error.size(), 0);
@@ -93,44 +95,48 @@ void Command::selectCommand(std::string command, std::vector<Salon> &_salon, Cli
 	}
 	else if (command.find("TOPIC") != std::string::npos)
 	{
-		Salon salon;
+		Salon *salon;
 		for (size_t i = 0; i < _salon.size(); ++i)
 		{
 			size_t start = command.find("#") + 1;
 			size_t end = command.find(" ", start);
 			if (clean(_salon[i].getName()) == command.substr(start, end - start))
 			{
-				salon = _salon[i];
+				salon = &_salon[i];
 				break;
 			}
 		}
-		if (salon.getName().empty())
+		if (salon->getName().empty())
 		{
 			std::cout << "Salon not found" << std::endl;
 			return;
 		}
-		topic(command, salon, client);
+		std::cout << "salon option " << std::endl;
+		salon->print_opt();
+		topic(command, *salon, client);
 	}
 	else if (command.find("MODE") != std::string::npos)
 	{
-		Salon salon;
+		Salon *salon = NULL;
 		for (size_t i = 0; i < _salon.size(); ++i)
 		{
 			size_t start = command.find("#") + 1;
 			size_t end = command.find(" ", start);
 			if (clean(_salon[i].getName()) == command.substr(start, end - start))
 			{
-				salon = _salon[i];
+				salon = &_salon[i];
 				break;
 			}
 		}
-		if (salon.getName().empty())
+		if (salon == NULL)
 		{
 			std::string error = ":127.0.0.1 403 " + client.getNickname() + " #" + command.substr(command.find("#") + 1, command.find(" ", command.find("#") + 1) - command.find("#") - 1) + " :No such channel\r\n";
 			send(client.getSocket(), error.c_str(), error.size(), 0);
 			return;
 		}
-		mode(command, salon, client);
+		mode(command, *salon, client);
+		std::cout << "option apres la modification " << std::endl;
+		salon->print_opt();
 	}
 }
 
@@ -177,7 +183,8 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 		client = salon.get_client(i + 4);
 		if (client.getNickname() == username)
 		{
-			std::string kick_msg = ":" + kicker.getNickname() + "!" + kicker.getUsername() + " KICK #" + clean(salon.getName()) + " " + clean(client.getNickname()) + raison + "\r\n";
+			std::string kick_msg = ":" + clean(kicker.getNickname()) + "!" + clean(kicker.getUsername()) + "@127.0.0.1 KICK #" + clean(salon.getName()) + " " + clean(client.getNickname()) + raison + "\r\n";
+			debug_print(kick_msg);
 			salon.send_to_all(kick_msg);
 			salon.remove_client(client.getSocket());
 			return;
@@ -186,8 +193,6 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 	std::string error = ":127.0.0.1 441 " + kicker.getNickname() + " " + username + " #" + clean(salon.getName()) + " :They aren't on that channel\r\n";
 	send(kicker.getSocket(), error.c_str(), error.size(), 0);
 }
-
-
 
 void Command::invite(std::string command, Salon &salon, std::map<int, Client> &clients, Client client)
 {
@@ -241,6 +246,10 @@ void Command::topic(std::string topics, Salon &salon, Client client)
 		bool is_op = false;
 		std::map<int, Client> clients = salon.get_all_client();
 		is_op = salon.is_operator(client.getSocket());
+		if (is_op == false)
+			std::cout << "is_op = false" << std::endl;
+		else
+			std::cout << "is_op = true" << std::endl;
 		if (is_op == false)
 		{
 			std::string error = ":127.0.0.1 482 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";
@@ -325,6 +334,8 @@ void Command::mode(std::string args, Salon &salon, Client client)
 		minus_mode(option, salon, client, value);
 	else
 		plus_mode(option, value, salon, client);
+	std::cout << "option apres la modification " << std::endl;
+	salon.print_opt();
 }
 
 void Command::minus_mode(std::string option, Salon &salon, Client client, std::string value)
@@ -389,6 +400,7 @@ void Command::plus_mode(std::string option, std::string value, Salon &salon, Cli
 	}
 	else if (option == "+t")
 	{
+		std::cout << "je suis dans le +t" << std::endl;
 		salon.set_mode(true, 1);
 		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.0.1 MODE #" + clean(salon.getName()) + " +t\r\n";
 		salon.send_to_all(msg);
