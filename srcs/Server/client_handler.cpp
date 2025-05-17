@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_handler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/15 18:14:41 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/17 14:49:14 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void Server::setupNewClient(int clientSocket)
 
 	if (authClient(msg, clientSocket))
 		return ;
-		
+
 	_clients[clientSocket].sendMsg(":127.0.0.1 001 test :Welcome to the IRC Server\r\n");
 }
 

@@ -6,7 +6,7 @@
 /*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/05/17 13:54:14 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/17 15:06:28 by rostrub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ void Command::selectCommand(std::string command, std::vector<Salon> &_salon, Cli
 			if (clean(_salon[i].getName()) == command.substr(start, end - start))
 			{
 				salon = &_salon[i];
-				std::cout << "salon option " << std::endl;
-				salon->print_opt();
 				kick(command, *salon, client);
 				return;
 			}
@@ -63,7 +61,7 @@ void Command::selectCommand(std::string command, std::vector<Salon> &_salon, Cli
 		size_t start = command.find("#") + 1;
 		size_t end = command.find(" ", start);
 		std::string channel = command.substr(start, end - start);
-		std::string error = "	:127.0.0.1 403 " + client.getNickname() + " #" + channel + " :No such channel\r\n";
+		std::string error = ":127.0.0.1 403 " + client.getNickname() + " #" + channel + " :No such channel\r\n";
 		send(client.getSocket(), error.c_str(), error.size(), 0);
 		return;
 	}
@@ -83,7 +81,7 @@ void Command::selectCommand(std::string command, std::vector<Salon> &_salon, Cli
 		}
 		if (salon == NULL)
 		{
-			std::string error = "'127.0.0.1 442 " + client.getNickname() + " #" + command.substr(start, end - start) + " :You're not on that channel\r\n";
+			std::string error = ":127.0.0.1 442 " + client.getNickname() + " #" + command.substr(start, end - start) + " :You're not on that channel\r\n";
 			send(client.getSocket(), error.c_str(), error.size(), 0);
 			return;
 		}
@@ -177,7 +175,6 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 		if (client.getNickname() == username)
 		{
 			std::string kick_msg = ":" + clean(kicker.getNickname()) + "!" + clean(kicker.getUsername()) + "@127.0.0.1 KICK #" + clean(salon.getName()) + " " + clean(client.getNickname()) + raison + "\r\n";
-			debug_print(kick_msg);
 			salon.send_to_all(kick_msg);
 			salon.remove_client(client.getSocket());
 			return;
@@ -203,9 +200,8 @@ void Command::invite(std::string command, Salon &salon, std::map<int, Client> &c
 	if (is_in == false)
 	{
 		std::string error = "'127.0.0.1 442 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not on that channel\r\n";
-			debug_print(error);
-			send(client.getSocket(), error.c_str(), error.size(), 0);
-			return;
+		send(client.getSocket(), error.c_str(), error.size(), 0);
+		return;
 	}
 	for (int i = 0; i < salon.get_salon_client_len(); i++)
 	{
@@ -241,8 +237,7 @@ void Command::topic(std::string topics, Salon &salon, Client client)
 		is_op = salon.is_operator(client.getSocket());
 		if (is_op == false)
 		{
-			std::cout << "je suis dans le is op" << std::endl;
-			std::string error = ":127.0.0.1 482 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";
+			std::string error = ":127.0.0.1 482 " + clean(client.getNickname()) + " #" + clean(salon.getName()) + " :You're not channel operator\r\n";
 			send(client.getSocket(), error.c_str(), error.size(), 0);
 			return;
 		}
@@ -281,7 +276,6 @@ void Command::mode(std::string args, Salon &salon, Client client)
 	if (is_in == false)
 	{
 		std::string error = "'127.0.0.1 442 " + client.getNickname() + " #" + clean(salon.getName()) + " :You're not on that channel\r\n";
-		debug_print(error);
 		send(client.getSocket(), error.c_str(), error.size(), 0);
 		return;
 	}
@@ -324,8 +318,6 @@ void Command::mode(std::string args, Salon &salon, Client client)
 		minus_mode(option, salon, client, value);
 	else
 		plus_mode(option, value, salon, client);
-	std::cout << "option apres la modification " << std::endl;
-	salon.print_opt();
 }
 
 void Command::minus_mode(std::string option, Salon &salon, Client client, std::string value)
@@ -390,7 +382,6 @@ void Command::plus_mode(std::string option, std::string value, Salon &salon, Cli
 	}
 	else if (option == "+t")
 	{
-		std::cout << "je suis dans le +t" << std::endl;
 		salon.set_mode(true, 1);
 		std::string msg = ":" + client.getNickname() + "!" + client.getUsername() + "@127.0.0.1 MODE #" + clean(salon.getName()) + " +t\r\n";
 		salon.send_to_all(msg);

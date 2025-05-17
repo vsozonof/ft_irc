@@ -288,14 +288,20 @@ bool Salon::check_opt(int clientsocket)
 	std::cout << "opt[0] " << _opt[0];
 	std::cout << " opt[2] " << _opt[2];
 	std::cout << " opt[3] " << _opt[3] << " ";
-	if (_opt[0] == true)
+	if (_opt[0] == true) // /mode +i (met le chan sur invitation)
 	{
         std::cout << "passage dans le opt[0]" << std::endl;
 		std::cout << "is invite " << is_invite(clientsocket) << std::endl;
 		if (is_invite(clientsocket) == false)
 			return false;
+        else
+        {
+            Client client = get_client(clientsocket);
+            std::string error  = ":127.0.0.1 473 " + client.getNickname() + " #" + getName() + " :Cannot join channel (+i)\r\n";
+            send(clientsocket, error.c_str(), error.size(), 0);
+        }
 	}
-	else if (_opt[2] == true)
+	else if (_opt[2] == true) // +k
 	{
         std::cout << "passage dans le opt[2]" << std::endl;
 		std::string pass;
@@ -304,7 +310,7 @@ bool Salon::check_opt(int clientsocket)
 		if (pass != get_password())
 			return false;
 	}
-	else if (_opt[3] == true)
+	else if (_opt[3] == true) // +l 1
 	{
         std::cout << "passage dans le opt[3]" << std::endl;
 		std::cout << "ok la il faut test " << get_client_limits();
