@@ -6,14 +6,15 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 14:27:37 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/15 16:55:55 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/20 04:08:29 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
 
-// ! Checks Password validity
+// * checkPassword(std::string clientPassword)
+// * This function will check if the given password matches the server password.
 int	Server::checkPassword(std::string clientPassword)
 {
 	if (clientPassword == _password)
@@ -22,7 +23,8 @@ int	Server::checkPassword(std::string clientPassword)
 		return (1);
 }
 
-// ! Checks if username is already in use
+// * checkNick(std::string clientNick)
+// * This function will check if the given nickname is already in use.
 int	Server::checkNick(std::string clientNick)
 {
 	(void)clientNick;
@@ -36,6 +38,9 @@ int	Server::checkNick(std::string clientNick)
 	return (0);
 }
 
+// * gatherInfos(int clientSocket, std::string & msg)
+// * This function will parse the informations received from a client
+// * and will timeout a client if too much time is taken to send the required infos.
 int	Server::gatherInfos(int clientSocket, std::string & msg) {
 	int timeout = 0;
 	
@@ -46,7 +51,7 @@ int	Server::gatherInfos(int clientSocket, std::string & msg) {
 			&& msg.find("NICK") != std::string::npos
 			&& msg.find("PASS") != std::string::npos)
 		{
-			std::cout << '[' << clientSocket << ']' << ": All informations successfully collected" << std::endl;
+			std::cout << "ID " << '[' << clientSocket << ']' << ": All informations successfully collected" << std::endl;
 			return (0);
 		}
 		else
@@ -64,17 +69,14 @@ int	Server::gatherInfos(int clientSocket, std::string & msg) {
 	}
 }
 
+// * authClient(std::string msg, int clientSocket)
+// * This function will check if the password is valid and if
+// * the nickname is not already in use.
+// * If the password is wrong, or nickname already in use, will disconnect the client.
 int Server::authClient(std::string msg, int clientSocket) {
 	std::string userPass = msg.substr((msg.find("PASS") + 5), _password.length());
 	std::string userNick = extractValue(msg, "NICK");
 	std::string userName = extractValue(msg, "USER");
-
-	std::cout << "______________________________________" << std::endl;
-	std::cout << "\nID [" << clientSocket << "]: " << "INFOS RECEIVED:"
-				<< "\nPASS: " << '[' << userPass << ']'
-				<< "\nNICK: " << '[' << userNick << ']'
-				<< "\nNAME: " << '[' << userName << ']';
-	std::cout << "\n------------------------------------" << '\n';
 
 	if (checkPassword(userPass))
 	{
@@ -89,13 +91,19 @@ int Server::authClient(std::string msg, int clientSocket) {
 		return (1);
 	}
 
+	std::cout << "ID " << '[' << clientSocket << ']' << ": Password and Nickname are valid" << std::endl;
 	_clients[clientSocket].setNickname(userNick);
 	_clients[clientSocket].setUsername(userName);
-
+	std::cout << "\nID [" << clientSocket << "]: " << "SUCCESSFULLY REGISTERED:"
+		<< "\nPASS: " << '[' << userPass << ']'
+		<< "\nNICK: " << '[' << _clients[clientSocket].getNickname() << ']'
+		<< "\nNAME: " << '[' << _clients[clientSocket].getUsername() << ']';
+	std::cout << "\n______________________________________" << '\n';
 	return (0);
 }
 
-// ! Extracts KEY in MSG -> will extract the pass/nick/user from IRSSI's msg
+// * extractValue(const std::string & msg, const std::string & key)
+// * This function will search and extract "key" from msg and return it.
 std::string Server::extractValue(const std::string& msg, const std::string& key) {
     size_t start = msg.find(key);
     if (start == std::string::npos)
