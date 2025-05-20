@@ -42,6 +42,7 @@ Salon::Salon(std::string name)
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
     _Name = name;
+    std::cout << "test" << std::endl;
     _opt[0] = false;
     _opt[1] = false;
     _opt[2] = false;
@@ -283,25 +284,21 @@ void Salon::setOwner(int clientSocket)
 
 bool Salon::check_opt(int clientsocket)
 {
-	std::cout << "je rentre dans opt" << std::endl;
-	std::cout << "voici les entrees de _opt " << std::endl;
-	std::cout << "opt[0] " << _opt[0];
-	std::cout << " opt[2] " << _opt[2];
-	std::cout << " opt[3] " << _opt[3] << " ";
+	this->print_opt();
 	if (_opt[0] == true) // /mode +i (met le chan sur invitation)
 	{
         std::cout << "passage dans le opt[0]" << std::endl;
 		std::cout << "is invite " << is_invite(clientsocket) << std::endl;
 		if (is_invite(clientsocket) == false)
-			return false;
-        else
         {
             Client client = get_client(clientsocket);
             std::string error  = ":127.0.0.1 473 " + client.getNickname() + " #" + getName() + " :Cannot join channel (+i)\r\n";
+            std::cout << "voici error" << std::endl << error << std::endl;
             send(clientsocket, error.c_str(), error.size(), 0);
+            return false;
         }
 	}
-	else if (_opt[2] == true) // +k
+	if (_opt[2] == true) // +k
 	{
         std::cout << "passage dans le opt[2]" << std::endl;
 		std::string pass;
@@ -310,7 +307,7 @@ bool Salon::check_opt(int clientsocket)
 		if (pass != get_password())
 			return false;
 	}
-	else if (_opt[3] == true) // +l 1
+	if (_opt[3] == true) // +l 1
 	{
         std::cout << "passage dans le opt[3]" << std::endl;
 		std::cout << "ok la il faut test " << get_client_limits();
@@ -357,25 +354,6 @@ int Server::search_salon_by_socket(int clientSocket)
 		i++;
 	}
 	return -1;
-}
-
-size_t Server::verif_Salon(Salon salon)
-{
-	int i = 0;
-	size_t tmp = _salon.size();
-	while (tmp > 0)
-	{
-		if (_salon[i].getName() == salon.getName())
-			return i;
-		i++;
-		tmp--;
-	}
-	salon.set_mode(0, 0);
-    salon.set_mode(0, 1);
-	salon.set_mode(0, 2);
-	salon.set_mode(0, 3);
-	_salon.push_back(salon);
-	return 0;
 }
 
 void Salon::print_opt()

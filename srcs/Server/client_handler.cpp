@@ -123,8 +123,20 @@ void Server::doClientAction(int clientSocket)
 
 	if (msg.find("JOIN") != std::string::npos)
 	{
-		if (join_channel(clientSocket, msg) == 0)
-			return ;
+		join_channel(clientSocket, msg);
+		size_t i = 0;
+		std::cout << "et voici le name en brut " << _salon[0].getName() << std::endl;
+		std::cout << _salon[i].getName() << std::endl;
+		std::cout << "i " << i << std::endl;
+		std::cout << "JE PASSE PAR LA" << std::endl;
+		std::cout << "voici la size " << _salon.size() << std::endl;
+		while (i < _salon.size())
+		{
+			std::cout << "Je rentre " << std::endl;
+			std::cout << _salon[i].getName() << std::endl;
+			i++;
+		}
+		return ;
 	}
 	else if (msg.find("PING") != std::string::npos)
 	{
@@ -144,23 +156,47 @@ void Server::doClientAction(int clientSocket)
 bool Server::join_channel(int clientSocket, std::string msg)
 {
 	msg = msg.erase(0, 6);
-	Salon salon(msg);
-	verif_Salon(salon);
-	size_t i = verif_Salon(salon);
-	if (_salon[i].get_salon_client_len() == 0)
+	int i = verif_Salon(msg);
+	std::cout << "voici la pos de recherche salon " << i << std::endl;
+	if (i > -1)
 	{
-		_salon[i].setOwner(clientSocket);
-		_salon[i].set_operator(clientSocket);
+		// donc le salon est existant
+		std::cout << "je rentre dans la partie salon doublon" << std::endl;
+		if (_salon[i].check_opt(clientSocket) == false)
+		{
+			std::cout << "je pars car mon opt est pas bon" << std::endl;
+			std::cout << "voici celui qui pars " << clientSocket << std::endl;
+			return 0;
+		}
+		_salon[i].increaseSocketClient(clientSocket);
+		_salon[i].set_client(_clients, clientSocket);
+		Client client = _salon[i].get_client(clientSocket);
+		std::string success_join = ":" + Command::clean(client.getNickname()) + "!" + Command::clean(client.getUsername()) + "@127.0.0.1 JOIN #" + Command::clean(_salon[i].getName()) +"\r\n";
+		int bytes = send(clientSocket, success_join.c_str(), success_join.size(), 0);
+		if (bytes == -1)
+			throw std::runtime_error("Error sending message with send");
 	}
-	else if (_salon[i].check_opt(clientSocket) == false)
-		return 0;
-	_salon[i].increaseSocketClient(clientSocket);
-	_salon[i].set_client(_clients, clientSocket);
-	Client client = _salon[i].get_client(clientSocket);
-	std::string success_join = ":" + Command::clean(client.getNickname()) + "!" + Command::clean(client.getUsername()) + "@127.0.0.1 JOIN #" + Command::clean(salon.getName()) +"\r\n";
-	int bytes = send(clientSocket, success_join.c_str(), success_join.size(), 0);
-	if (bytes == -1)
-		throw std::runtime_error("Error sending message with send");
+	else
+	{
+		std::cout << "je rentre dans la partie salon unique" << std::endl;
+		Salon salon(msg);
+		salon.increaseSocketClient(clientSocket);
+		salon.set_client(_clients, clientSocket);
+		Client client = salon.get_client(clientSocket);
+		if (salon.get_salon_client_len() == 1)
+		{
+			salon.setOwner(clientSocket);
+			salon.set_operator(clientSocket);
+		}
+		_salon.push_back(salon);
+		std::cout << "salon size bien plus tot " << _salon.size();
+		std::cout << "et voici le name " << _salon[0].getName() << std::endl;
+		std::string success_join = ":" + Command::clean(client.getNickname()) + "!" + Command::clean(client.getUsername()) + "@127.0.0.1 JOIN #" + Command::clean(salon.getName()) +"\r\n";
+		int bytes = send(clientSocket, success_join.c_str(), success_join.size(), 0);
+		if (bytes == -1)
+			throw std::runtime_error("Error sending message with send");
+	}
+	std::cout << "je passe par salon" << std::endl;
 	return 1;
 }
 

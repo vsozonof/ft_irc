@@ -12,7 +12,6 @@
 
 #include "Server.hpp"
 
-
 Server::Server(unsigned int port, std::string password) : _port(port), _password(password)
 {
 	std::cout << BOLD_GREEN << "⚙️  Ft_IRC: Creating IRC Server ..." << def << std::endl;
@@ -32,6 +31,7 @@ Server::~Server()
 // * - Bind the socket to the address and port and listen for connections
 // * - Add the socket to the poll list
 // * If everything goes well, the server is online, else an error is thrown!
+
 void Server::initServer()
 {
 	_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -96,4 +96,24 @@ void Server::run()
 		handleClient();
 	std::cout << BOLD_GREEN << "\n⚙️  Ft_IRC: Successfully stopped the server!" << std::endl;
 	close(_socket);
+}
+
+int Server::verif_Salon(std::string name)
+{
+	int i = 0;
+	if (_salon.size() == 0 || _salon.size() > 2147483647)
+	{
+		std::cout << "je pars" << std::endl;
+		return -1;
+	}
+	std::cout << "je passe par la" << std::endl;
+	size_t tmp = _salon.size();
+	while (tmp > 0)
+	{
+		if (_salon[i].getName() == name)
+			return i;
+		i++;
+		tmp--;
+	}
+	return -1;
 }

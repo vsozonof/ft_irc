@@ -56,9 +56,8 @@ class Server
 
 		void doClientAction(int clientSocket);
 
-
 		int setSalon(Salon salon, int i);
-		size_t verif_Salon(Salon salon);
+		int verif_Salon(std::string name);
 		std::vector<Salon> getSalon(void);
 		int search_salon_by_socket(int clientSocket);
 
