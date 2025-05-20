@@ -188,7 +188,14 @@ void Salon::increaseSocketClient(int socket)
 
 Client Salon::get_client(int ClientSocket)
 {
-    return _clients[ClientSocket];
+    size_t i = 0;
+    while (i < _clients.size())
+    {
+        if (_clients[i].getSocket() == ClientSocket)
+            return _clients[i];
+        i++;
+    }
+    return -1;
 }
 
 std::map<int, Client> Salon::get_all_client()

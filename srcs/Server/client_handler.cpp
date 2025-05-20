@@ -186,11 +186,34 @@ bool Server::join_channel(int clientSocket, std::string msg)
 		std::cout << "salon size bien plus tot " << _salon.size();
 		std::cout << "et voici le name " << _salon[0].getName() << std::endl;
 		std::string success_join = ":" + Command::clean(client.getNickname()) + "!" + Command::clean(client.getUsername()) + "@127.0.0.1 JOIN #" + Command::clean(salon.getName()) +"\r\n";
+		std::cout << "message pour join " << success_join << std::endl;
 		int bytes = send(clientSocket, success_join.c_str(), success_join.size(), 0);
 		if (bytes == -1)
 			throw std::runtime_error("Error sending message with send");
+		std::cout << "apres" << std::endl;
 	}
-	std::cout << "je passe par salon" << std::endl;
+	i = verif_Salon(msg);
+	Client client = _salon[i].get_client(clientSocket);
+	// recup tous les clients
+	std::map<int, Client> clients = _salon[i].get_all_client();
+	std::string msg_join1 = ":127.0.0.1 353 ";
+	msg_join1.append(client.getNickname() + " = #" + Command::clean(_salon[i].getName()) + " :");
+	// 127.0.0.1 353 clientNick = #salon :user1 user2 user3\r\n
+	std::cout << "voici la len " << _salon[i].get_salon_client_len() << std::endl;
+	_salon[i].show_list_client();
+	for(int j = 0; j < _salon[i].get_salon_client_len(); j++)
+	{
+		std::cout << "Je rentre ici " << clients.size() << std::endl;
+		std::cout << clients[j].getNickname() << std::endl;
+		msg_join1.append(clients[j].getNickname() + " ");
+	}
+	// msg_join1.append(" " + _salon[i].get_salon_client_len());
+	msg_join1.append("\r\n");
+	std::cout << "voici mon msg_join1 ";
+	Command::debug_print(msg_join1);
+	int bytes = send(clientSocket, msg_join1.c_str(), msg_join1.size(), 0);
+	if (bytes == -1)
+		throw std::runtime_error("Error sending message with send");
 	return 1;
 }
 
