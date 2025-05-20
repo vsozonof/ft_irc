@@ -295,6 +295,7 @@ bool Salon::check_opt(int clientsocket)
             std::string error  = ":127.0.0.1 473 " + client.getNickname() + " #" + getName() + " :Cannot join channel (+i)\r\n";
             std::cout << "voici error" << std::endl << error << std::endl;
             send(clientsocket, error.c_str(), error.size(), 0);
+            this->show_list_client();
             return false;
         }
 	}

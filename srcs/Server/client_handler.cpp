@@ -125,14 +125,8 @@ void Server::doClientAction(int clientSocket)
 	{
 		join_channel(clientSocket, msg);
 		size_t i = 0;
-		std::cout << "et voici le name en brut " << _salon[0].getName() << std::endl;
-		std::cout << _salon[i].getName() << std::endl;
-		std::cout << "i " << i << std::endl;
-		std::cout << "JE PASSE PAR LA" << std::endl;
-		std::cout << "voici la size " << _salon.size() << std::endl;
 		while (i < _salon.size())
 		{
-			std::cout << "Je rentre " << std::endl;
 			std::cout << _salon[i].getName() << std::endl;
 			i++;
 		}
