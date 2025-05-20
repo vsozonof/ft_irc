@@ -381,3 +381,8 @@ void Salon::print_opt()
         std::cout << "false" << std::endl;
 
 }
+
+int Salon::socketSize()
+{
+    return _SocketClient.size();
+}

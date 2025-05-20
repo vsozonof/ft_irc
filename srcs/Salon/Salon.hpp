@@ -47,6 +47,7 @@ class Salon
 		int get_SocketClient(int pos);
 		void set_mode(bool value, int mode);
 		bool get_mode(int mode);
+		int socketSize();
 		std::map<int, Client> get_all_client();
 		int getOwner();
 

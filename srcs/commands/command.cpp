@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ertupop <ertupop@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 10:48:14 by rostrub           #+#    #+#             */
-/*   Updated: 2025/05/17 15:06:28 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/20 08:10:54 by ertupop          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,9 +136,10 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 	Client client;
 	bool is_in = false;
 	bool is_op = false;
-	for (int i = 0; i < salon.get_salon_client_len(); i++)
+	for (int i = 0; i < salon.socketSize(); i++)
 	{
-		client = salon.get_client(i + 4);
+		int socket = salon.get_SocketClient(i);
+		client = salon.get_client(socket);
 		if (client.getNickname() == kicker.getNickname())
 		{
 			is_in = true;
@@ -169,9 +170,10 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 		raison = " :Kicked by operator";
 	else
 		raison = " " + raison;
-	for (int i = 0; i < salon.get_salon_client_len(); i++)
+	for (int i = 0; i < salon.socketSize(); i++)
 	{
-		client = salon.get_client(i + 4);
+		int socket = salon.get_SocketClient(i);
+		client = salon.get_client(socket);
 		if (client.getNickname() == username)
 		{
 			std::string kick_msg = ":" + clean(kicker.getNickname()) + "!" + clean(kicker.getUsername()) + "@127.0.0.1 KICK #" + clean(salon.getName()) + " " + clean(client.getNickname()) + raison + "\r\n";
@@ -189,9 +191,10 @@ void Command::invite(std::string command, Salon &salon, std::map<int, Client> &c
 	std::string username = command.substr(command.find(" ") + 1, command.find("#") - command.find(" ") - 2);
 	std::map<int, Client> salon_clients = salon.get_all_client();
 	bool is_in = false;
-	for (int i = 0; i < salon.get_salon_client_len(); i++)
+	for (int i = 0; i < salon.socketSize(); i++)
 	{
-		if (salon_clients[i + 4].getNickname() == client.getNickname())
+		int socket = salon.get_SocketClient(i);
+		if (salon_clients[socket].getNickname() == client.getNickname())
 		{
 			is_in = true;
 			break;
@@ -203,9 +206,10 @@ void Command::invite(std::string command, Salon &salon, std::map<int, Client> &c
 		send(client.getSocket(), error.c_str(), error.size(), 0);
 		return;
 	}
-	for (int i = 0; i < salon.get_salon_client_len(); i++)
+	for (int i = 0; i < salon.socketSize(); i++)
 	{
-		if (clients[i + 4].getNickname() == username)
+		int socket = salon.get_SocketClient(i);
+		if (clients[socket].getNickname() == username)
 		{
 			std::string error = "'127.0.0.1 443 " + client.getNickname() + " " + username + " #" + clean(salon.getName()) + " :is already on channel\r\n";
 			send(client.getSocket(), error.c_str(), error.size(), 0);
@@ -233,7 +237,6 @@ void Command::topic(std::string topics, Salon &salon, Client client)
 	if (salon.get_mode(1) == true)
 	{
 		bool is_op = false;
-		std::map<int, Client> clients = salon.get_all_client();
 		is_op = salon.is_operator(client.getSocket());
 		if (is_op == false)
 		{
@@ -265,9 +268,10 @@ void Command::mode(std::string args, Salon &salon, Client client)
 	bool is_in = false;
 	bool is_op = false;
 	std::map<int, Client> clients = salon.get_all_client();
-	for (int i = 0; i < salon.get_salon_client_len(); i++)
+	for (int i = 0; i < salon.socketSize(); i++)
 	{
-		if (clients[i + 4].getNickname() == client.getNickname())
+		int socket = salon.get_SocketClient(i);
+		if (clients[socket].getNickname() == client.getNickname())
 		{
 			is_in = true;
 			break;
@@ -344,9 +348,10 @@ void Command::minus_mode(std::string option, Salon &salon, Client client, std::s
 	else if (option == "-o")
 	{
 		Client user;
-		for (int i = 0; i < salon.get_salon_client_len(); i++)
+		for (int i = 0; i < salon.socketSize(); i++)
 		{
-			user = salon.get_client(i + 4);
+			int socket = salon.get_SocketClient(i);
+			user = salon.get_client(socket);
 			if (user.getNickname() == value)
 			{
 				salon.remove_operator(user.getSocket());
@@ -396,9 +401,10 @@ void Command::plus_mode(std::string option, std::string value, Salon &salon, Cli
 	else if (option == "+o")
 	{
 		Client user;
-		for (int i = 0; i < salon.get_salon_client_len(); i++)
+		for (int i = 0; i < salon.socketSize(); i++)
 		{
-			user = salon.get_client(i + 4);
+			int socket = salon.get_SocketClient(i);
+			user = salon.get_client(socket);
 			if (user.getNickname() == value)
 			{
 				salon.set_operator(user.getSocket());
