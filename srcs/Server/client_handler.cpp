@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_handler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rostrub <rostrub@student.42.fr>            +#+  +:+       +#+        */
+/*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/17 14:49:14 by rostrub          ###   ########.fr       */
+/*   Updated: 2025/05/20 04:09:05 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,17 @@ void Server::deleteClient(int clientSocket)
 // * ==> The function will handle auth messages from the client and treat them.
 // * ===> The server will reject the new clients if they provide incorrect password or already in use names.
 // * ==> If everything is correct, the client will be successfully connected to the IRC server.
-
 void Server::setupNewClient(int clientSocket)
 {
-	std::cout << "\033[1m" << "__________________________" << std::endl;
-	std::cout << "Setting up new client: " << clientSocket << std::endl;
+	std::cout << "\033[1m" << "______________________________________\n" << std::endl;
+	std::cout << "Setting up new client: ID " << '[' << clientSocket << ']' << std::endl;
 
 	Client newClient(clientSocket);
 	_clients.insert(std::pair<int, Client>(clientSocket, newClient));
 	pollfd newClient_fd;
 	newClient_fd.fd = clientSocket;
 	newClient_fd.events = POLLIN;
+	newClient_fd.revents = 0;
 	_fds.push_back(newClient_fd);
 	fcntl(clientSocket, F_SETFL, O_NONBLOCK);
 
@@ -105,7 +105,6 @@ void Server::setupNewClient(int clientSocket)
 // * - sending messages,
 // * - kick users
 // * - etc....
-
 void Server::doClientAction(int clientSocket)
 {
 	char buffer[1024];
