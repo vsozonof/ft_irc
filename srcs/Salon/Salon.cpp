@@ -42,6 +42,7 @@ Salon::Salon(std::string name)
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
     _Name = name;
+    _SocketClient.empty();
     std::cout << "test" << std::endl;
     _opt[0] = false;
     _opt[1] = false;
@@ -105,6 +106,7 @@ void Salon::set_invite(int socket)
 {
     _invite.push_back(socket);
 }
+
 void Salon::remove_invite(int socket)
 {
     std::list<int>::iterator i;
@@ -179,21 +181,19 @@ int Salon::get_client_limits()
 void Salon::increaseSocketClient(int socket)
 {
     _SocketClient.push_back(socket);
-    int i = _SocketClient.size();
-    while (i > 0)
-    {
-        i--;
-    }
 }
 
 Client Salon::get_client(int ClientSocket)
 {
-    size_t i = 0;
-    while (i < _clients.size())
+    std::vector<int>::iterator it = _SocketClient.begin();
+
+    while (*it)
     {
-        if (_clients[i].getSocket() == ClientSocket)
-            return _clients[i];
-        i++;
+        std::cout << "voici le client " << *it << std::endl;
+        std::cout << "voic le client rechercher " << ClientSocket << std::endl;
+        if (*it == ClientSocket)
+            return *it;
+        it++;
     }
     return -1;
 }
@@ -299,6 +299,7 @@ bool Salon::check_opt(int clientsocket)
 		if (is_invite(clientsocket) == false)
         {
             Client client = get_client(clientsocket);
+            std::cout << "voici client " << client.getNickname() << " " << getName() << std::endl;
             std::string error  = ":127.0.0.1 473 " + client.getNickname() + " #" + getName() + " :Cannot join channel (+i)\r\n";
             std::cout << "voici error" << std::endl << error << std::endl;
             send(clientsocket, error.c_str(), error.size(), 0);
