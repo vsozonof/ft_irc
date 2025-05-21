@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/20 04:39:58 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:48:16 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ void Server::initSigHandler() {
 	sigIntHandler.sa_flags = 0;
 	
 	sigaction(SIGINT, &sigIntHandler, NULL);
+	signal(SIGPIPE, SIG_IGN);
 	
 	g_server = this;
 }

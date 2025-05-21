@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 14:27:37 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/20 04:08:29 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:51:30 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	Server::gatherInfos(int clientSocket, std::string & msg) {
 	while (42)
 	{
 		msg += _clients[clientSocket].receiveMsg();
+		std::cout << "[DEBUG] msg = " << msg << std::endl;
 		if (msg.find("USER") != std::string::npos
 			&& msg.find("NICK") != std::string::npos
 			&& msg.find("PASS") != std::string::npos)
@@ -57,7 +58,7 @@ int	Server::gatherInfos(int clientSocket, std::string & msg) {
 		else
 		{
 			sleep(1);
-			std::cout << '[' << clientSocket << ']' << ": Missing informations.." << std::endl;
+			std::cout << "ID " << '[' << clientSocket << ']' << ": Missing informations.." << std::endl;
 			timeout++;
 			if (timeout == 5)
 			{
@@ -80,12 +81,16 @@ int Server::authClient(std::string msg, int clientSocket) {
 
 	if (checkPassword(userPass))
 	{
-		_clients[clientSocket].sendMsg(":127.0.0.1 464 * :Password incorrect\r\n");
+		std::cout << "ID " << '[' << clientSocket << ']' << ": Password incorrect, terminating connection." << std::endl;
+		_clients[clientSocket].sendMsg(":127.0.0.1 464 * :Password incorrect, terminating connection.\r\n");
+		std::cout << "______________________________________" << '\n';
 		deleteClient(clientSocket);
 		return (1);
 	}
-	else if (checkNick(userName))
+	else if (checkNick(userNick))
 	{
+		std::cout << "ID " << '[' << clientSocket << ']' << ": Nickname already in use, terminating connection." << std::endl;
+		std::cout << "______________________________________" << '\n';
 		_clients[clientSocket].sendMsg(":127.0.0.1 433 * :Nickname is already in use\r\n");
 		deleteClient(clientSocket);
 		return (1);

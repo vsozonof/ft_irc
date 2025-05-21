@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/20 04:09:05 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:57:34 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,8 @@ void Server::setupNewClient(int clientSocket)
 	if (authClient(msg, clientSocket))
 		return ;
 
-	_clients[clientSocket].sendMsg(":127.0.0.1 001 test :Welcome to the IRC Server\r\n");
+	std::string welcome = ":Ft_Irc 001 " + _clients[clientSocket].getNickname() + " :Welcome to the IRC server!\r\n";
+	_clients[clientSocket].sendMsg(welcome);
 }
 
 // * void doClientAction(int clientSocket)
@@ -140,6 +141,7 @@ void Server::doClientAction(int clientSocket)
 	else if (msg.find("QUIT") != std::string::npos)
 	{
 		std::cout << "QUIT command" << std::endl;
+		deleteClient(clientSocket);
 	}
 	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
 		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
