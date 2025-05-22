@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/22 16:41:00 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/22 17:30:19 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void Server::timeOutInactiveClients() {
 	while (it != _clients.end()) {
 		Client& client = it->second;
 		
-		if (now - client.lastActive >= 20 && client.registered) {
+		if (now - client.lastActive >= 120 && client.registered) {
 			std::cout << "ID [" << client.getSocket() << ']' << " : timed out, disconnecting." << std::endl;
 			++it;
 			deleteClient(client.getSocket());
@@ -154,5 +154,5 @@ Client Server::search_client(int socket)
 			return (_clients[i]);
 		}
 	}
-	return NULL;
+	return 0;
 }
