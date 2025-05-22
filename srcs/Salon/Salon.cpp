@@ -289,7 +289,7 @@ void Salon::setOwner(int clientSocket)
     this->_owner = clientSocket;
 }
 
-bool Salon::check_opt(int clientsocket)
+bool Salon::check_opt(int clientsocket, Client client)
 {
 	this->print_opt();
 	if (_opt[0] == true) // /mode +i (met le chan sur invitation)
@@ -298,10 +298,18 @@ bool Salon::check_opt(int clientsocket)
 		std::cout << "is invite " << is_invite(clientsocket) << std::endl;
 		if (is_invite(clientsocket) == false)
         {
-            Client client = get_client(clientsocket);
-            std::cout << "voici client " << client.getNickname() << " " << getName() << std::endl;
-            std::string error  = ":127.0.0.1 473 " + client.getNickname() + " #" + getName() + " :Cannot join channel (+i)\r\n";
-            std::cout << "voici error" << std::endl << error << std::endl;
+            // ca sert a rien de recup le client via le salon
+            std::string clientname =  Command::clean(client.getNickname());
+            std::string servname =  Command::clean(getName());
+            std::cout << "voici client " << clientname << std::endl;
+            std::cout << "et le salon " << servname << std::endl;
+            // std::string error  = std::string(":127.0.0.1 473 ") + clientname + " #" + servname + " :Cannot join channel (+i)\r\n";
+            std::string error = ":127.0.0.1 473 ";
+            error.append(clientname);
+			error.append(" #" + servname);
+			error.append(" :Cannot join channel (+i)\r\n");
+            std::cout << "voici error" << std::endl;
+            Command::debug_print(error);
             send(clientsocket, error.c_str(), error.size(), 0);
             this->show_list_client();
             return false;

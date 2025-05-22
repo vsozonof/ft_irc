@@ -118,3 +118,17 @@ int Server::verif_Salon(std::string name)
 	}
 	return -1;
 }
+
+Client Server::search_client(int socket)
+{
+	for (size_t i = 0; i < _clients.size() ;i++)
+	{
+		if (socket == _clients[i].getSocket())
+		{
+			std::cout << "CLIENT RECUP " << _clients[i].getSocket() << std::endl;
+			std::cout << "le name = " << _clients[i].getNickname() << std::endl;
+			return (_clients[i]);
+		}
+	}
+	return NULL;
+}

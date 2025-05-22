@@ -62,6 +62,7 @@ class Server
 		int search_salon_by_socket(int clientSocket);
 
 		void msg_client(int clientSocket, std::string msg);
+		Client search_client(int socket);
 
 		bool join_channel(int clientSocket, std::string msg);
 		void send_msg_client(int clientSocket, std::string nv, Salon &tab);
