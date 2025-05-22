@@ -6,15 +6,15 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 10:45:06 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/15 16:35:37 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:35:38 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
-Client::Client() : _socket(-1) {}
+Client::Client() : _socket(-1), registered(false), lastActive(time(NULL)) {}
 
-Client::Client(int socket) : _socket(socket) {}
+Client::Client(int socket) : _socket(socket), registered(false), lastActive(time(NULL)) {}
 
 Client::~Client() {}
 
@@ -24,6 +24,8 @@ Client::Client(const Client &src)
 	_nickname = src._nickname;
 	_username = src._username;
 	_password = src._password;
+	registered = false;
+	lastActive = time(NULL);
 }
 
 Client& Client::operator=(Client const &rhs)
@@ -34,6 +36,8 @@ Client& Client::operator=(Client const &rhs)
 		_nickname = rhs._nickname;
 		_username = rhs._username;
 		_password = rhs._password;
+		registered = false;
+		lastActive = time(NULL);
 	}
 	return (*this);
 }

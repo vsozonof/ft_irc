@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 14:27:37 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/21 15:51:30 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:27:19 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int	Server::gatherInfos(int clientSocket, std::string & msg) {
 	while (42)
 	{
 		msg += _clients[clientSocket].receiveMsg();
-		std::cout << "[DEBUG] msg = " << msg << std::endl;
 		if (msg.find("USER") != std::string::npos
 			&& msg.find("NICK") != std::string::npos
 			&& msg.find("PASS") != std::string::npos)
@@ -99,6 +98,8 @@ int Server::authClient(std::string msg, int clientSocket) {
 	std::cout << "ID " << '[' << clientSocket << ']' << ": Password and Nickname are valid" << std::endl;
 	_clients[clientSocket].setNickname(userNick);
 	_clients[clientSocket].setUsername(userName);
+	_clients[clientSocket].registered = true;
+	
 	std::cout << "\nID [" << clientSocket << "]: " << "SUCCESSFULLY REGISTERED:"
 		<< "\nPASS: " << '[' << userPass << ']'
 		<< "\nNICK: " << '[' << _clients[clientSocket].getNickname() << ']'

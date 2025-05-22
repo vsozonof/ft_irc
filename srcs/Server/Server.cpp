@@ -6,11 +6,12 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/21 15:48:16 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:41:00 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <ctime>
 
 Server::Server(unsigned int port, std::string password) : _port(port), _password(password)
 {
@@ -83,18 +84,41 @@ void Server::initSigHandler() {
 	sigIntHandler.sa_handler = sigHandler;
 	sigemptyset(&sigIntHandler.sa_mask);
 	sigIntHandler.sa_flags = 0;
-	
 	sigaction(SIGINT, &sigIntHandler, NULL);
-	signal(SIGPIPE, SIG_IGN);
+
+	struct sigaction sigPipeHandler;
+	sigaction(SIGPIPE, &sigPipeHandler, NULL);
+	sigPipeHandler.sa_handler = SIG_IGN;
+	sigemptyset(&sigPipeHandler.sa_mask);
+	sigPipeHandler.sa_flags = 0;
 	
 	g_server = this;
+}
+
+void Server::timeOutInactiveClients() {
+	time_t now = time(NULL);
+	std::map<int, Client>::iterator it = _clients.begin();
+	while (it != _clients.end()) {
+		Client& client = it->second;
+		
+		if (now - client.lastActive >= 20 && client.registered) {
+			std::cout << "ID [" << client.getSocket() << ']' << " : timed out, disconnecting." << std::endl;
+			++it;
+			deleteClient(client.getSocket());
+		}
+		else
+			++it;
+	}
 }
 
 void Server::run()
 {	
 	initSigHandler();
-	while (!_shutdown)
+
+	while (!_shutdown) {
 		handleClient();
+		timeOutInactiveClients();
+	}
 	std::cout << BOLD_GREEN << "\n⚙️  Ft_IRC: Successfully stopped the server!" << std::endl;
 	close(_socket);
 }

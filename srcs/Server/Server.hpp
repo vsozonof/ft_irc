@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:03:09 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/15 16:49:45 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:40:52 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class Server
 		void initSigHandler();
 		void run();
 		void handleClient();
+		void timeOutInactiveClients();
 
 		// ? Client Regisration
 		void setupNewClient(int clientSocket);

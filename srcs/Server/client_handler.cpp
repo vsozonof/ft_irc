@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/21 15:57:34 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:38:30 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ void Server::doClientAction(int clientSocket)
 {
 	char buffer[1024];
     int bytesRecv = recv(clientSocket, buffer, sizeof(buffer), 0);
+	std::cout << "[DEBUG]: RECV:" << buffer << std::endl;
+	_clients[clientSocket].lastActive = time(NULL);
 
     if (bytesRecv <= 0)
     {
