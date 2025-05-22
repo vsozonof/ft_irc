@@ -295,7 +295,9 @@ bool Salon::check_opt(int clientsocket, Client client)
             error.append(clientname);
 			error.append(" #" + servname);
 			error.append(" :Cannot join channel (+i)\r\n");
-            send(clientsocket, error.c_str(), error.size(), 0);
+            int bytes = send(clientsocket, error.c_str(), error.size(), 0);
+            if (bytes == -1)
+                throw std::runtime_error("Error sending message with send");
             return false;
         }
 	}
@@ -313,14 +315,18 @@ bool Salon::check_opt(int clientsocket, Client client)
         std::cout << "passage dans le opt[3]" << std::endl;
 		std::cout << "ok la il faut test " << get_client_limits();
 		std::cout << " et " << get_salon_client_len() << std::endl;
-		if (get_client_limits() < get_salon_client_len())
+		if (get_client_limits() <= get_salon_client_len())
         {
+            std::cout << "je rentre ici" << std::endl;
             std::string clientname =  Command::clean(client.getNickname());
             std::string servname =  Command::clean(getName());
             std::string error = ":127.0.0.1 473 ";
             error.append(clientname);
 			error.append(" #" + servname);
 			error.append(" :Cannot join channel (+l)\r\n");
+            int bytes = send(clientsocket, error.c_str(), error.size(), 0);
+            if (bytes == -1)
+                throw std::runtime_error("Error sending message with send");
 			return false;
         }
     }
