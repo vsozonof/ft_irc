@@ -160,7 +160,7 @@ bool Server::join_channel(int clientSocket, std::string msg)
 	{
 		// donc le salon est existant
 		std::cout << "je rentre dans la partie salon doublon" << std::endl;
-		if (_salon[i].check_opt(clientSocket) == false)
+		if (_salon[i].check_opt(clientSocket, search_client(clientSocket)) == false)
 		{
 			std::cout << "je pars car mon opt est pas bon" << std::endl;
 			std::cout << "voici celui qui pars " << clientSocket << std::endl;
@@ -238,10 +238,12 @@ void Server::msg_client(int clientSocket, std::string msg)
 			if (pos > 2147483647 || pos < 0)
 				return;
 			Client client = tab.get_client(clientSocket);
+			std::cout << "voici le client pour le message " << client.getNickname();
 			std::string nv = ":";
 			nv.append(client.getNickname());
 			nv.append(" " + msg);
 			nv.append("\r\n");
+			tab.show_list_client();
 			send_msg_client(clientSocket, nv, tab);
 		}
 	}
