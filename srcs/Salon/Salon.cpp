@@ -185,17 +185,7 @@ void Salon::increaseSocketClient(int socket)
 
 Client Salon::get_client(int ClientSocket)
 {
-    std::vector<int>::iterator it = _SocketClient.begin();
-
-    while (*it)
-    {
-        std::cout << "voici le client " << *it << std::endl;
-        std::cout << "voic le client rechercher " << ClientSocket << std::endl;
-        if (*it == ClientSocket)
-            return *it;
-        it++;
-    }
-    return -1;
+    return _clients[ClientSocket];
 }
 
 std::map<int, Client> Salon::get_all_client()
@@ -301,17 +291,11 @@ bool Salon::check_opt(int clientsocket, Client client)
             // ca sert a rien de recup le client via le salon
             std::string clientname =  Command::clean(client.getNickname());
             std::string servname =  Command::clean(getName());
-            std::cout << "voici client " << clientname << std::endl;
-            std::cout << "et le salon " << servname << std::endl;
-            // std::string error  = std::string(":127.0.0.1 473 ") + clientname + " #" + servname + " :Cannot join channel (+i)\r\n";
             std::string error = ":127.0.0.1 473 ";
             error.append(clientname);
 			error.append(" #" + servname);
 			error.append(" :Cannot join channel (+i)\r\n");
-            std::cout << "voici error" << std::endl;
-            Command::debug_print(error);
             send(clientsocket, error.c_str(), error.size(), 0);
-            this->show_list_client();
             return false;
         }
 	}
@@ -330,8 +314,16 @@ bool Salon::check_opt(int clientsocket, Client client)
 		std::cout << "ok la il faut test " << get_client_limits();
 		std::cout << " et " << get_salon_client_len() << std::endl;
 		if (get_client_limits() < get_salon_client_len())
+        {
+            std::string clientname =  Command::clean(client.getNickname());
+            std::string servname =  Command::clean(getName());
+            std::string error = ":127.0.0.1 473 ";
+            error.append(clientname);
+			error.append(" #" + servname);
+			error.append(" :Cannot join channel (+l)\r\n");
 			return false;
-	}
+        }
+    }
 	return true;
 }
 
