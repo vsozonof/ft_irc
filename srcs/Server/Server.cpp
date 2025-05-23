@@ -156,3 +156,35 @@ Client Server::search_client(int socket)
 	}
 	return 0;
 }
+
+bool Server::is_already_in_serv(int socket)
+{
+	size_t j = 0;
+	while (j < _salon.size())
+	{
+		_salon[j].show_list_client();
+		j++;
+	}
+	j = 0;
+	while (j < _salon.size())
+	{
+		std::cout << "voici le j " << j << std::endl;
+		std::map<int, Client> clients = _salon[j].get_all_client();
+		for (size_t i = 0; i < _salon.size() ;i++)
+		{
+			std::cout << "voici le i " << i << std::endl;
+			std::cout << "voici la comparaison " << socket << " " << clients[i].getSocket() << std::endl;
+			if (socket == clients[i].getSocket())
+			{
+				std::cout << "CLIENT RECUP " << clients[i].getSocket() << std::endl;
+				std::cout << "le name = " << clients[i].getSocket() << std::endl;
+				std::cout << "voici salon " << _salon[j].getName() << std::endl;
+				_salon[j].remove_client(socket);
+				_salon[j].show_list_client();
+				return 1;
+			}
+		}
+		j++;
+	}
+	return 0;
+}

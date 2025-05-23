@@ -64,6 +64,7 @@ class Server
 
 		void msg_client(int clientSocket, std::string msg);
 		Client search_client(int socket);
+		bool is_already_in_serv(int socket);
 
 		bool join_channel(int clientSocket, std::string msg);
 		void send_msg_client(int clientSocket, std::string nv, Salon &tab);
