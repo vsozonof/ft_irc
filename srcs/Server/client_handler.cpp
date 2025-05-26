@@ -193,10 +193,7 @@ bool Server::join_channel(int clientSocket, std::string msg)
 			salon.set_operator(clientSocket);
 		}
 		_salon.push_back(salon);
-		std::cout << "salon size bien plus tot " << _salon.size();
-		std::cout << "et voici le name " << _salon[0].getName() << std::endl;
 		std::string success_join = ":" + Command::clean(client.getNickname()) + "!" + Command::clean(client.getUsername()) + "@127.0.0.1 JOIN #" + Command::clean(salon.getName()) +"\r\n";
-		std::cout << "message pour join " << success_join << std::endl;
 		int bytes = send(clientSocket, success_join.c_str(), success_join.size(), 0);
 		if (bytes == -1)
 			throw std::runtime_error("Error sending message with send");
@@ -209,7 +206,6 @@ bool Server::join_channel(int clientSocket, std::string msg)
 	std::string msg_join1 = ":127.0.0.1 353 ";
 	msg_join1.append(client.getNickname() + " = #" + Command::clean(_salon[i].getName()) + " :");
 	// 127.0.0.1 353 clientNick = #salon :user1 user2 user3\r\n
-	std::cout << "voici la len " << _salon[i].get_salon_client_len() << std::endl;
 	_salon[i].show_list_client();
 	for(int j = 0; j < _salon[i].get_salon_client_len(); j++)
 	{
@@ -219,7 +215,6 @@ bool Server::join_channel(int clientSocket, std::string msg)
 	}
 	// msg_join1.append(" " + _salon[i].get_salon_client_len());
 	msg_join1.append("\r\n");
-	std::cout << "voici mon msg_join1 ";
 	Command::debug_print(msg_join1);
 	int bytes = send(clientSocket, msg_join1.c_str(), msg_join1.size(), 0);
 	if (bytes == -1)
@@ -244,7 +239,6 @@ void Server::msg_client(int clientSocket, std::string msg)
 			if (pos > 2147483647 || pos < 0)
 				return;
 			Client client = tab.get_client(clientSocket);
-			std::cout << "voici le client pour le message " << client.getNickname();
 			std::string nv = ":";
 			nv.append(client.getNickname());
 			nv.append(" " + msg);
@@ -257,20 +251,14 @@ void Server::msg_client(int clientSocket, std::string msg)
 
 void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)
 {
-	std::cout << std::endl << "============= ENVOIS DU MESSAGE =============" << std::endl << std::endl;
-	//changer ca pour que ca aille plus vite et qu'il envoie bien un message a tous le monde
-	std::cout << "voici le socket qui envois le message " << clientSocket << std::endl;
 	for (int i = 0; tab.get_salon_client_len() > i; i++)
 	{
 		try
 		{
 			while (tab.get_SocketClient(i) > 0)
 			{
-				std::cout << "voici le socket que j'ai eu " << tab.get_SocketClient(i) << " et voici le i " << i << " " << std::endl;
 				if (tab.get_SocketClient(i) != clientSocket)
 				{
-					std::cout << "ce socket est passe " << tab.get_SocketClient(i) << std::endl;
-					std::cout << nv << std::endl;
 					int bytes = send(tab.get_SocketClient(i), nv.c_str(), nv.size(), 0);
 					if (bytes == -1)
 						throw std::runtime_error("Error sending message with send");
