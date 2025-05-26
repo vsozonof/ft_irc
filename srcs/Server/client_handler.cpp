@@ -156,7 +156,9 @@ void Server::doClientAction(int clientSocket)
 bool Server::join_channel(int clientSocket, std::string msg)
 {
 	msg = msg.erase(0, 6);
-	int i = verif_Salon(msg);
+	int i = verif_Salon(msg, clientSocket);
+	if (i == -2)
+		return 0;
 	std::cout << "voici la pos de recherche salon " << i << std::endl;
 	if (i > -1)
 	{
@@ -199,7 +201,7 @@ bool Server::join_channel(int clientSocket, std::string msg)
 			throw std::runtime_error("Error sending message with send");
 		std::cout << "apres" << std::endl;
 	}
-	i = verif_Salon(msg);
+	i = verif_Salon(msg, clientSocket);
 	Client client = _salon[i].get_client(clientSocket);
 	// recup tous les clients
 	std::map<int, Client> clients = _salon[i].get_all_client();

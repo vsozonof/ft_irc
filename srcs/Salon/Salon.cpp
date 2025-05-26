@@ -41,6 +41,10 @@ Salon::Salon(std::string name)
 {
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
+    // if (name.find())
+    // size_t pos = name.find(122);
+    // 122 97 65 90
+    // name.copy(_Name, name.end() - pos, pos);
     _Name = name;
     _SocketClient.empty();
     _opt[0] = false;
@@ -302,21 +306,37 @@ bool Salon::check_opt(int clientsocket, Client client)
 	}
 	if (_opt[2] == true) // +k
 	{
+        //  "<client> :Password incorrect"
         std::cout << "passage dans le opt[2]" << std::endl;
-		std::string pass;
-		std::cin >> pass;
-		std::cout << "voici pass " << pass << std::endl;
+        char buffer[1024];
+        int bytesRecv = recv(clientsocket, buffer, sizeof(buffer), 0);
+
+        if (bytesRecv <= 0)
+        {
+            std::cout << "Client " << clientsocket << " bad input" << std::endl;
+            return false;
+        }
+
+        buffer[bytesRecv - 1] = '\0';
+        std::string pass(buffer);
 		if (pass != get_password())
-			return false;
-	}
+        {
+            std::cout << "bad mdp" << std::endl;
+            std::string clientname =  Command::clean(client.getNickname());
+            std::string error = ":127.0.0.1 473 ";
+            error.append(clientname);
+            error.append(" :Password incorrect\r\n");
+            int bytes = send(clientsocket, error.c_str(), error.size(), 0);
+            if (bytes == -1)
+                throw std::runtime_error("Error sending message with send");
+			return false;	
+        }
+        std::cout << "bon mdp" << std::endl;
+    }
 	if (_opt[3] == true) // +l 1
 	{
-        std::cout << "passage dans le opt[3]" << std::endl;
-		std::cout << "ok la il faut test " << get_client_limits();
-		std::cout << " et " << get_salon_client_len() << std::endl;
 		if (get_client_limits() <= get_salon_client_len())
         {
-            std::cout << "je rentre ici" << std::endl;
             std::string clientname =  Command::clean(client.getNickname());
             std::string servname =  Command::clean(getName());
             std::string error = ":127.0.0.1 473 ";

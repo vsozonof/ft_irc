@@ -123,9 +123,41 @@ void Server::run()
 	close(_socket);
 }
 
-int Server::verif_Salon(std::string name)
+int Server::verif_Salon(std::string name, int clientSocket)
 {
 	int i = 0;
+	(void)clientSocket;
+	// std::cout << "voici le nom du salon " << name << std::endl;
+	// int tmp = 65;
+	// while (tmp < 122)
+	// {
+	// 	if (name.find())
+	// 	{
+
+	// 	}
+	// }
+	// if (name.find())
+	// int pos = name.find(" ");
+	// pos = name.find(" ");
+	// // 122 97 65 90
+	// if (pos != -1)
+	// {
+	// 	//    "<client> <channel> :No such channel"
+	// 	std::cout << "il y a un espace" << std::endl;
+	// 	std::cout << "try " << _clients[clientSocket].getNickname() << std::endl;
+	// 	std::string clientname =  Command::clean(_clients[clientSocket].getNickname());
+	// 	std::cout << "donc " << clientname << std::endl;
+	// 	std::string error = ":127.0.0.1 473 ";
+	// 	error.append(clientname);
+	// 	error.append(name);
+	// 	error.append(" :No such channel\r\n");
+	// 	Command::debug_print(error);
+	// 	int bytes = send(clientSocket, error.c_str(), error.size(), 0);
+	// 	if (bytes == -1)
+	// 		throw std::runtime_error("Error sending message with send");
+	// 	return -2;
+	// }
+	// if (name.find(" "))
 	if (_salon.size() == 0 || _salon.size() > 2147483647)
 	{
 		std::cout << "je pars" << std::endl;
