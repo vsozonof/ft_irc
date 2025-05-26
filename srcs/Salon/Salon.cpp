@@ -43,7 +43,6 @@ Salon::Salon(std::string name)
 	_clients = std::map<int, Client>();
     _Name = name;
     _SocketClient.empty();
-    std::cout << "test" << std::endl;
     _opt[0] = false;
     _opt[1] = false;
     _opt[2] = false;

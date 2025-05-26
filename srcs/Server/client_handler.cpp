@@ -181,6 +181,7 @@ bool Server::join_channel(int clientSocket, std::string msg)
 		std::cout << "je rentre dans la partie salon unique" << std::endl;
 		Salon salon(msg);
 		// mettre les verifs si user est deja dans un channel
+		is_already_in_serv(clientSocket);
 		salon.increaseSocketClient(clientSocket);
 		salon.set_client(_clients, clientSocket);
 		Client client = salon.get_client(clientSocket);
@@ -190,7 +191,6 @@ bool Server::join_channel(int clientSocket, std::string msg)
 			salon.set_operator(clientSocket);
 		}
 		_salon.push_back(salon);
-		is_already_in_serv(clientSocket);
 		std::cout << "salon size bien plus tot " << _salon.size();
 		std::cout << "et voici le name " << _salon[0].getName() << std::endl;
 		std::string success_join = ":" + Command::clean(client.getNickname()) + "!" + Command::clean(client.getUsername()) + "@127.0.0.1 JOIN #" + Command::clean(salon.getName()) +"\r\n";
@@ -255,18 +255,19 @@ void Server::msg_client(int clientSocket, std::string msg)
 
 void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)
 {
-	std::cout << std::endl << "ENVOIS DU MESSAGE " << std::endl << std::endl;
+	std::cout << std::endl << "============= ENVOIS DU MESSAGE =============" << std::endl << std::endl;
 	//changer ca pour que ca aille plus vite et qu'il envoie bien un message a tous le monde
+	std::cout << "voici le socket qui envois le message " << clientSocket << std::endl;
 	for (int i = 0; tab.get_salon_client_len() > i; i++)
 	{
 		try
 		{
 			while (tab.get_SocketClient(i) > 0)
 			{
-				std::cout << "voici le socket que j'ai eu " << tab.get_SocketClient(i) << std::endl;
+				std::cout << "voici le socket que j'ai eu " << tab.get_SocketClient(i) << " et voici le i " << i << " " << std::endl;
 				if (tab.get_SocketClient(i) != clientSocket)
 				{
-					std::cout << "ce socket est passe " << std::endl;
+					std::cout << "ce socket est passe " << tab.get_SocketClient(i) << std::endl;
 					std::cout << nv << std::endl;
 					int bytes = send(tab.get_SocketClient(i), nv.c_str(), nv.size(), 0);
 					if (bytes == -1)
