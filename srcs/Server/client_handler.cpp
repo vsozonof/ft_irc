@@ -143,6 +143,8 @@ void Server::doClientAction(int clientSocket)
 	else if (msg.find("QUIT") != std::string::npos)
 	{
 		std::cout << "QUIT command" << std::endl;
+		int i = search_salon_by_socket(clientSocket);
+		_salon[i].delete_client_from_salon(clientSocket);
 		deleteClient(clientSocket);
 	}
 	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)

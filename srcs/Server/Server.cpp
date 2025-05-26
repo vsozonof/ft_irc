@@ -180,3 +180,21 @@ bool Server::is_already_in_serv(int socket)
 	}
 	return 0;
 }
+
+int Server::search_salon_by_socket(int clientSocket)
+{
+	size_t i = 0;
+	while (_salon.size() > i)
+	{
+		size_t j = 0;
+		std::map<int, Client> client = _salon[i].get_all_client();
+		while (client.size() > j)
+		{
+			if (client[j].getSocket() == clientSocket)
+			return i;
+			j++;
+		}
+		i++;
+	}
+	return -1;
+}

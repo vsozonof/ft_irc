@@ -352,24 +352,6 @@ std::vector<Salon> Server::getSalon(void)
 	return _salon;
 }
 
-int Server::search_salon_by_socket(int clientSocket)
-{
-	size_t i = 0;
-	while (_salon.size() > i)
-	{
-		size_t j = 0;
-		std::map<int, Client> client = _salon[i].get_all_client();
-		while (client.size() > j)
-		{
-			if (client[j].getSocket() == clientSocket)
-			return i;
-			j++;
-		}
-		i++;
-	}
-	return -1;
-}
-
 void Salon::print_opt()
 {
     std::cout << "opt[0] ";
@@ -398,4 +380,13 @@ void Salon::print_opt()
 int Salon::socketSize()
 {
     return _SocketClient.size();
+}
+
+void Salon::delete_client_from_salon(int socketclient)
+{
+    _clients.erase(socketclient);
+    int i = 0;
+    while (_SocketClient[i] != socketclient)
+        i++;
+    _SocketClient.erase(_SocketClient.begin() + i);
 }
