@@ -240,8 +240,8 @@ void Server::msg_client(int clientSocket, std::string msg)
 		int nb_salon = search_salon_msg(msg);
 		if (nb_salon != -1)
 		{
-			std::cout << "voici le salon trouver " << _salon[nb_salon].getName() << std::endl;
-			Salon tab = _salon[search_salon_by_socket(clientSocket)];
+			// std::cout << "voici le salon trouver " << _salon[nb_salon].getName() << std::endl;
+			Salon tab = _salon[nb_salon];
 			msg = msg.erase(msg.size() - 1);
 			envoyeur = tab.getName();
 			int pos = msg.find(":");
