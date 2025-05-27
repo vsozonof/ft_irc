@@ -165,9 +165,12 @@ int Server::verif_Salon(std::string name, int clientSocket)
 	}
 	std::cout << "je passe par la" << std::endl;
 	size_t tmp = _salon.size();
+	std::string name2 = Command::clean(name);
 	while (tmp > 0)
 	{
-		if (_salon[i].getName() == name)
+		Command::debug_print(name2);
+		Command::debug_print(_salon[i].getName());
+		if (_salon[i].getName() == name2)
 			return i;
 		i++;
 		tmp--;

@@ -153,9 +153,18 @@ void Server::doClientAction(int clientSocket)
 		msg_client(clientSocket, msg);
 }
 
-bool Server::join_channel(int clientSocket, std::string msg)
+bool Server::join_channel(int clientSocket, std::string buf)
 {
-	msg = msg.erase(0, 6);
+	buf = buf.erase(0, 6);
+	//parse deux chose: le nom du salon (premier mot)
+	// et le mdp rentree (le second mot)
+	size_t j = 0;
+	 for (;j < buf.size(); j++)
+        if (isspace(buf[j]))
+            break;
+	std::cout << "voici le j " << j << std::endl;
+	std::string msg = buf.substr(0, j);
+	Command::debug_print(msg);
 	int i = verif_Salon(msg, clientSocket);
 	if (i == -2)
 		return 0;
@@ -202,6 +211,7 @@ bool Server::join_channel(int clientSocket, std::string msg)
 		std::cout << "apres" << std::endl;
 	}
 	i = verif_Salon(msg, clientSocket);
+	std::cout << "le i de verif salon " << i << std::endl;
 	Client client = _salon[i].get_client(clientSocket);
 	// recup tous les clients
 	std::map<int, Client> clients = _salon[i].get_all_client();

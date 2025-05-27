@@ -41,10 +41,12 @@ Salon::Salon(std::string name)
 {
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
-    // if (name.find())
-    // size_t pos = name.find(122);
-    // 122 97 65 90
-    // name.copy(_Name, name.end() - pos, pos);
+
+    // size_t i = 0;
+    // int count = 0;
+    // for (; i < name.size(); i++)
+        // if (isspace(name[i]))
+            // count++;
     _Name = name;
     _SocketClient.empty();
     _opt[0] = false;
