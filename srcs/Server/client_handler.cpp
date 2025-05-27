@@ -156,15 +156,11 @@ void Server::doClientAction(int clientSocket)
 bool Server::join_channel(int clientSocket, std::string buf)
 {
 	buf = buf.erase(0, 6);
-	//parse deux chose: le nom du salon (premier mot)
-	// et le mdp rentree (le second mot)
 	size_t j = 0;
 	 for (;j < buf.size(); j++)
         if (isspace(buf[j]))
             break;
-	std::cout << "voici le j " << j << std::endl;
 	std::string msg = buf.substr(0, j);
-	Command::debug_print(msg);
 	int i = verif_Salon(msg, clientSocket);
 	if (i == -2)
 		return 0;
@@ -173,7 +169,7 @@ bool Server::join_channel(int clientSocket, std::string buf)
 	{
 		// donc le salon est existant
 		std::cout << "je rentre dans la partie salon doublon" << std::endl;
-		if (_salon[i].check_opt(clientSocket, search_client(clientSocket)) == false)
+		if (_salon[i].check_opt(clientSocket, search_client(clientSocket), buf) == false)
 		{
 			std::cout << "je pars car mon opt est pas bon" << std::endl;
 			std::cout << "voici celui qui pars " << clientSocket << std::endl;

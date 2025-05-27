@@ -284,7 +284,7 @@ void Salon::setOwner(int clientSocket)
     this->_owner = clientSocket;
 }
 
-bool Salon::check_opt(int clientsocket, Client client)
+bool Salon::check_opt(int clientsocket, Client client, std::string buf)
 {
 	this->print_opt();
 	if (_opt[0] == true) // /mode +i (met le chan sur invitation)
@@ -310,17 +310,8 @@ bool Salon::check_opt(int clientsocket, Client client)
 	{
         //  "<client> :Password incorrect"
         std::cout << "passage dans le opt[2]" << std::endl;
-        char buffer[1024];
-        int bytesRecv = recv(clientsocket, buffer, sizeof(buffer), 0);
-
-        if (bytesRecv <= 0)
-        {
-            std::cout << "Client " << clientsocket << " bad input" << std::endl;
-            return false;
-        }
-
-        buffer[bytesRecv - 1] = '\0';
-        std::string pass(buffer);
+        //faire le substr de buf pour pass
+        std::string pass = buf;
 		if (pass != get_password())
         {
             std::cout << "bad mdp" << std::endl;
