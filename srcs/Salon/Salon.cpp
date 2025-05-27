@@ -41,7 +41,7 @@ Salon::Salon(std::string name)
 {
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
-
+    std::cout << "NOUVEAU SALON CREE" << std::endl;
     _Name = name;
     _SocketClient.empty();
     _opt[0] = false;
@@ -295,6 +295,7 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
             error.append(clientname);
 			error.append(" #" + servname);
 			error.append(" :Cannot join channel (+i)\r\n");
+            Command::debug_print(error);
             int bytes = send(clientsocket, error.c_str(), error.size(), 0);
             if (bytes == -1)
                 throw std::runtime_error("Error sending message with send");
@@ -304,20 +305,15 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
 	if (_opt[2] == true) // +k
 	{
         std::cout << "passage dans le opt[2]" << std::endl;
-        //faire le substr de buf pour pass
-        std::cout << "donc voici buf " << buf << std::endl;
         size_t count = 0;
         size_t i = 0;
         for (; i < buf.size(); i++)
         if (isspace(buf[i]))
-        count++;
+            count++;
         if (count < buf.size())
-        count++;
+            count++;
         buf = Command::clean(buf);
-        std::cout << "donc voici count " << count << " " << buf.size() << std::endl;
         std::string pass = buf.substr(count, count - buf.size());
-        Command::debug_print(pass);
-        Command::debug_print(get_password());
 		if (pass != get_password())
         {
             //  "<client> :Password incorrect"
@@ -325,7 +321,7 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
             std::string clientname =  Command::clean(client.getNickname());
             std::string error = ":127.0.0.1 464 ";
             std::cout << "voici le client " << clientname << std::endl;
-            error.append(clientname);
+            error.append(Command::clean(clientname));
             error.append(" :Password incorrect\r\n");
             Command::debug_print(error);
             std::cout << std::endl;
@@ -334,7 +330,6 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
                 throw std::runtime_error("Error sending message with send");
 			return false;
         }
-        std::cout << "bon mdp" << std::endl;
     }
 	if (_opt[3] == true) // +l 1
 	{
