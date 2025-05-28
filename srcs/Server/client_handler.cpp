@@ -158,7 +158,10 @@ void Server::doClientAction(int clientSocket)
 		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
 	}
 	else
+	{
+		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
 		msg_client(clientSocket, msg);
+	}
 }
 
 bool Server::join_channel(int clientSocket, std::string buf)
