@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/28 07:36:19 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/28 07:58:15 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,15 @@ void Server::msg_client(int clientSocket, std::string msg)
 	std::string envoyeur;
 	std::string final;
 
+	// // ! PRIVMSG ########3prout :f
+	// std::string nick = extractValue(msg, "PRIVMSG");
+	// for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); it++) {
+	// 	if (it->second.getNickname() == nick) {
+	// 		// send msg to client
+	// 		// return
+	// 	}
+	// 	// it++
+	// }
 	if (_salon.size() > 0)
 	{
 		std::cout << msg << std::endl;
