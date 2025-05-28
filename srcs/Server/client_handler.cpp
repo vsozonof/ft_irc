@@ -113,7 +113,6 @@ void Server::doClientAction(int clientSocket)
 {
 	char buffer[1024];
     int bytesRecv = recv(clientSocket, buffer, sizeof(buffer), 0);
-	std::cout << "[DEBUG]: RECV:" << buffer << std::endl;
 	_clients[clientSocket].lastActive = time(NULL);
 
     if (bytesRecv <= 0)
@@ -126,33 +125,22 @@ void Server::doClientAction(int clientSocket)
 
     buffer[bytesRecv - 1] = '\0';
     std::string msg(buffer);
-	std::cout << "======= DEBUT D'UN NOUVEAU MESSAGE =======" << std::endl << std::endl;
 	msg = "/" + msg;
-	std::cout << msg << std::endl;
 	if (msg.find("/JOIN") != std::string::npos)
 	{
 		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
 		join_channel(clientSocket, msg);
-		size_t i = 0;
-		while (i < _salon.size())
-		{
-			std::cout << _salon[i].getName() << std::endl;
-			i++;
-		}
 		return ;
 	}
 	if (msg.find("/PING") != std::string::npos)
 	{
-		std::cout<<"pong\n";
 		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
 		std::string pong = "PONG 127.0.0.1 :" + Command::clean(msg.substr(5)) + "\r\n";
 		send(clientSocket, pong.c_str(), pong.size(), 0);
 	}
 	else if (msg.find("/QUIT") != std::string::npos)
 	{
-		std::cout << "QUIT command" << std::endl;
 		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
-		// mettre protection si client pas dans salon
 		deleteClient(clientSocket);
 	}
 	else if (msg.find("/KICK") != std::string::npos || msg.find("/INVITE") != std::string::npos || msg.find("/TOPIC") != std::string::npos || msg.find("/MODE") != std::string::npos)
@@ -179,7 +167,6 @@ bool Server::join_channel(int clientSocket, std::string buf)
 	for (size_t i = 0; i < msg.size(); ++i) {
         if (!std::isalnum(static_cast<unsigned char>(msg[i])))
 		{
-			std::cout << "sending join error \n";
 			_clients[clientSocket].sendMsg(":yourserver 403 " + _clients[clientSocket].getNickname() + " " + msg + " :No such channel\r\n");
             return -1;		
 		}
@@ -188,19 +175,10 @@ bool Server::join_channel(int clientSocket, std::string buf)
 	int i = verif_Salon(msg, clientSocket);
 	if (i == -2)
 		return 0;
-	std::cout << "voici la pos de recherche salon " << i << std::endl;
 	if (i > -1)
 	{
-		// donc le salon est existant
-		std::cout << "je rentre dans la partie salon doublon" << std::endl;
 		if (_salon[i].check_opt(clientSocket, search_client(clientSocket), buf) == false)
-		{
-			std::cout << "je pars car mon opt est pas bon" << std::endl;
-			std::cout << "voici celui qui pars " << clientSocket << std::endl;
 			return 0;
-		}
-		// mettre les verifs si user est deja dans un channel
-		// is_already_in_serv(clientSocket);
 		_salon[i].increaseSocketClient(clientSocket);
 		_salon[i].set_client(_clients, clientSocket);
 		Client client = _salon[i].get_client(clientSocket);
@@ -211,10 +189,7 @@ bool Server::join_channel(int clientSocket, std::string buf)
 	}
 	else
 	{
-		std::cout << "je rentre dans la partie salon unique" << std::endl;
 		Salon salon(msg);
-		// mettre les verifs si user est deja dans un channel
-		// is_already_in_serv(clientSocket);
 		salon.increaseSocketClient(clientSocket);
 		salon.set_client(_clients, clientSocket);
 		Client client = salon.get_client(clientSocket);
@@ -228,25 +203,15 @@ bool Server::join_channel(int clientSocket, std::string buf)
 		int bytes = send(clientSocket, success_join.c_str(), success_join.size(), 0);
 		if (bytes == -1)
 			throw std::runtime_error("Error sending message with send");
-		std::cout << "apres" << std::endl;
 	}
 	i = verif_Salon(msg, clientSocket);
-	std::cout << "le i de verif salon " << i << std::endl;
 	Client client = _salon[i].get_client(clientSocket);
 	std::map<int, Client> clients = _salon[i].get_all_client();
 	std::string msg_join1 = ":127.0.0.1 353 ";
 	msg_join1.append(client.getNickname() + " = #" + Command::clean(_salon[i].getName()) + " :");
-	// 127.0.0.1 353 clientNick = #salon :user1 user2 user3\r\n
-	_salon[i].show_list_client();
 	for(int j = 0; j < _salon[i].get_salon_client_len(); j++)
-	{
-		std::cout << "Je rentre ici " << clients.size() << std::endl;
-		std::cout << clients[j].getNickname() << std::endl;
 		msg_join1.append(clients[j].getNickname() + " ");
-	}
-	// msg_join1.append(" " + _salon[i].get_salon_client_len());
 	msg_join1.append("\r\n");
-	Command::debug_print(msg_join1);
 	int bytes = send(clientSocket, msg_join1.c_str(), msg_join1.size(), 0);
 	if (bytes == -1)
 		throw std::runtime_error("Error sending message with send");
@@ -260,31 +225,11 @@ void Server::msg_client(int clientSocket, std::string msg)
 
 	if (_salon.size() > 0)
 	{
-		std::cout << msg << std::endl;
-		std::cout << "JE PASSE PAR LA" << std::endl;
 		int nb_salon = search_salon_msg(msg);
 		Salon tab = _salon[nb_salon];
-		std::cout << "nom salon " << msg << std::endl;
 		Client env = search_client(clientSocket);
-		// envoyeur = _salon[nb_salon].get_SocketClient(clientSocket);
-		std::cout << "voici envoyeur " << env.getNickname() << std::endl;
-		std::cout << "msg = " << msg << std::endl;
-		//donc j'ai: recup le salon, recup le client, et je
-		// faire un search_salon_socket_and_msg
-		std::cout << "ma fct renvoie " << search_salon_socket_and_msg(clientSocket, msg) << std::endl;
-		std::cout << "nb_salon = " << nb_salon << " search = " << search_salon_by_socket(clientSocket) << " "<< std::endl;
 		if (nb_salon != -1 && search_salon_socket_and_msg(clientSocket, msg) == 0)
 		{
-			std::cout << "je rentre dedans " << std::endl;
-			/*! PRIVMSG ########3prout :f
-			il faut recup: nom du salon, user qui envois user qui recoit
-			size_t j = 0;
-			msg = msg.erase(0, 6);
-			for (;j < msg.size(); j++)
-			if (isspace(msg[j]))
-			break;
-			std::string msg = msg.substr(0, j);
-			std::string receveur = ;*/
 			if (msg.size())
 			{
 				std::string nick = extractValue(msg, "PRIVMSG");
@@ -292,7 +237,6 @@ void Server::msg_client(int clientSocket, std::string msg)
 				{
 					if (it->second.getNickname() == nick)
 					{
-						// send msg to client
 						std::string nv = ":";
 						nv.append(nick);
 						nv.append(" " + msg);
@@ -307,8 +251,6 @@ void Server::msg_client(int clientSocket, std::string msg)
 		}
 		if (nb_salon != -1 && search_salon_socket_and_msg(clientSocket, msg) == 1)
 		{
-			std::cout << "COUCOU" << std::endl;
-			// std::cout << "voici le salon trouver " << _salon[nb_salon].getName() << std::endl;
 			Salon tab = _salon[nb_salon];
 			msg = msg.erase(msg.size() - 1);
 			envoyeur = tab.getName();
@@ -320,8 +262,6 @@ void Server::msg_client(int clientSocket, std::string msg)
 			nv.append(client.getNickname());
 			nv.append(" " + msg);
 			nv.append("\r\n");
-			tab.show_list_client();
-			std::cout << nv << std::endl;
 			send_msg_client(clientSocket, nv, tab);
 		}
 	}
