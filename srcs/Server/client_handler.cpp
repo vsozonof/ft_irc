@@ -237,7 +237,17 @@ void Server::msg_client(int clientSocket, std::string msg)
 
 	if (_salon.size() > 0)
 	{
+		std::cout << msg << std::endl;
 		int nb_salon = search_salon_msg(msg);
+		if (msg.find("#"))
+		{
+			Salon tab = _salon[nb_salon];
+			msg = msg.erase(msg.size() - 1);
+			envoyeur = tab.getName();
+			int pos = msg.find(":");
+			if (pos > 2147483647 || pos < 0)
+				return;
+		}
 		if (nb_salon != -1)
 		{
 			// std::cout << "voici le salon trouver " << _salon[nb_salon].getName() << std::endl;
@@ -252,7 +262,6 @@ void Server::msg_client(int clientSocket, std::string msg)
 			nv.append(client.getNickname());
 			nv.append(" " + msg);
 			nv.append("\r\n");
-			tab.show_list_client();
 			send_msg_client(clientSocket, nv, tab);
 		}
 	}
