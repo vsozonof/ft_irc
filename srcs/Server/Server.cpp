@@ -123,7 +123,7 @@ void Server::run()
 
 	while (!_shutdown) {
 		handleClient();
-		timeOutInactiveClients();
+		// timeOutInactiveClients();
 	}
 	std::cout << BOLD_GREEN << "\n⚙️  Ft_IRC: Successfully stopped the server!" << std::endl;
 	close(_socket);
