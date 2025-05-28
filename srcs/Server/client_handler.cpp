@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/28 07:26:34 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/28 07:36:19 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ void Server::doClientAction(int clientSocket)
 	}
 	else if (msg.find("/PING") != std::string::npos)
 	{
+		std::cout<<"pong\n";
 		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
 		std::string pong = "PONG 127.0.0.1 :" + Command::clean(msg.substr(5)) + "\r\n";
 		send(clientSocket, pong.c_str(), pong.size(), 0);
