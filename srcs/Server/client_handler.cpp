@@ -258,18 +258,12 @@ void Server::msg_client(int clientSocket, std::string msg)
 	if (_salon.size() > 0)
 	{
 		std::cout << msg << std::endl;
+		std::cout << "JE PASSE PAR LA" << std::endl;
+		// if (nb_salon != -1 && msg.find("#") != 0)
 		int nb_salon = search_salon_msg(msg);
-		if (msg.find("#"))
-		{
-			Salon tab = _salon[nb_salon];
-			msg = msg.erase(msg.size() - 1);
-			envoyeur = tab.getName();
-			int pos = msg.find(":");
-			if (pos > 2147483647 || pos < 0)
-				return;
-		}
 		if (nb_salon != -1)
 		{
+			std::cout << "COUCOU" << std::endl;
 			// std::cout << "voici le salon trouver " << _salon[nb_salon].getName() << std::endl;
 			Salon tab = _salon[nb_salon];
 			msg = msg.erase(msg.size() - 1);
@@ -282,7 +276,30 @@ void Server::msg_client(int clientSocket, std::string msg)
 			nv.append(client.getNickname());
 			nv.append(" " + msg);
 			nv.append("\r\n");
+			tab.show_list_client();
+			std::cout << nv << std::endl;
 			send_msg_client(clientSocket, nv, tab);
+		}
+		if (nb_salon != -1)
+		{
+			// std::cout << "je rentre dedans " << std::endl;
+			Salon tab = _salon[nb_salon];
+			std::string privmsg = msg.erase(0, 6);
+			std::cout << privmsg << std::endl;
+			msg = msg.erase(msg.size() - 1);
+			envoyeur = tab.getName();
+			int pos = msg.find(":");
+			if (pos > 2147483647 || pos < 0)
+			return;
+			Client client = tab.get_client(clientSocket);
+			std::string nv = ":";
+			nv.append(client.getNickname());
+			nv.append(" " + msg);
+			nv.append("\r\n");
+			send_msg_priv(clientSocket, nv, tab);
+			// int bytes = send(receveur.getsocket(), nv.c_str(), nv.size(), 0);
+			// if (bytes == -1)
+				// throw std::runtime_error("Error sending message with send");
 		}
 	}
 }
@@ -314,6 +331,32 @@ int Server::search_salon_msg(std::string msg)
 }
 
 void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)
+{
+	for (int i = 0; tab.get_salon_client_len() > i; i++)
+	{
+		try
+		{
+			while (tab.get_SocketClient(i) > 0)
+			{
+				if (tab.get_SocketClient(i) != clientSocket)
+				{
+					int bytes = send(tab.get_SocketClient(i), nv.c_str(), nv.size(), 0);
+					if (bytes == -1)
+						throw std::runtime_error("Error sending message with send");
+				}
+				i++;
+				if (i >= tab.get_salon_client_len())
+					break;
+			}
+		}
+		catch(std::exception &e)
+		{
+			throw std::runtime_error("a problem happend when sending message");
+		}
+	}
+}
+
+void Server::send_msg_priv(int clientSocket, std::string nv, Salon &tab)
 {
 	for (int i = 0; tab.get_salon_client_len() > i; i++)
 	{
