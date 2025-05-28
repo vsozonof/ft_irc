@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 14:27:37 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/22 16:27:19 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/28 08:08:05 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,21 @@ int	Server::checkPassword(std::string clientPassword)
 
 // * checkNick(std::string clientNick)
 // * This function will check if the given nickname is already in use.
-int	Server::checkNick(std::string clientNick)
-{
-	(void)clientNick;
-	std::map<int, Client>::iterator it = _clients.begin();
-	while (it != _clients.end())
+	int	Server::checkNick(std::string clientNick)
 	{
-		if (it->second.getNickname() == clientNick)
-			return (1);
-		it++;
+		for (size_t i = 0; i < clientNick.size(); ++i) {
+        	if (!std::isalnum(static_cast<unsigned char>(clientNick[i]))) 
+            	return -1;
+    	}
+		std::map<int, Client>::iterator it = _clients.begin();
+		while (it != _clients.end())
+		{
+			if (it->second.getNickname() == clientNick)
+				return (1);
+			it++;
+		}
+		return (0);
 	}
-	return (0);
-}
 
 // * gatherInfos(int clientSocket, std::string & msg)
 // * This function will parse the informations received from a client
@@ -88,9 +91,9 @@ int Server::authClient(std::string msg, int clientSocket) {
 	}
 	else if (checkNick(userNick))
 	{
-		std::cout << "ID " << '[' << clientSocket << ']' << ": Nickname already in use, terminating connection." << std::endl;
+		std::cout << "ID " << '[' << clientSocket << ']' << ": Invalid Nickname, terminating connection." << std::endl;
 		std::cout << "______________________________________" << '\n';
-		_clients[clientSocket].sendMsg(":127.0.0.1 433 * :Nickname is already in use\r\n");
+		_clients[clientSocket].sendMsg(":127.0.0.1 433 * :Invalid nickname\r\n");
 		deleteClient(clientSocket);
 		return (1);
 	}

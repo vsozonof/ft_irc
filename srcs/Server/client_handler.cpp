@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/28 07:58:15 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/28 08:24:25 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,16 @@ bool Server::join_channel(int clientSocket, std::string buf)
 	if (isspace(buf[j]))
 		break;
 	std::string msg = buf.substr(0, j);
+
+	for (size_t i = 0; i < msg.size(); ++i) {
+        if (!std::isalnum(static_cast<unsigned char>(msg[i])))
+		{
+			std::cout << "sending join error \n";
+			_clients[clientSocket].sendMsg(":yourserver 403 " + _clients[clientSocket].getNickname() + " " + msg + " :No such channel\r\n");
+            return -1;		
+		}
+	}
+
 	int i = verif_Salon(msg, clientSocket);
 	if (i == -2)
 		return 0;
