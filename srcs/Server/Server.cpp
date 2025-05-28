@@ -236,3 +236,40 @@ void Server::delete_user_all_salon(int clientSocket)
 	std::cout << "he was not already in serv" << std::endl;
 	return ;
 }
+
+int Server::search_salon_socket_and_msg(int clientSocket, std::string salon)
+{
+	size_t j = 0;
+	int pos = salon.find("#");
+	for (int save = 0;j < salon.size(); j++)
+	{
+		if (isspace(salon[j]))
+		{
+			if (save == 1)
+				break;
+			save++;
+		}
+	}
+	std::string salon_name = salon.substr(pos + 1, j - pos - 1);
+	salon_name = Command::clean(salon_name);
+	std::cout << "voici le nom du salon que je cherche " << salon_name << std::endl;
+	j = 0;
+	while (salon_name != _salon[j].getName())
+	{
+		j++;
+	}
+	std::cout << "voici j " << j << std::endl;
+	std::map<int, Client> list = _salon[j].get_all_client();
+	for (size_t i = 0; i < list.size() ;i++)
+	{
+		if (clientSocket == list[i].getSocket())
+		{
+			std::cout << "CLIENT RECUP " << list[i].getSocket() << std::endl;
+			std::cout << "le name = " << list[i].getNickname() << std::endl;
+			std::cout << "un client trouver" << std::endl;
+			return 1;
+		}
+	}
+	std::cout << "aucun client trouver" << std::endl;
+	return 0;
+}

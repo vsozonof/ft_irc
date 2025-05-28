@@ -270,8 +270,10 @@ void Server::msg_client(int clientSocket, std::string msg)
 		std::cout << "voici envoyeur " << env.getNickname() << std::endl;
 		std::cout << "msg = " << msg << std::endl;
 		//donc j'ai: recup le salon, recup le client, et je
+		// faire un search_salon_socket_and_msg
+		std::cout << "ma fct renvoie " << search_salon_socket_and_msg(clientSocket, msg) << std::endl;
 		std::cout << "nb_salon = " << nb_salon << " search = " << search_salon_by_socket(clientSocket) << " "<< std::endl;
-		if (nb_salon != -1 && search_salon_by_socket(clientSocket) != -1)
+		if (nb_salon != -1 && search_salon_socket_and_msg(clientSocket, msg) == 0)
 		{
 			std::cout << "je rentre dedans " << std::endl;
 			/*! PRIVMSG ########3prout :f
@@ -303,7 +305,7 @@ void Server::msg_client(int clientSocket, std::string msg)
 				}
 			}
 		}
-		if (nb_salon != -1 && search_salon_by_socket(clientSocket) == nb_salon)
+		if (nb_salon != -1 && search_salon_socket_and_msg(clientSocket, msg) == 1)
 		{
 			std::cout << "COUCOU" << std::endl;
 			// std::cout << "voici le salon trouver " << _salon[nb_salon].getName() << std::endl;
