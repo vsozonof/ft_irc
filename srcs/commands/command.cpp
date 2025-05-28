@@ -28,6 +28,8 @@ void Command::debug_print(const std::string& msg)
             std::cout << "\\r";
         else if (msg[i] == '\n')
             std::cout << "\\n";
+		else if (msg[i] == ' ')
+			std::cout << "sp";
         else
             std::cout << msg[i];
     }
@@ -160,8 +162,8 @@ void Command::kick(std::string command, Salon &salon, Client kicker)
 		send(kicker.getSocket(), error.c_str(), error.size(), 0);
 		return;
 	}
-	size_t start = command.find("KICK") + 6 + salon.getName().size();
-	size_t end = command.find_first_of(" :", start);
+	size_t start = command.find("#") + 2 + salon.getName().size();
+	size_t end = command.find(" ", start);
 	std::string username = command.substr(start, end - start);
 	start = command.find(":");
 	end = command.find("\r", start);
