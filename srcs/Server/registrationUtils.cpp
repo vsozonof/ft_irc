@@ -62,7 +62,7 @@ int	Server::gatherInfos(int clientSocket, std::string & msg) {
 			sleep(1);
 			std::cout << "ID " << '[' << clientSocket << ']' << ": Missing informations.." << std::endl;
 			timeout++;
-			if (timeout == 5)
+			if (timeout == 50)
 			{
 				std::cout << '[' << clientSocket << ']' << ": TimeOut, disconnecting client.." << std::endl;
 				deleteClient(clientSocket);
