@@ -280,11 +280,10 @@ void Salon::setOwner(int clientSocket)
 
 bool Salon::check_opt(int clientsocket, Client client, std::string buf)
 {
-	if (_opt[0] == true) // /mode +i (met le chan sur invitation)
+	if (_opt[0] == true)
 	{
 		if (is_invite(clientsocket) == false)
         {
-            // ca sert a rien de recup le client via le salon
             std::string clientname =  Command::clean(client.getNickname());
             std::string servname =  Command::clean(getName());
             std::string error = ":127.0.0.1 473 ";
@@ -297,7 +296,7 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
             return false;
         }
 	}
-	if (_opt[2] == true) // +k
+	if (_opt[2] == true)
 	{
         size_t count = 0;
         size_t i = 0;
@@ -317,13 +316,13 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
 			return false;
         }
     }
-	if (_opt[3] == true) // +l 1
+	if (_opt[3] == true)
 	{
 		if (get_client_limits() <= get_salon_client_len())
         {
             std::string clientname =  Command::clean(client.getNickname());
             std::string servname =  Command::clean(getName());
-            std::string error = ":127.0.0.1 473 ";
+            std::string error = ":127.0.0.1 471 ";
             error.append(clientname);
 			error.append(" #" + servname);
 			error.append(" :Cannot join channel (+l)\r\n");
