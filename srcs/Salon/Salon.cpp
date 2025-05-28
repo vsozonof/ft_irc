@@ -318,9 +318,8 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
         Command::debug_print(pass);
 		if (pass != get_password())
         {
-            std::cout << "bad pass" << std::endl;
-            std::string error = "127.0.0.1 475 " + Command::clean(client.getNickname()) + " " + Command::clean(_Name) + " :Cannot join channel (+k)\r\n";
-            int bytes = send(clientsocket, error.c_str(), error.size(), 0);
+            std::string error = ":127.0.0.1 475 " + Command::clean(client.getNickname()) + " #" + Command::clean(_Name) + " :Cannot join channel (+k)\r\n";
+            int bytes = send(client.getSocket(), error.c_str(), error.size(), 0);
             if (bytes == -1)
                 throw std::runtime_error("Error sending message with send");
 			return false;

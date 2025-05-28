@@ -138,7 +138,7 @@ void Server::doClientAction(int clientSocket)
 		}
 		return ;
 	}
-	else if (msg.find("/PING") != std::string::npos)
+	if (msg.find("/PING") != std::string::npos)
 	{
 		std::cout<<"pong\n";
 		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
