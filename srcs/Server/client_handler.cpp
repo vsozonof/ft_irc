@@ -225,25 +225,17 @@ void Server::msg_client(int clientSocket, std::string msg)
 
 	if (_salon.size() > 0)
 	{
-		std::cout << "je rentre dans les msg" << std::endl;
-		// trouver par nickname
-		// envoyer le message si trouver
-		// si pas trouver chercher salon
 		if (msg.find("#") == std::string::npos)
 		{
-			std::cout << "pas de #" << std::endl;
 			if (msg.size())
 			{
 				std::string nick = extractValue(msg, "PRIVMSG");
-				std::string message = extractValue(msg, nick);
+				std::string message = msg.substr(msg.find(":"), msg.size() - msg.find(":") - 1);
 				_clients[clientSocket].getNickname();
 				for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); it++)
 				{
 					if (it->second.getNickname() == nick)
 					{
-						// :source PRIVMSG test :rew
-						// :<nick>!<user>@<host> PRIVMSG <dest> :<message>\r\n
-
 						std::string nv = (":");
 						nv.append(Command::clean(_clients[clientSocket].getNickname()));
 						nv.append("!");
@@ -253,10 +245,6 @@ void Server::msg_client(int clientSocket, std::string msg)
 						nv.append(" ");
 						nv.append(message);
 						nv.append("\r\n");
-						Command::debug_print(nv);
-						std::cout << "=====================" << std::endl;
-						Command::debug_print(it->second.getNickname());
-						std::cout << it->second.getSocket() << std::endl;
 						int bytes = send(it->second.getSocket(), nv.c_str(), nv.size(), 0);
 						if (bytes == -1)
 						throw std::runtime_error("Error sending message with send");
@@ -267,31 +255,8 @@ void Server::msg_client(int clientSocket, std::string msg)
 			return ;
 		}
 		int nb_salon = search_salon_msg(msg);
-		std::cout << msg << std::endl;
 		Salon tab = _salon[nb_salon];
 		Client env = search_client(clientSocket);
-		std::cout << "je check les if" << std::endl;
-		// if (nb_salon != -1 && search_salon_socket_and_msg(clientSocket, msg) == 0)
-		// {
-		// 	if (msg.size())
-		// 	{
-				// std::string nick = extractValue(msg, "PRIVMSG");
-		// 		for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); it++)
-		// 		{
-		// 			if (it->second.getNickname() == nick)
-		// 			{
-		// 				std::string nv = ":";
-		// 				nv.append(nick);
-		// 				nv.append(" " + msg);
-		// 				nv.append("\r\n");
-		// 				int bytes = send(it->second.getSocket(), nv.c_str(), nv.size(), 0);
-		// 				if (bytes == -1)
-		// 				throw std::runtime_error("Error sending message with send");
-		// 				return;
-		// 			}
-		// 		}
-		// 	}
-		// }
 		if (nb_salon != -1 && search_salon_socket_and_msg(clientSocket, msg) == 1)
 		{
 			Salon tab = _salon[nb_salon];
