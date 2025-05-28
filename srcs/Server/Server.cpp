@@ -211,3 +211,28 @@ int Server::search_salon_by_socket(int clientSocket)
 	}
 	return -1;
 }
+
+void Server::delete_user_all_salon(int clientSocket)
+{
+	size_t j = 0;
+	while (j < _salon.size())
+	{
+		std::map<int, Client> clients = _salon[j].get_all_client();
+		size_t o = 0;
+		for (int i = 0; i < _salon[j].get_salon_client_len() ;i++)
+		{
+			while (clients[o].getSocket() == -1)
+				o++;
+			std::cout << "voici le client " << clients[o].getSocket() << std::endl;
+			if (clientSocket == clients[o].getSocket())
+			{
+				std::cout << "je remove le client du salon " << _salon[j].getName() << std::endl;
+				_salon[j].delete_client_from_salon(clientSocket);
+			}
+			o++;
+		}
+		j++;
+	}
+	std::cout << "he was not already in serv" << std::endl;
+	return ;
+}

@@ -57,6 +57,9 @@ void Server::handleClient()
 // * This function will erase a clientSocket from both our fd and client lists.
 void Server::deleteClient(int clientSocket)
 {
+	int i = search_salon_by_socket(clientSocket);
+	if (i > -1)
+		delete_user_all_salon(clientSocket);
 	close(clientSocket);
     for (std::vector<pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it)
     {
@@ -150,8 +153,6 @@ void Server::doClientAction(int clientSocket)
 		std::cout << "QUIT command" << std::endl;
 		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
 		// mettre protection si client pas dans salon
-		int i = search_salon_by_socket(clientSocket);
-		_salon[i].delete_client_from_salon(clientSocket);
 		deleteClient(clientSocket);
 	}
 	else if (msg.find("/KICK") != std::string::npos || msg.find("/INVITE") != std::string::npos || msg.find("/TOPIC") != std::string::npos || msg.find("/MODE") != std::string::npos)
