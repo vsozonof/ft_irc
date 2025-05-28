@@ -109,6 +109,7 @@ void Server::setupNewClient(int clientSocket)
 // * - sending messages,
 // * - kick users
 // * - etc....
+
 void Server::doClientAction(int clientSocket)
 {
 	char buffer[1024];
@@ -163,7 +164,8 @@ bool Server::join_channel(int clientSocket, std::string buf)
 	if (isspace(buf[j]))
 		break;
 	std::string msg = buf.substr(0, j);
-
+	if (msg.empty())
+		return -1;
 	for (size_t i = 0; i < msg.size(); ++i) {
         if (!std::isalnum(static_cast<unsigned char>(msg[i])))
 		{
@@ -230,6 +232,8 @@ void Server::msg_client(int clientSocket, std::string msg)
 			if (msg.size())
 			{
 				std::string nick = extractValue(msg, "PRIVMSG");
+				if (msg.find(":") == std::string::npos)
+					return;
 				std::string message = msg.substr(msg.find(":"), msg.size() - msg.find(":") - 1);
 				_clients[clientSocket].getNickname();
 				for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); it++)
@@ -289,6 +293,8 @@ int Server::search_salon_msg(std::string msg)
 		}
 	}
 	std::string salon_name = msg.substr(pos + 1, j - pos - 1);
+	if (msg.empty())
+		return -1;
 	j = 0;
 	while (_salon.size() > j)
 	{
@@ -303,40 +309,19 @@ int Server::search_salon_msg(std::string msg)
 
 void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)
 {
+	tab.show_list_client();
 	for (int i = 0; tab.get_salon_client_len() > i; i++)
 	{
 		try
 		{
 			while (tab.get_SocketClient(i) > 0)
 			{
+				std::cout << "voici le socket check " << tab.get_SocketClient(i) << std::endl;
 				if (tab.get_SocketClient(i) != clientSocket)
 				{
-					int bytes = send(tab.get_SocketClient(i), nv.c_str(), nv.size(), 0);
-					if (bytes == -1)
-						throw std::runtime_error("Error sending message with send");
-				}
-				i++;
-				if (i >= tab.get_salon_client_len())
-					break;
-			}
-		}
-		catch(std::exception &e)
-		{
-			throw std::runtime_error("a problem happend when sending message");
-		}
-	}
-}
-
-void Server::send_msg_priv(int clientSocket, std::string nv, Salon &tab)
-{
-	for (int i = 0; tab.get_salon_client_len() > i; i++)
-	{
-		try
-		{
-			while (tab.get_SocketClient(i) > 0)
-			{
-				if (tab.get_SocketClient(i) != clientSocket)
-				{
+					std::cout << tab.get_SocketClient(i) << std::endl;
+					tab.show_client_infos(tab.get_SocketClient(i));
+					Command::debug_print(nv);
 					int bytes = send(tab.get_SocketClient(i), nv.c_str(), nv.size(), 0);
 					if (bytes == -1)
 						throw std::runtime_error("Error sending message with send");

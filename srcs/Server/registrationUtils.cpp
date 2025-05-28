@@ -46,7 +46,7 @@ int	Server::checkPassword(std::string clientPassword)
 // * and will timeout a client if too much time is taken to send the required infos.
 int	Server::gatherInfos(int clientSocket, std::string & msg) {
 	int timeout = 0;
-	
+
 	while (42)
 	{
 		msg += _clients[clientSocket].receiveMsg();

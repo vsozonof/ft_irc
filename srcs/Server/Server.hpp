@@ -69,7 +69,6 @@ class Server
 		bool join_channel(int clientSocket, std::string msg);
 		void send_msg_client(int clientSocket, std::string nv, Salon &tab);
 		int search_salon_msg(std::string msg);
-		void send_msg_priv(int clientSocket, std::string nv, Salon &tab);
 		void delete_user_all_salon(int clientSocket);
 		int search_salon_socket_and_msg(int clientSocket, std::string salon);
 

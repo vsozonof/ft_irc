@@ -82,7 +82,6 @@ std::string Client::receiveMsg()
 	int bytesRecv = recv(_socket, buffer, sizeof(buffer), 0);
 	if (bytesRecv <= 0)
 	{
-		close(_socket);
 		return ("EMPTY MSG");
 	}
 	buffer[bytesRecv - 1] = '\0';

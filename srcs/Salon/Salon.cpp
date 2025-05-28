@@ -280,7 +280,6 @@ void Salon::setOwner(int clientSocket)
 
 bool Salon::check_opt(int clientsocket, Client client, std::string buf)
 {
-	this->print_opt();
 	if (_opt[0] == true) // /mode +i (met le chan sur invitation)
 	{
 		if (is_invite(clientsocket) == false)

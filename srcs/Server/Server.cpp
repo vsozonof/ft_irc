@@ -232,6 +232,8 @@ int Server::search_salon_socket_and_msg(int clientSocket, std::string salon)
 		}
 	}
 	std::string salon_name = salon.substr(pos + 1, j - pos - 1);
+	if (salon_name.empty())
+		return 0;
 	salon_name = Command::clean(salon_name);
 	j = 0;
 	while (salon_name != _salon[j].getName())
