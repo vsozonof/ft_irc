@@ -41,7 +41,6 @@ Salon::Salon(std::string name)
 {
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
-    std::cout << "NOUVEAU SALON CREE" << std::endl;
     _Name = name;
     _SocketClient.empty();
     _opt[0] = false;
@@ -284,8 +283,6 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
 	this->print_opt();
 	if (_opt[0] == true) // /mode +i (met le chan sur invitation)
 	{
-        std::cout << "passage dans le opt[0]" << std::endl;
-		std::cout << "is invite " << is_invite(clientsocket) << std::endl;
 		if (is_invite(clientsocket) == false)
         {
             // ca sert a rien de recup le client via le salon
@@ -295,7 +292,6 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
             error.append(clientname);
 			error.append(" #" + servname);
 			error.append(" :Cannot join channel (+i)\r\n");
-            Command::debug_print(error);
             int bytes = send(clientsocket, error.c_str(), error.size(), 0);
             if (bytes == -1)
                 throw std::runtime_error("Error sending message with send");
@@ -304,7 +300,6 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
 	}
 	if (_opt[2] == true) // +k
 	{
-        std::cout << "passage dans le opt[2]" << std::endl;
         size_t count = 0;
         size_t i = 0;
         for (; i < buf.size(); i++)
@@ -314,8 +309,6 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
             count++;
         buf = Command::clean(buf);
         std::string pass = buf.substr(count, count - buf.size());
-        std::cout << "mdp :";
-        Command::debug_print(pass);
 		if (pass != get_password())
         {
             std::string error = ":127.0.0.1 475 " + Command::clean(client.getNickname()) + " #" + Command::clean(_Name) + " :Cannot join channel (+k)\r\n";

@@ -134,17 +134,11 @@ int Server::verif_Salon(std::string name, int clientSocket)
 	int i = 0;
 	(void)clientSocket;
 	if (_salon.size() == 0 || _salon.size() > 2147483647)
-	{
-		std::cout << "je pars" << std::endl;
 		return -1;
-	}
-	std::cout << "je passe par la" << std::endl;
 	size_t tmp = _salon.size();
 	std::string name2 = Command::clean(name);
 	while (tmp > 0)
 	{
-		Command::debug_print(name2);
-		Command::debug_print(_salon[i].getName());
 		if (_salon[i].getName() == name2)
 			return i;
 		i++;
@@ -158,11 +152,7 @@ Client Server::search_client(int socket)
 	for (size_t i = 0; i < _clients.size() ;i++)
 	{
 		if (socket == _clients[i].getSocket())
-		{
-			std::cout << "CLIENT RECUP " << _clients[i].getSocket() << std::endl;
-			std::cout << "le name = " << _clients[i].getNickname() << std::endl;
 			return (_clients[i]);
-		}
 	}
 	return 0;
 }
@@ -178,19 +168,15 @@ bool Server::is_already_in_serv(int socket)
 		{
 			while (clients[o].getSocket() == -1)
 				o++;
-			std::cout << "voici le client " << clients[o].getSocket() << std::endl;
 			if (socket == clients[o].getSocket())
 			{
-				std::cout << "je remove le client du salon " << _salon[j].getName() << std::endl;
 				_salon[j].remove_client(socket);
-				_salon[j].show_list_client();
 				return 1;
 			}
 			o++;
 		}
 		j++;
 	}
-	std::cout << "he was not already in serv" << std::endl;
 	return 0;
 }
 
@@ -223,17 +209,12 @@ void Server::delete_user_all_salon(int clientSocket)
 		{
 			while (clients[o].getSocket() == -1)
 				o++;
-			std::cout << "voici le client " << clients[o].getSocket() << std::endl;
 			if (clientSocket == clients[o].getSocket())
-			{
-				std::cout << "je remove le client du salon " << _salon[j].getName() << std::endl;
 				_salon[j].delete_client_from_salon(clientSocket);
-			}
 			o++;
 		}
 		j++;
 	}
-	std::cout << "he was not already in serv" << std::endl;
 	return ;
 }
 
@@ -252,24 +233,16 @@ int Server::search_salon_socket_and_msg(int clientSocket, std::string salon)
 	}
 	std::string salon_name = salon.substr(pos + 1, j - pos - 1);
 	salon_name = Command::clean(salon_name);
-	std::cout << "voici le nom du salon que je cherche " << salon_name << std::endl;
 	j = 0;
 	while (salon_name != _salon[j].getName())
 	{
 		j++;
 	}
-	std::cout << "voici j " << j << std::endl;
 	std::map<int, Client> list = _salon[j].get_all_client();
 	for (size_t i = 0; i < list.size() ;i++)
 	{
 		if (clientSocket == list[i].getSocket())
-		{
-			std::cout << "CLIENT RECUP " << list[i].getSocket() << std::endl;
-			std::cout << "le name = " << list[i].getNickname() << std::endl;
-			std::cout << "un client trouver" << std::endl;
 			return 1;
-		}
 	}
-	std::cout << "aucun client trouver" << std::endl;
 	return 0;
 }
