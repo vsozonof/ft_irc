@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 15:02:02 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/22 17:30:19 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/28 07:27:41 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,20 +80,26 @@ void sigHandler(int s)
 
 void Server::initSigHandler() {
 	struct sigaction sigIntHandler;
-	
+	std::memset(&sigIntHandler, 0, sizeof(sigIntHandler));
+
 	sigIntHandler.sa_handler = sigHandler;
 	sigemptyset(&sigIntHandler.sa_mask);
 	sigIntHandler.sa_flags = 0;
+
 	sigaction(SIGINT, &sigIntHandler, NULL);
 
 	struct sigaction sigPipeHandler;
-	sigaction(SIGPIPE, &sigPipeHandler, NULL);
+	std::memset(&sigPipeHandler, 0, sizeof(sigPipeHandler));
+
 	sigPipeHandler.sa_handler = SIG_IGN;
 	sigemptyset(&sigPipeHandler.sa_mask);
 	sigPipeHandler.sa_flags = 0;
-	
+
+	sigaction(SIGPIPE, &sigPipeHandler, NULL);
+
 	g_server = this;
 }
+
 
 void Server::timeOutInactiveClients() {
 	time_t now = time(NULL);
@@ -101,7 +107,7 @@ void Server::timeOutInactiveClients() {
 	while (it != _clients.end()) {
 		Client& client = it->second;
 		
-		if (now - client.lastActive >= 120 && client.registered) {
+		if (now - client.lastActive >= 20 && client.registered) {
 			std::cout << "ID [" << client.getSocket() << ']' << " : timed out, disconnecting." << std::endl;
 			++it;
 			deleteClient(client.getSocket());

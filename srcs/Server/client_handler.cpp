@@ -6,7 +6,7 @@
 /*   By: vsozonof <vsozonof@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/22 16:38:30 by vsozonof         ###   ########.fr       */
+/*   Updated: 2025/05/28 07:26:34 by vsozonof         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 // * ==> Do authenticated clients actions (handling their commands, messages).
 void Server::handleClient()
 {
-	int ret = poll(_fds.data(), _fds.size(), -1);
+	int ret = poll(_fds.data(), _fds.size(), 100);
 
 	if (ret > 0)
 	{
