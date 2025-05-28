@@ -124,9 +124,11 @@ void Server::doClientAction(int clientSocket)
     buffer[bytesRecv - 1] = '\0';
     std::string msg(buffer);
 	std::cout << "======= DEBUT D'UN NOUVEAU MESSAGE =======" << std::endl << std::endl;
+	msg = "/" + msg;
 	std::cout << msg << std::endl;
-	if (msg.find("JOIN") != std::string::npos)
+	if (msg.find("/JOIN") != std::string::npos)
 	{
+		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
 		join_channel(clientSocket, msg);
 		size_t i = 0;
 		while (i < _salon.size())
@@ -136,20 +138,25 @@ void Server::doClientAction(int clientSocket)
 		}
 		return ;
 	}
-	else if (msg.find("PING") != std::string::npos)
+	else if (msg.find("/PING") != std::string::npos)
 	{
+		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
 		std::string pong = "PONG 127.0.0.1 :" + Command::clean(msg.substr(5)) + "\r\n";
 		send(clientSocket, pong.c_str(), pong.size(), 0);
 	}
-	else if (msg.find("QUIT") != std::string::npos)
+	else if (msg.find("/QUIT") != std::string::npos)
 	{
 		std::cout << "QUIT command" << std::endl;
+		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
 		int i = search_salon_by_socket(clientSocket);
 		_salon[i].delete_client_from_salon(clientSocket);
 		deleteClient(clientSocket);
 	}
-	else if (msg.find("KICK") != std::string::npos || msg.find("INVITE") != std::string::npos || msg.find("TOPIC") != std::string::npos || msg.find("MODE") != std::string::npos)
+	else if (msg.find("/KICK") != std::string::npos || msg.find("/INVITE") != std::string::npos || msg.find("/TOPIC") != std::string::npos || msg.find("/MODE") != std::string::npos)
+	{
+		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
 		Command::selectCommand(msg, this->_salon , _clients[clientSocket], this->_clients);
+	}
 	else
 		msg_client(clientSocket, msg);
 }
