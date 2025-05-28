@@ -263,6 +263,8 @@ void Server::msg_client(int clientSocket, std::string msg)
 		std::cout << msg << std::endl;
 		std::cout << "JE PASSE PAR LA" << std::endl;
 		int nb_salon = search_salon_msg(msg);
+		if (nb_salon == -1)
+			return;
 		Salon tab = _salon[nb_salon];
 		std::cout << "nom salon " << msg << std::endl;
 		Client env = search_client(clientSocket);
