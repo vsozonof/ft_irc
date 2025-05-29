@@ -42,6 +42,7 @@ Salon::Salon(std::string name)
 	std::map<int, Client> _clients;
 	_clients = std::map<int, Client>();
     _Name = name;
+    std::cout << "voici le name du salon " << _Name << std::endl;
     _SocketClient.empty();
     _opt[0] = false;
     _opt[1] = false;

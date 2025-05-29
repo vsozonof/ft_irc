@@ -158,19 +158,15 @@ void Server::doClientAction(int clientSocket)
 
 bool Server::join_channel(int clientSocket, std::string buf)
 {
-	buf = buf.erase(0, 6);
-	size_t j = 0;
-	for (;j < buf.size(); j++)
-	if (isspace(buf[j]))
-		break;
-	std::string msg = buf.substr(0, j);
+	std::string msg = get_salon_name(buf);
 	if (msg.empty())
 		return -1;
-	for (size_t i = 0; i < msg.size(); ++i) {
+	for (size_t i = 0; i < msg.size(); ++i)
+	{
         if (!std::isalnum(static_cast<unsigned char>(msg[i])))
 		{
 			_clients[clientSocket].sendMsg(":yourserver 403 " + _clients[clientSocket].getNickname() + " " + msg + " :No such channel\r\n");
-            return -1;		
+			return -1;
 		}
 	}
 
@@ -191,6 +187,8 @@ bool Server::join_channel(int clientSocket, std::string buf)
 	}
 	else
 	{
+		std::cout << "voici msg = ";
+		Command::debug_print(msg);
 		Salon salon(msg);
 		salon.increaseSocketClient(clientSocket);
 		salon.set_client(_clients, clientSocket);
@@ -309,6 +307,7 @@ int Server::search_salon_msg(std::string msg)
 
 void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)
 {
+	std::cout << std::endl << "NOUVEAU ENVOIE DE MESSAGE" << std::endl;
 	tab.show_list_client();
 	for (int i = 0; tab.get_salon_client_len() > i; i++)
 	{

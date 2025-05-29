@@ -248,3 +248,27 @@ int Server::search_salon_socket_and_msg(int clientSocket, std::string salon)
 	}
 	return 0;
 }
+
+std::string Server::get_salon_name(std::string buf)
+{
+    // il ne faut pas que je detecte de # car nc n'en met pas
+	// il faut que je cherche simplement le mot apres le join et inclure tout sauf #
+	// il faut que je m'arrete sois a un espace sois par  les \ quelque chose
+	size_t j = 0;
+	for (;j < buf.size(); j++)
+	if (isspace(buf[j]))
+		break;
+	size_t i = j + 1;
+	j++;
+	for (;j < buf.size(); j++)
+	if (isspace(buf[j]))
+		break;
+    std::string name = buf.substr(i, j);
+	j = 0;
+	for (;j < name.size(); j++)
+	if (isspace(name[j]))
+		name = name.erase(j);
+	if (name.find("#") != std::string::npos)
+		name = name.substr(1, name.size() - 1);
+    return name;
+}

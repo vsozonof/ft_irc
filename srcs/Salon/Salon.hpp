@@ -76,7 +76,6 @@ class Salon
 		void print_opt();
 		void delete_client_from_salon(int socketclient);
 
-
 	private:
 		std::string						_Name;				// name du Salon
 		std::string						_Topic;				// topic du Salon
