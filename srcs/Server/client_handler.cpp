@@ -320,6 +320,7 @@ void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)
 				{
 					std::cout << tab.get_SocketClient(i) << std::endl;
 					tab.show_client_infos(tab.get_SocketClient(i));
+					std::cout << nv << std::endl;
 					Command::debug_print(nv);
 					int bytes = send(tab.get_SocketClient(i), nv.c_str(), nv.size(), 0);
 					if (bytes == -1)
