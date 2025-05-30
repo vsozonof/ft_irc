@@ -223,41 +223,68 @@ void Server::msg_client(int clientSocket, std::string msg)
 	std::string envoyeur;
 	std::string final;
 
-	if (_salon.size() > 0)
+	// message recu par nc: 			/msg test :salut
+	// message recu par irssi			PRIVMSG wq :salut
+
+	// message recu pour salon nc		:salut
+	// message recu pour salon irssi	:wq PRIVMSG #sa :ewq
+
+	std::cout << "voici le message recu " << std::endl;
+	std::cout << msg << std::endl;
+	Command::debug_print(msg);
+	// je dois detecter si le debut du mot est "/msg"
+	if (message_format(msg) == 0)
+		return ;
+	if (msg.find("#") == std::string::npos)
 	{
-		if (msg.find("#") == std::string::npos)
+		if (msg.size())
 		{
-			if (msg.size())
+			std::string nick = extractValue(msg, "PRIVMSG");
+			if (msg.find(":") == std::string::npos)
+				return;
+			std::string message = msg.substr(msg.find(":"), msg.size() - msg.find(":") - 1);
+			_clients[clientSocket].getNickname();
+			for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); it++)
 			{
-				std::string nick = extractValue(msg, "PRIVMSG");
-				if (msg.find(":") == std::string::npos)
-					return;
-				std::string message = msg.substr(msg.find(":"), msg.size() - msg.find(":") - 1);
-				_clients[clientSocket].getNickname();
-				for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); it++)
+				std::cout << it->second.getNickname() << std::endl << nick << std::endl;
+				if (it->second.getNickname() == nick)
 				{
-					if (it->second.getNickname() == nick)
-					{
-						std::string nv = (":");
-						nv.append(Command::clean(_clients[clientSocket].getNickname()));
-						nv.append("!");
-						nv.append(Command::clean(_clients[clientSocket].getUsername()));
-						nv.append("@127.0.0.1 PRIVMSG ");
-						nv.append(Command::clean(nick));
-						nv.append(" ");
-						nv.append(message);
-						nv.append("\r\n");
-						int bytes = send(it->second.getSocket(), nv.c_str(), nv.size(), 0);
-						if (bytes == -1)
-						throw std::runtime_error("Error sending message with send");
+					std::string nv = (":");
+					nv.append(Command::clean(_clients[clientSocket].getNickname()));
+					nv.append("!");
+					nv.append(Command::clean(_clients[clientSocket].getUsername()));
+					nv.append("@127.0.0.1 PRIVMSG ");
+					nv.append(Command::clean(nick));
+					nv.append(" ");
+					nv.append(message);
+					nv.append("\r\n");
+					int bytes = send(it->second.getSocket(), nv.c_str(), nv.size(), 0);
+					if (bytes == -1)
+					throw std::runtime_error("Error sending message with send");
 						return;
-					}
 				}
 			}
-			return ;
 		}
+		return ;
+	}
+	else if (_salon.size() > 0)
+	{
+		//Message dans un canal	:user!u@ip PRIVMSG #canal :hello all\r\n
+		// irssi = :alice!a@host PRIVMSG #test :hello canal\r\n
+		// nc = :alice!a@host PRIVMSG #test :hello canal\r\n
+
+		//Message privé à un client	:user!u@ip PRIVMSG nick :salut en privé\r\n
+		//irssi = :alice!a@host PRIVMSG bob :hello en privé\r\n
+		// nc = :alice!a@host PRIVMSG bob :hello en privé\r\n
+
 		int nb_salon = search_salon_msg(msg);
-		Salon tab = _salon[nb_salon];
+		std::cout << nb_salon << std::endl;
+		if (nb_salon == -1)
+		{
+			std::cout << "wrong salon" << std::endl;
+			return;
+		}
+			Salon tab = _salon[nb_salon];
 		Client env = search_client(clientSocket);
 		if (nb_salon != -1 && search_salon_socket_and_msg(clientSocket, msg) == 1)
 		{
@@ -279,7 +306,11 @@ void Server::msg_client(int clientSocket, std::string msg)
 
 int Server::search_salon_msg(std::string msg)
 {
+	// je dois verifier:
+	// s'il n'y a qu'un mot -> donc 
 	size_t j = 0;
+	std::cout << "msg" << std::endl;
+	std::cout << msg << std::endl;
 	int pos = msg.find("#");
 	for (int save = 0;j < msg.size(); j++)
 	{
@@ -293,7 +324,10 @@ int Server::search_salon_msg(std::string msg)
 	std::string salon_name = msg.substr(pos + 1, j - pos - 1);
 	if (msg.empty())
 		return -1;
+	// if (salon_name[0] == ':')
+		// salon_name = msg.substr(pos + 1, j - pos - 1);
 	j = 0;
+	std::cout << "salon_name " << salon_name << std::endl;
 	while (_salon.size() > j)
 	{
 		if (_salon[j].getName() == salon_name)
@@ -303,6 +337,35 @@ int Server::search_salon_msg(std::string msg)
 			return -1;
 	}
 	return -1;
+}
+
+bool Server::message_format(std::string msg)
+{
+	// check si je recois:
+	// PRIVMSG + # + nom du salon + : + message
+	// PRIVMSG #sa :wq
+
+	int pos = -1;
+	std::cout << "test formatage de mesg" << std::endl;
+	pos = msg.find("PRIVMSG");
+	std::cout << "pos = " << pos << std::endl;
+	if (pos != 0)
+		return 0;
+	std::cout << msg[pos + 8] << std::endl;
+	if (msg[pos + 8] != '#')
+		return 0;
+	std::cout << "voici deuxieme endroit passe " << std::endl;
+	pos = msg.find(" ", 8);
+	std::cout << pos << std::endl;
+	std::cout << std::endl << "==== go pour troisieme etape" << std::endl;
+	std::cout << msg << std::endl;
+	std::cout << "voici pos " << pos << std::endl;
+	std::cout << msg[pos + 1] << std::endl;
+	if (msg[pos + 1] != ':')
+		return 0;
+	// il manque plus que le :message
+	std::cout << "===== je sors tranquillos" << std::endl;
+	return 1;
 }
 
 void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)
@@ -322,6 +385,7 @@ void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)
 					tab.show_client_infos(tab.get_SocketClient(i));
 					std::cout << nv << std::endl;
 					Command::debug_print(nv);
+					std::cout << "et la le send debarque " << std::endl;
 					int bytes = send(tab.get_SocketClient(i), nv.c_str(), nv.size(), 0);
 					if (bytes == -1)
 						throw std::runtime_error("Error sending message with send");
