@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/29 09:59:53 by vsozonof          #+#    #+#             */
-/*   Updated: 2025/05/30 22:03:24 by tpotilli         ###   ########.fr       */
+/*   Updated: 2025/05/30 22:16:54 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,12 +221,6 @@ void Server::msg_client(int clientSocket, std::string msg)
 	std::string envoyeur;
 	std::string final;
 
-	// message recu par nc: 			/msg test :salut
-	// message recu par irssi			PRIVMSG wq :salut
-
-	// message recu pour salon nc		:salut
-	// message recu pour salon irssi	:wq PRIVMSG #sa :ewq
-
 	int type = detect_message_type(msg);
 	if (type == 0)
 		return ;
@@ -355,7 +349,7 @@ int Server::detect_message_type(std::string msg)
 	pos = 8;
 	for(; isspace(msg[pos]) == 0; pos++)
 	{
-		if (isalpha(msg[pos]) == 0)
+		if (isalnum(msg[pos]) == 0)
 			return 0;
 	}
 	pos = 8;
@@ -364,10 +358,9 @@ int Server::detect_message_type(std::string msg)
 		return 0;
 	return 1;
 }
-// PRIVMSG #sa :salut
+
 void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)
 {
-	tab.show_list_client();
 	for (int i = 0; tab.get_salon_client_len() > i; i++)
 	{
 		try
