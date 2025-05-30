@@ -152,6 +152,8 @@ void Server::doClientAction(int clientSocket)
 	else
 	{
 		msg = msg.substr(msg.find_first_of("/") + 1, std::string::npos);
+		std::cout << "ok ok" << std::endl;
+		std::cout << msg << std::endl;
 		msg_client(clientSocket, msg);
 	}
 }
@@ -233,15 +235,19 @@ void Server::msg_client(int clientSocket, std::string msg)
 	std::cout << msg << std::endl;
 	Command::debug_print(msg);
 	// je dois detecter si le debut du mot est "/msg"
-	detect_message_type(msg);
-	if (msg.find("#") == std::string::npos)
+	int type = detect_message_type(msg);
+	std::cout << "type dectect " << type << std::endl;
+	if (type == 0)
+		return ;
+	if (type == 1)
 	{
 		if (msg.size())
 		{
+			std::cout << msg << std::endl;
 			std::string nick = extractValue(msg, "PRIVMSG");
 			if (msg.find(":") == std::string::npos)
 				return;
-			std::string message = msg.substr(msg.find(":"), msg.size() - msg.find(":") - 1);
+			std::string message = msg.substr(msg.find(":"), msg.size() - msg.find(":"));
 			_clients[clientSocket].getNickname();
 			for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); it++)
 			{
@@ -266,7 +272,7 @@ void Server::msg_client(int clientSocket, std::string msg)
 		}
 		return ;
 	}
-	else if (_salon.size() > 0)
+	else if (_salon.size() > 0 && type == 2)
 	{
 		//Message dans un canal	:user!u@ip PRIVMSG #canal :hello all\r\n
 		// irssi = :alice!a@host PRIVMSG #test :hello canal\r\n
@@ -278,26 +284,31 @@ void Server::msg_client(int clientSocket, std::string msg)
 
 		int nb_salon = search_salon_msg(msg);
 		std::cout << nb_salon << std::endl;
+		std::cout << msg << std::endl;
 		if (nb_salon == -1)
 		{
 			std::cout << "wrong salon" << std::endl;
 			return;
 		}
-			Salon tab = _salon[nb_salon];
+		Salon tab = _salon[nb_salon];
 		Client env = search_client(clientSocket);
 		if (nb_salon != -1 && search_salon_socket_and_msg(clientSocket, msg) == 1)
 		{
 			Salon tab = _salon[nb_salon];
-			msg = msg.erase(msg.size() - 1);
+			msg = msg.erase(msg.size());
 			envoyeur = tab.getName();
 			int pos = msg.find(":");
 			if (pos > 2147483647 || pos < 0)
 				return;
 			Client client = tab.get_client(clientSocket);
+			std::cout << "voici le message que je file " << std::endl << msg << std::endl;
 			std::string nv = ":";
 			nv.append(client.getNickname());
 			nv.append(" " + msg);
 			nv.append("\r\n");
+			std::cout << "voici nv " << std::endl;
+			std::cout << nv << std::endl;
+			Command::debug_print(nv);
 			send_msg_client(clientSocket, nv, tab);
 		}
 	}
@@ -305,8 +316,6 @@ void Server::msg_client(int clientSocket, std::string msg)
 
 int Server::search_salon_msg(std::string msg)
 {
-	// je dois verifier:
-	// s'il n'y a qu'un mot -> donc 
 	size_t j = 0;
 	int pos = msg.find("#");
 	for (int save = 0;j < msg.size(); j++)
@@ -351,6 +360,7 @@ int Server::detect_message_type(std::string msg)
 		pos = msg.find(" ", 8);
 		if (msg[pos + 1] != ':')
 			return 0;
+		return 2;
 	}
 	//catch le nom de celui qui remplace le channel
 	pos = 8;
@@ -365,7 +375,7 @@ int Server::detect_message_type(std::string msg)
 		return 0;
 	return 1;
 }
-
+// PRIVMSG #sa :salut
 void Server::send_msg_client(int clientSocket, std::string nv, Salon &tab)
 {
 	std::cout << std::endl << "NOUVEAU ENVOIE DE MESSAGE" << std::endl;
