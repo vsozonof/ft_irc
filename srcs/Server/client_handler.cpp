@@ -233,8 +233,7 @@ void Server::msg_client(int clientSocket, std::string msg)
 	std::cout << msg << std::endl;
 	Command::debug_print(msg);
 	// je dois detecter si le debut du mot est "/msg"
-	if (message_format(msg) == 0)
-		return ;
+	detect_message_type(msg);
 	if (msg.find("#") == std::string::npos)
 	{
 		if (msg.size())
@@ -309,8 +308,6 @@ int Server::search_salon_msg(std::string msg)
 	// je dois verifier:
 	// s'il n'y a qu'un mot -> donc 
 	size_t j = 0;
-	std::cout << "msg" << std::endl;
-	std::cout << msg << std::endl;
 	int pos = msg.find("#");
 	for (int save = 0;j < msg.size(); j++)
 	{
@@ -339,32 +336,33 @@ int Server::search_salon_msg(std::string msg)
 	return -1;
 }
 
-bool Server::message_format(std::string msg)
+int Server::detect_message_type(std::string msg)
 {
-	// check si je recois:
-	// PRIVMSG + # + nom du salon + : + message
-	// PRIVMSG #sa :wq
-
+	// ok donc mainteant je gere bien les messages type channel
 	int pos = -1;
-	std::cout << "test formatage de mesg" << std::endl;
 	pos = msg.find("PRIVMSG");
-	std::cout << "pos = " << pos << std::endl;
 	if (pos != 0)
 		return 0;
-	std::cout << msg[pos + 8] << std::endl;
-	if (msg[pos + 8] != '#')
-		return 0;
-	std::cout << "voici deuxieme endroit passe " << std::endl;
+	if (msg.find("#") != std::string::npos)
+	{
+		std::cout << msg[pos + 8] << std::endl;
+		if (msg[pos + 8] != '#')
+			return 0;
+		pos = msg.find(" ", 8);
+		if (msg[pos + 1] != ':')
+			return 0;
+	}
+	//catch le nom de celui qui remplace le channel
+	pos = 8;
+	for(; isspace(msg[pos]) == 0; pos++)
+	{
+		if (isalpha(msg[pos]) == 0)
+			return 0;
+	}
+	pos = 8;
 	pos = msg.find(" ", 8);
-	std::cout << pos << std::endl;
-	std::cout << std::endl << "==== go pour troisieme etape" << std::endl;
-	std::cout << msg << std::endl;
-	std::cout << "voici pos " << pos << std::endl;
-	std::cout << msg[pos + 1] << std::endl;
 	if (msg[pos + 1] != ':')
 		return 0;
-	// il manque plus que le :message
-	std::cout << "===== je sors tranquillos" << std::endl;
 	return 1;
 }
 

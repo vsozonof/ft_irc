@@ -72,7 +72,7 @@ class Server
 		void delete_user_all_salon(int clientSocket);
 		int search_salon_socket_and_msg(int clientSocket, std::string salon);
 		std::string get_salon_name(std::string buf);
-		bool message_format(std::string msg);
+		int detect_message_type(std::string msg);
 
 };
 
