@@ -299,15 +299,9 @@ bool Salon::check_opt(int clientsocket, Client client, std::string buf)
 	}
 	if (_opt[2] == true)
 	{
-        size_t count = 0;
-        size_t i = 0;
-        for (; i < buf.size(); i++)
-        if (isspace(buf[i]))
-            count++;
-        if (count < buf.size())
-            count++;
-        buf = Command::clean(buf);
-        std::string pass = buf.substr(count, count - buf.size());
+        size_t start = buf.find('#') + 2 + _Name.size();
+        size_t end = buf.find('\r');
+        std::string pass = buf.substr(start, end - start);
 		if (pass != get_password())
         {
             std::string error = ":127.0.0.1 475 " + Command::clean(client.getNickname()) + " #" + Command::clean(_Name) + " :Cannot join channel (+k)\r\n";
